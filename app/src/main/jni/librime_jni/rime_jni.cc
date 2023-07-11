@@ -6,11 +6,6 @@ extern void rime_require_module_lua();
 extern void rime_require_module_charcode();
 extern void rime_require_module_octagram();
 // librime is compiled as a static library, we have to link modules explicitly
-static void declare_librime_module_dependencies() {
-    rime_require_module_lua();
-    rime_require_module_charcode();
-    rime_require_module_octagram();
-}
 
 class Rime {
 public:
@@ -150,7 +145,6 @@ JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM* jvm, void* reserved)
 {
     GlobalRef = new GlobalRefSingleton(jvm);
-    declare_librime_module_dependencies();
     return JNI_VERSION_1_6;
 }
 
