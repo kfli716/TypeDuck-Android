@@ -71,8 +71,8 @@ public class Key {
   private int gap;
   private int row;
   private int column;
-  private String label;
-  private String hint;
+  private String label, cangjieLabel;
+  private String hint, hasMenuHint;
   private Drawable key_back_color;
   private Drawable hilited_key_back_color;
   private Integer key_text_color;
@@ -132,8 +132,10 @@ public class Key {
       if (hasComposingKey) mKeyboard.getComposingKeys().add(this);
 
       label = ConfigGetter.getString(mk, "label", "");
+      cangjieLabel = ConfigGetter.getString(mk, "cangjie_label", "");
       labelSymbol = ConfigGetter.getString(mk, "label_symbol", "");
       hint = ConfigGetter.getString(mk, "hint", "");
+      hasMenuHint = ConfigGetter.getString(mk, "has_menu_hint", "");
       if (mk.containsKey("send_bindings")) {
         send_bindings = ConfigGetter.getBoolean(mk, "send_bindings", true);
       } else if (!hasComposingKey) {
@@ -210,6 +212,10 @@ public class Key {
   }
 
   public String getHint() {
+    if (!TextUtils.isEmpty(cangjieLabel) && Rime.schemaIsCangjie())
+      return getClick().getLabel();
+    if (!TextUtils.isEmpty(hasMenuHint) && Rime.hasMenu() && Rime.schemaIsCantonese())
+      return hasMenuHint;
     return hint;
   }
 
@@ -554,6 +560,8 @@ public class Key {
   }
 
   public Event getLongClick() {
+    if (events[KeyEventType.ASCII_LONG_CLICK.ordinal()] != null && Rime.isAsciiMode())
+      return events[KeyEventType.ASCII_LONG_CLICK.ordinal()];
     return events[KeyEventType.LONG_CLICK.ordinal()];
   }
 
@@ -588,10 +596,13 @@ public class Key {
 
   public String getLabel() {
     Event event = getEvent();
-    if (!TextUtils.isEmpty(label)
-        && event == getClick()
-        && (events[KeyEventType.ASCII.ordinal()] == null && !Rime.showAsciiPunch()))
-      return label; // 中文狀態顯示標籤
+    if (event == getClick()
+        && (events[KeyEventType.ASCII.ordinal()] == null && !Rime.showAsciiPunch())) {
+      if (!TextUtils.isEmpty(cangjieLabel) && Rime.schemaIsCangjie())
+        return cangjieLabel;
+      if (!TextUtils.isEmpty(label))
+        return label; // 中文狀態顯示標籤
+    }
     return event.getLabel();
   }
 
@@ -601,6 +612,7 @@ public class Key {
   }
 
   public String getSymbolLabel() {
+    if (!mKeyboard.getName().equals("default")) return "";
     if (labelSymbol.isEmpty()) {
       Event longClick = getLongClick();
       if (longClick != null) return longClick.getLabel();

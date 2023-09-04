@@ -41,6 +41,8 @@ public class Keyboard {
   // private static final String TAG = Keyboard.class.getSimpleName();
   /** Number of key widths from current touch point to search for nearest keys. */
   public static float SEARCH_DISTANCE = 1.4f;
+
+  private String mName;
   /** 按鍵默認水平間距 */
   private int mDefaultHorizontalGap;
   /** 默認鍵寬 */
@@ -183,8 +185,10 @@ public class Keyboard {
     final Object v = config.keyboards.getObject(name);
     if (v != null) {
       keyboardConfig = (Map<String, Object>) v;
+      mName = name;
     } else {
       keyboardConfig = (Map<String, Object>) config.keyboards.getObject("default");
+      mName = "default";
     }
     mLabelTransform = ConfigGetter.getString(keyboardConfig, "label_transform", "none");
     mAsciiMode = ConfigGetter.getInt(keyboardConfig, "ascii_mode", 1);
@@ -451,6 +455,10 @@ public class Keyboard {
       this.mMetaKey = key;
     else if (c == KeyEvent.KEYCODE_ALT_LEFT || c == KeyEvent.KEYCODE_ALT_RIGHT) this.mAltKey = key;
     else if (c == KeyEvent.KEYCODE_SYM) this.mSymKey = key;
+  }
+
+  public String getName() {
+    return mName;
   }
 
   public List<Key> getKeys() {

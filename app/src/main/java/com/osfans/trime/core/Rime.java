@@ -342,6 +342,14 @@ public class Rime {
     return isEmpty(getCurrentRimeSchema());
   }
 
+  public static boolean schemaIsCangjie() {
+    return getCurrentRimeSchema().matches("^(cangjie|quick)");
+  }
+
+  public static boolean schemaIsCantonese() {
+    return getCurrentRimeSchema().matches("^(jyut6ping3|loengfan)");
+  }
+
   public static String getSchemaName() {
     return mStatus.schema_name;
   }
