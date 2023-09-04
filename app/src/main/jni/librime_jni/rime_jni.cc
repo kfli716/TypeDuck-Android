@@ -31,9 +31,9 @@ public:
         RIME_STRUCT(RimeTraits, trime_traits)
         trime_traits.shared_data_dir = sharedDir;
         trime_traits.user_data_dir = userDir;
-        trime_traits.app_name = "rime.trime";
-        trime_traits.distribution_name = "Rime";
-        trime_traits.distribution_code_name = "trime";
+        trime_traits.app_name = "TypeDuck";
+        trime_traits.distribution_name = "TypeDuck";
+        trime_traits.distribution_code_name = "TypeDuck";
         trime_traits.distribution_version = TRIME_VERSION;
 
         if (firstRun) {

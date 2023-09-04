@@ -318,10 +318,10 @@ class AppPrefs(
             val EXTERNAL_PATH_PREFIX: String = PathUtils.getExternalStoragePath()
         }
         var sharedDataDir: String
-            get() = prefs.getPref(SHARED_DATA_DIR, "$EXTERNAL_PATH_PREFIX/rime")
+            get() = prefs.getPref(SHARED_DATA_DIR, "$EXTERNAL_PATH_PREFIX/TypeDuck")
             set(v) = prefs.setPref(SHARED_DATA_DIR, v)
         var userDataDir: String
-            get() = prefs.getPref(USER_DATA_DIR, "$EXTERNAL_PATH_PREFIX/rime")
+            get() = prefs.getPref(USER_DATA_DIR, "$EXTERNAL_PATH_PREFIX/TypeDuck")
             set(v) = prefs.setPref(USER_DATA_DIR, v)
         var syncBackgroundEnabled: Boolean
             get() = prefs.getPref(SYNC_BACKGROUND_ENABLED, false)
