@@ -1,0 +1,63 @@
+# Rime default settings
+# encoding: utf-8
+
+config_version: "2023.07.05"
+
+schema_list:
+  - schema: jyut6ping3
+  - schema: jyut6ping3_fuzzy
+  - schema: jyut6ping3_ipa
+  - schema: jyut6ping3_scolar
+
+switcher:
+  caption: "[Schema Menu]"
+  hotkeys:
+    - Control+grave
+    - Control+Shift+grave
+    - F4
+  save_options:
+    - full_shape
+    - noop
+    - variants_hk
+    - trad_tw
+    - simplification
+    - ascii_punct
+  option_list_separator: " / "
+
+menu:
+  page_size: 10
+
+punctuator:
+  full_shape:
+    __include: punctuation:/full_shape
+  half_shape:
+    __include: punctuation:/half_shape
+  ascii_style:
+    __include: punctuation:/ascii_style
+
+key_binder:
+  bindings:
+    __patch:
+      - key_bindings:/emacs_editing
+      - key_bindings:/move_by_word_with_tab
+      - key_bindings:/paging_with_minus_equal
+      - key_bindings:/paging_with_comma_period
+      - key_bindings:/paging_with_brackets
+      - key_bindings:/numbered_mode_switch
+      - key_bindings:/optimized_mode_switch
+
+recognizer:
+  patterns:
+    email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
+    uppercase: "[A-Z][-_+.'0-9A-Za-z]*$"
+    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
+
+ascii_composer:
+  good_old_caps_lock: true
+  switch_key:
+    Shift_L: noop
+    Shift_R: noop
+    Control_L: noop
+    Control_R: noop
+    Caps_Lock: clear
+    Eisu_toggle: clear
