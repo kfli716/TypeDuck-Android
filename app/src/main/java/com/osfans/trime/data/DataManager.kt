@@ -15,6 +15,7 @@ object DataManager {
     @JvmStatic
     val userDataDir = File(prefs.profile.userDataDir)
     val customDefault = File(sharedDataDir, "default.custom.yaml")
+    val commonPatch = File(sharedDataDir, "common.yaml")
     @JvmStatic
     val buildDir = File(userDataDir, "build")
 
@@ -63,6 +64,11 @@ object DataManager {
         if (!customDefault.exists()) {
             Timber.d("Creating empty default.custom.yaml ...")
             customDefault.createNewFile()
+        }
+        // Don't combine candidates
+        if (!commonPatch.exists()) {
+            Timber.d("Creating common.yaml ...")
+            commonPatch.writeText("patch:\n  translator/combine_candidates: false\n")
         }
 
         Timber.i("Synced!")
