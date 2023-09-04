@@ -65,7 +65,7 @@ class EditorInstance(private val ims: InputMethodService) {
         val ic = inputConnection ?: return
         val composingText = when (prefs.keyboard.inlinePreedit) {
             InlineModeType.INLINE_PREVIEW -> Rime.getComposingText()
-            InlineModeType.INLINE_COMPOSITION -> Rime.getCompositionText()
+            InlineModeType.INLINE_COMPOSITION -> Rime.getCompositionText().replace("‸", "")
             InlineModeType.INLINE_INPUT -> Rime.getRimeRawInput() ?: ""
             else -> ""
         }
