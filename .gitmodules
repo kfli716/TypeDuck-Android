@@ -14,3 +14,6 @@
 [submodule "libiconv"]
 	path = app/src/main/jni/libiconv
 	url = https://github.com/osfans/libiconv-gnu.git
+[submodule "rime-dictionary-lookup-filter"]
+	path = app/src/main/jni/rime-dictionary-lookup-filter
+	url = https://github.com/TypeDuck-HK/rime-dictionary-lookup-filter.git
