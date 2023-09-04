@@ -152,7 +152,7 @@ public class Key {
     hilited_key_back_color = config.colors.getDrawable(mk, "hilited_key_back_color");
     key_symbol_color = config.colors.getColor(mk, "key_symbol_color");
     hilited_key_symbol_color = config.colors.getColor(mk, "hilited_key_symbol_color");
-    round_corner = ConfigGetter.getFloat(mk, "round_corner", 0);
+    round_corner = ConfigGetter.getFloat(mk, "round_corner", 0) * Keyboard.adjustRatio;
   }
 
   public static Map<String, Map<String, Object>> getPresetKeys() {

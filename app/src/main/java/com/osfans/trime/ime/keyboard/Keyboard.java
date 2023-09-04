@@ -19,8 +19,10 @@
 package com.osfans.trime.ime.keyboard;
 
 import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.osfans.trime.data.theme.Config;
 import com.osfans.trime.util.ConfigGetter;
 import com.osfans.trime.util.DimensionsKt;
@@ -95,6 +97,9 @@ public class Keyboard {
   //    特别的，当值为负数时，为倒序序号（-1即倒数第一个）;当值大于按键行数时，为最后一行
   private int autoHeightIndex, keyboardHeight;
 
+  public static float adjustRatio = Math.min(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()) / 1000f;
+  public static float adjustRatioSmall = (float) Math.pow(adjustRatio, 1.0 / 3.0);
+
   /** Creates a keyboard from the given xml key layout file. */
   public Keyboard() {
 
@@ -107,21 +112,24 @@ public class Keyboard {
     // final int mDisplayHeight = dm.heightPixels;
     // Log.v(TAG, "keyboard's display metrics:" + dm);
 
-    mDefaultHorizontalGap = (int) DimensionsKt.dp2px(config.style.getFloat("horizontal_gap"));
-    mDefaultVerticalGap = (int) DimensionsKt.dp2px(config.style.getFloat("vertical_gap"));
+    mDefaultHorizontalGap = (int) (SizeUtils.applyDimension(
+        config.style.getFloat("horizontal_gap"), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
+    mDefaultVerticalGap = (int) (SizeUtils.applyDimension(
+        config.style.getFloat("vertical_gap"), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
     mDefaultWidth = (int) (mDisplayWidth * config.style.getFloat("key_width") / 100);
 
     mDefaultHeight = (int) DimensionsKt.dp2px(config.style.getFloat("key_height"));
 
     mProximityThreshold = (int) (mDefaultWidth * SEARCH_DISTANCE);
     mProximityThreshold = mProximityThreshold * mProximityThreshold; // Square it for comparison
-    mRoundCorner = config.style.getFloat("round_corner");
+    mRoundCorner = config.style.getFloat("round_corner") * adjustRatio;
     mBackground = config.colors.getDrawable("keyboard_back_color");
 
-    keyboardHeight = (int) DimensionsKt.dp2px(config.style.getFloat("keyboard_height"));
+    keyboardHeight = (int) (SizeUtils.applyDimension(
+        config.style.getFloat("keyboard_height"), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
     if (ScreenUtils.isLandscape()) {
-      int keyBoardHeightLand =
-          (int) DimensionsKt.dp2px(config.style.getFloat("keyboard_height_land"));
+      int keyBoardHeightLand = (int) (SizeUtils.applyDimension(
+          config.style.getFloat("keyboard_height_land"), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
       if (keyBoardHeightLand > 0) keyboardHeight = keyBoardHeightLand;
     }
 
@@ -210,14 +218,14 @@ public class Keyboard {
     List<Map<String, Object>> lm = (List<Map<String, Object>>) keyboardConfig.get("keys");
 
     mDefaultHorizontalGap =
-        ConfigGetter.getPixel(
-            keyboardConfig, "horizontal_gap", config.style.getFloat("horizontal_gap"));
+        (int) (SizeUtils.applyDimension(ConfigGetter.getFloat(
+            keyboardConfig, "horizontal_gap", config.style.getFloat("horizontal_gap")), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
     mDefaultVerticalGap =
-        ConfigGetter.getPixel(
-            keyboardConfig, "vertical_gap", config.style.getFloat("vertical_gap"));
+        (int) (SizeUtils.applyDimension(ConfigGetter.getFloat(
+            keyboardConfig, "vertical_gap", config.style.getFloat("vertical_gap")), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
     mRoundCorner =
-        ConfigGetter.getFloat(
-            keyboardConfig, "round_corner", config.style.getFloat("round_corner"));
+        (int) (ConfigGetter.getFloat(
+            keyboardConfig, "round_corner", config.style.getFloat("round_corner")) * adjustRatio);
 
     Drawable background = config.colors.getDrawable(keyboardConfig, "keyboard_back_color");
     if (background != null) mBackground = background;
@@ -233,9 +241,13 @@ public class Keyboard {
     int[] newHeight = new int[0];
 
     if (keyboardHeight > 0) {
-      int mkeyboardHeight = ConfigGetter.getPixel(keyboardConfig, "keyboard_height", 0);
+      int mkeyboardHeight =
+          (int) (SizeUtils.applyDimension(ConfigGetter.getFloat(
+              keyboardConfig, "keyboard_height", 0), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
       if (ScreenUtils.isLandscape()) {
-        int mkeyBoardHeightLand = ConfigGetter.getPixel(keyboardConfig, "keyboard_height_land", 0);
+        int mkeyBoardHeightLand =
+            (int) (SizeUtils.applyDimension(ConfigGetter.getFloat(
+                keyboardConfig, "keyboard_height_land", 0), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
         if (mkeyBoardHeightLand > 0) mkeyboardHeight = mkeyBoardHeightLand;
       }
 

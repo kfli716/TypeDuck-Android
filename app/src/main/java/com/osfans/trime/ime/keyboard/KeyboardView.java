@@ -360,9 +360,9 @@ public class KeyboardView extends View implements View.OnClickListener {
 
     mSymbolSize = (int) DimensionsKt.sp2px(config.style.getFloat("symbol_text_size"));
     mKeyTextSize = (int) DimensionsKt.sp2px(config.style.getFloat("key_text_size"));
-    mVerticalCorrection = (int) DimensionsKt.dp2px(config.style.getFloat("vertical_correction"));
+    mVerticalCorrection = (int) (DimensionsKt.dp2px(config.style.getFloat("vertical_correction")) * Keyboard.adjustRatioSmall);
     setProximityCorrectionEnabled(config.style.getBoolean("proximity_correction"));
-    mPreviewOffset = (int) DimensionsKt.dp2px(config.style.getFloat("preview_offset"));
+    mPreviewOffset = (int) (DimensionsKt.dp2px(config.style.getFloat("preview_offset")) * Keyboard.adjustRatioSmall);
     mPreviewHeight = (int) DimensionsKt.dp2px(config.style.getFloat("preview_height"));
     mLabelTextSize = (int) DimensionsKt.sp2px(config.style.getFloat("key_long_text_size"));
     if (mLabelTextSize == 0) mLabelTextSize = mKeyTextSize;
@@ -434,8 +434,9 @@ public class KeyboardView extends View implements View.OnClickListener {
       Timber.e(ex, "Get Drawable Exception");
     }
 
+    final int textPadding = (int) (16 * Keyboard.adjustRatio);
     mPreviewText = KeyboardKeyPreviewBinding.inflate(LayoutInflater.from(context)).getRoot();
-    mPreviewText.setPadding(16, 0, 16, 16);
+    mPreviewText.setPadding(textPadding, 0, textPadding, textPadding);
     mPaint = new Paint();
     mPaint.setAntiAlias(true);
     mPaint.setTextAlign(Align.CENTER);
