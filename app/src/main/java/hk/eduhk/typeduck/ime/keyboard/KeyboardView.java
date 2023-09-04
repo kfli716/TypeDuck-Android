@@ -54,6 +54,7 @@ import hk.eduhk.typeduck.util.DimensionsKt;
 import hk.eduhk.typeduck.util.LeakGuardHandlerWrapper;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -983,11 +984,13 @@ public class KeyboardView extends View implements View.OnClickListener {
       //      break;
     }
     mInvalidatedKey = null;
+    /*
     // Overlay a dark rectangle to dim the keyboard
     if (mMiniKeyboardOnScreen) {
       paint.setColor((int) (mBackgroundDimAmount * 0xFF) << 24);
       canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
     }
+    */
 
     boolean mShowTouchPoints = true;
     if (DEBUG && mShowTouchPoints) {
@@ -1361,9 +1364,10 @@ public class KeyboardView extends View implements View.OnClickListener {
             });
         // mInputView.setSuggest(mSuggest);
         final Keyboard keyboard;
-        if (popupKey.getPopupCharacters() != null) {
-          keyboard =
-              new Keyboard(popupKey.getPopupCharacters(), -1, getPaddingLeft() + getPaddingRight());
+        final List<String> popupCharacters = popupKey.getPopupCharacters();
+        if (popupCharacters != null) {
+          if (popupKey.getX() < getWidth() / 2) Collections.reverse(popupCharacters);
+          keyboard = new Keyboard(popupCharacters, -1, getPaddingLeft() + getPaddingRight());
         } else {
           keyboard = new Keyboard();
         }
@@ -1711,6 +1715,7 @@ public class KeyboardView extends View implements View.OnClickListener {
 
   private boolean repeatKey() {
     Timber.d("\t<TrimeInput>\trepeatKey()");
+    mKeyboardActionListener.onPress(mRepeatKeyIndex);
     final Key key = mKeys[mRepeatKeyIndex];
     detectAndSendKey(mCurrentKey, key.getX(), key.getY(), mLastTapTime);
     return true;

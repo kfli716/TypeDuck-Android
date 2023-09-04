@@ -24,6 +24,7 @@ import android.view.KeyEvent;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import hk.eduhk.typeduck.data.theme.Config;
+import hk.eduhk.typeduck.ime.enums.KeyEventType;
 import hk.eduhk.typeduck.util.ConfigGetter;
 import hk.eduhk.typeduck.util.DimensionsKt;
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class Keyboard {
   private boolean resetAsciiMode;
 
   // Variables for pre-computing nearest keys.
-  private String mLabelTransform;
+  private String mLabelTransform = "none";
   private int mCellWidth;
   private int mCellHeight;
   private int[][] mGridNeighbors;
@@ -154,7 +155,7 @@ public class Keyboard {
    *     keyboard will fit as many keys as possible in each row.
    * @param horizontalPadding 按鍵水平間距
    */
-  public Keyboard(CharSequence characters, int columns, int horizontalPadding) {
+  public Keyboard(List<String> characters, int columns, int horizontalPadding) {
     this();
     int x = 0;
     int y = 0;
@@ -162,8 +163,8 @@ public class Keyboard {
     mTotalWidth = 0;
 
     final int maxColumns = columns == -1 ? Integer.MAX_VALUE : columns;
-    for (int i = 0; i < characters.length(); i++) {
-      char c = characters.charAt(i);
+    for (int i = 0; i < characters.size(); i++) {
+      String str = characters.get(i);
       if (column >= maxColumns || x + mDefaultWidth + horizontalPadding > mDisplayWidth) {
         x = 0;
         y += mDefaultVerticalGap + mDefaultHeight;
@@ -175,7 +176,7 @@ public class Keyboard {
       key.setWidth(mDefaultWidth);
       key.setHeight(mDefaultHeight);
       key.setGap(mDefaultHorizontalGap);
-      key.events[0] = new Event(this, String.valueOf(c));
+      key.events[KeyEventType.CLICK.ordinal()] = new Event(this, str);
       column++;
       x += key.getWidth() + key.getGap();
       mKeys.add(key);

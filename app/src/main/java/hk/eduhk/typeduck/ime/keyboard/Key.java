@@ -30,7 +30,10 @@ import hk.eduhk.typeduck.ime.enums.KeyEventType;
 import hk.eduhk.typeduck.util.CollectionUtils;
 import hk.eduhk.typeduck.util.ConfigGetter;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import timber.log.Timber;
@@ -95,9 +98,11 @@ public class Key {
   private int y;
   private boolean pressed;
   private boolean on;
-  private String popupCharacters;
+  private List<String> popupCharacters;
   private int popupResId;
   private String labelSymbol;
+
+  private static int nextPopupResId = 1;
 
   /**
    * Create an empty key with no attributes.
@@ -143,6 +148,10 @@ public class Key {
         send_bindings = false;
       }
     }
+
+    if (mk.containsKey("extra")) popupCharacters = (List<String>) mk.get("extra");
+    else popupCharacters = new ArrayList<String>();
+    if (getPopupCharacters().size() > 1) popupResId = nextPopupResId++;
 
     mKeyboard.setModiferKey(getCode(), this);
     key_text_size = ConfigGetter.getPixel(mk, "key_text_size", 0);
@@ -262,8 +271,30 @@ public class Key {
     return this.on;
   }
 
-  public String getPopupCharacters() {
-    return popupCharacters;
+  public List<String> getPopupCharacters() {
+    final List<String> characters = new ArrayList<String>(popupCharacters);
+    final List<String> clickCharacters = new ArrayList<String>();
+    final List<String> longClickCharacters = new ArrayList<String>();
+    if (!TextUtils.isEmpty(getClick().getText()))
+      clickCharacters.add(getClick().getText());
+    if (events[KeyEventType.ASCII.ordinal()] != null)
+      clickCharacters.add(events[KeyEventType.ASCII.ordinal()].getText());
+    if (events[KeyEventType.LONG_CLICK.ordinal()] != null)
+      longClickCharacters.add(events[KeyEventType.LONG_CLICK.ordinal()].getText());
+    if (events[KeyEventType.ASCII_LONG_CLICK.ordinal()] != null)
+      longClickCharacters.add(events[KeyEventType.ASCII_LONG_CLICK.ordinal()].getText());
+    if (!Rime.isAsciiMode()) {
+      Collections.reverse(clickCharacters);
+      Collections.reverse(longClickCharacters);
+    }
+    if (mKeyboard.getName().equals("default")) {
+      characters.addAll(clickCharacters);
+      characters.addAll(longClickCharacters);
+    } else {
+      characters.addAll(longClickCharacters);
+      characters.addAll(clickCharacters);
+    }
+    return characters;
   }
 
   public int getPopupResId() {
