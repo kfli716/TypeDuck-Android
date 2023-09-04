@@ -35,6 +35,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -434,6 +435,7 @@ public class KeyboardView extends View implements View.OnClickListener {
     }
 
     mPreviewText = KeyboardKeyPreviewBinding.inflate(LayoutInflater.from(context)).getRoot();
+    mPreviewText.setPadding(16, 0, 16, 16);
     mPaint = new Paint();
     mPaint.setAntiAlias(true);
     mPaint.setTextAlign(Align.CENTER);
@@ -1118,6 +1120,7 @@ public class KeyboardView extends View implements View.OnClickListener {
     final PopupWindow previewPopup = mPreviewPopup;
 
     mCurrentKeyIndex = keyIndex;
+    boolean shouldShowPreview = mShowPreview;
     // Release the old key and press the new key
     final Key[] keys = mKeys;
     if (oldKeyIndex != mCurrentKeyIndex) {
@@ -1129,11 +1132,12 @@ public class KeyboardView extends View implements View.OnClickListener {
       if (mCurrentKeyIndex != NOT_A_KEY && keys.length > mCurrentKeyIndex) {
         final Key newKey = keys[mCurrentKeyIndex];
         newKey.onPressed();
+        shouldShowPreview = shouldShowPreview && !newKey.getClick().isFunctional() && newKey.getCode() != KeyEvent.KEYCODE_SPACE;
         invalidateKey(mCurrentKeyIndex);
       }
     }
     // If key changed and preview is on ...
-    if (oldKeyIndex != mCurrentKeyIndex && mShowPreview) {
+    if (oldKeyIndex != mCurrentKeyIndex && shouldShowPreview) {
       mHandler.removeMessages(MSG_SHOW_PREVIEW);
       if (previewPopup.isShowing()) {
         if (keyIndex == NOT_A_KEY) {
@@ -1154,7 +1158,7 @@ public class KeyboardView extends View implements View.OnClickListener {
   }
 
   private void showPreview(final int keyIndex) {
-    showPreview(keyIndex, 0);
+    showPreview(keyIndex, KeyEventType.CLICK.ordinal());
   }
 
   private void showKey(final int keyIndex, final int type) {
@@ -1169,8 +1173,8 @@ public class KeyboardView extends View implements View.OnClickListener {
         MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
     final int popupWidth =
         Math.max(
-            mPreviewText.getMeasuredWidth(),
-            key.getWidth() + mPreviewText.getPaddingLeft() + mPreviewText.getPaddingRight());
+            mPreviewText.getMeasuredWidth() + mPreviewText.getPaddingLeft() + mPreviewText.getPaddingRight(),
+            key.getWidth());
     final int popupHeight = mPreviewHeight;
     final ViewGroup.LayoutParams lp = mPreviewText.getLayoutParams();
     if (lp != null) {
@@ -1181,7 +1185,7 @@ public class KeyboardView extends View implements View.OnClickListener {
     int mPopupPreviewX;
     boolean mPreviewCentered = false;
     if (!mPreviewCentered) {
-      mPopupPreviewX = key.getX() - mPreviewText.getPaddingLeft() + getPaddingLeft();
+      mPopupPreviewX = key.getX() + getPaddingLeft() + (key.getWidth() - popupWidth) / 2;
       mPopupPreviewY = key.getY() - popupHeight + mPreviewOffset;
     } else {
       // TODO: Fix this if centering is brought back
@@ -1588,7 +1592,7 @@ public class KeyboardView extends View implements View.OnClickListener {
           final Message msg = mHandler.obtainMessage(MSG_LONGPRESS, me);
           mHandler.sendMessageDelayed(msg, getPrefs().getKeyboard().getLongPressTimeout());
         }
-        showPreview(keyIndex, 0);
+        showPreview(keyIndex);
         break;
 
       case MotionEvent.ACTION_MOVE:
