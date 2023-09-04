@@ -442,7 +442,6 @@ public class KeyboardView extends View implements View.OnClickListener {
     mPaint.setTextAlign(Align.CENTER);
     mPaintSymbol = new Paint();
     mPaintSymbol.setAntiAlias(true);
-    mPaintSymbol.setTextAlign(Align.CENTER);
     // reset(context);
 
     mPreviewPopup = new PopupWindow(context);
@@ -891,8 +890,6 @@ public class KeyboardView extends View implements View.OnClickListener {
     }
     canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
     final int keyCount = keys.length;
-    final float symbolBase = padding.top - mPaintSymbol.getFontMetrics().top;
-    final float hintBase = -padding.bottom - mPaintSymbol.getFontMetrics().bottom;
 
     Timber.i(
         "onBufferDraw() keyCount=%d, drawSingleKey=%s, invalidKeyIsNull=%s",
@@ -929,7 +926,6 @@ public class KeyboardView extends View implements View.OnClickListener {
       // Switch the character to uppercase if shift is pressed
       String label = key.getLabel();
       if (label.equals("enter_labels")) label = labelEnter;
-      final String hint = key.getHint();
       int left = (key.getWidth() - padding.left - padding.right) / 2 + padding.left;
       int top = padding.top;
 
@@ -958,28 +954,32 @@ public class KeyboardView extends View implements View.OnClickListener {
                 + top
                 + key.getKey_text_offset_y(),
             paint);
+
+        mPaintSymbol.setTextSize(
+            key.getSymbol_text_size() != null && key.getSymbol_text_size() > 0
+                ? key.getSymbol_text_size()
+                : mSymbolSize);
+        mPaintSymbol.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
+        final float symbolBase = padding.top - mPaintSymbol.getFontMetrics().top;
         if (mShowSymbol) {
-          String labelSymbol = key.getSymbolLabel();
-          if (!TextUtils.isEmpty(labelSymbol)) {
-            mPaintSymbol.setTextSize(
-                key.getSymbol_text_size() != null && key.getSymbol_text_size() > 0
-                    ? key.getSymbol_text_size()
-                    : mSymbolSize);
-            mPaintSymbol.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
+          final String symbol = key.getSymbolLabel();
+          if (!TextUtils.isEmpty(symbol)) {
+            mPaintSymbol.setTextAlign(Align.LEFT);
             canvas.drawText(
-                labelSymbol,
-                left + key.getKey_symbol_offset_x(),
+                symbol,
+                key.getKey_symbol_offset_x(),
                 symbolBase + key.getKey_symbol_offset_y(),
                 mPaintSymbol);
           }
         }
         if (mShowHint) {
+          final String hint = key.getHint();
           if (!TextUtils.isEmpty(hint)) {
-            mPaintSymbol.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
+            mPaintSymbol.setTextAlign(Align.RIGHT);
             canvas.drawText(
                 hint,
-                left + key.getKey_hint_offset_x(),
-                key.getHeight() + hintBase + key.getKey_hint_offset_y(),
+                key.getWidth() + padding.left + key.getKey_hint_offset_x(),
+                symbolBase + key.getKey_hint_offset_y(),
                 mPaintSymbol);
           }
         }
