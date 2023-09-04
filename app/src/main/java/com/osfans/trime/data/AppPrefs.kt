@@ -167,7 +167,7 @@ class AppPrefs(
             const val SHOULD_LONG_CLICK_DELETE_CANDIDATE = "keyboard__long_click_delete_candidate"
         }
         var inlinePreedit: InlineModeType
-            get() = InlineModeType.fromString(prefs.getPref(INLINE_PREEDIT_MODE, "preview"))
+            get() = InlineModeType.fromString(prefs.getPref(INLINE_PREEDIT_MODE, "composition"))
             set(v) = prefs.setPref(INLINE_PREEDIT_MODE, v)
         var fullscreenMode: LandscapeInputUIMode
             get() = LandscapeInputUIMode.fromString(prefs.getPref(FULLSCREEN_MODE, "auto_show"))
@@ -179,7 +179,7 @@ class AppPrefs(
             get() = prefs.getPref(FLOATING_WINDOW_ENABLED, true)
             private set
         var popupKeyPressEnabled: Boolean = false
-            get() = prefs.getPref(POPUP_KEY_PRESS_ENABLED, false)
+            get() = prefs.getPref(POPUP_KEY_PRESS_ENABLED, true)
             private set
         var switchesEnabled: Boolean = false
             get() = prefs.getPref(SWITCHES_ENABLED, true)
@@ -195,7 +195,7 @@ class AppPrefs(
             get() = prefs.getPref(HOOK_FAST_INPUT, false)
             private set
         var hookCandidate: Boolean = false
-            get() = prefs.getPref(HOOK_CANDIDATE, false)
+            get() = prefs.getPref(HOOK_CANDIDATE, true)
             private set
         var hookCandidateCommit: Boolean = false
             get() = prefs.getPref(HOOK_CANDIDATE_COMMIT, false)
@@ -223,7 +223,7 @@ class AppPrefs(
             private set
 
         var soundEnabled: Boolean = false
-            get() = prefs.getPref(SOUND_ENABLED, false)
+            get() = prefs.getPref(SOUND_ENABLED, true)
             private set
         var customSoundEnabled: Boolean
             get() = prefs.getPref(CUSTOM_SOUND_ENABLED, false)
@@ -244,7 +244,7 @@ class AppPrefs(
             get() = prefs.getPref(VIBRATION_AMPLITUDE, -1)
             private set
         var swipeEnabled: Boolean = false
-            get() = prefs.getPref(SWIPE_ENABLED, true)
+            get() = prefs.getPref(SWIPE_ENABLED, false)
             private set
         var swipeTravel: Int = 0
             get() = prefs.getPref(SWIPE_TRAVEL, 80)
@@ -271,7 +271,7 @@ class AppPrefs(
             get() = prefs.getPref(DELETE_CANDIDATE_TIMEOUT, 2000)
             private set
         var shouldLongClickDeleteCandidate: Boolean = false
-            get() = prefs.getPref(SHOULD_LONG_CLICK_DELETE_CANDIDATE, false)
+            get() = prefs.getPref(SHOULD_LONG_CLICK_DELETE_CANDIDATE, true)
             private set
         var isSpeakKey: Boolean
             get() = prefs.getPref(SPEAK_KEY_PRESS_ENABLED, false)

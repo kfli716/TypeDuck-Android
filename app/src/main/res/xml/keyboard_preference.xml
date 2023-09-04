@@ -8,13 +8,13 @@
         app:iconSpaceReserved="false"
         app:title="@string/pref_keyboard__function">
         <ListPreference
-            android:defaultValue="preview"
-            android:entries="@array/keyboard__inline_entries"
-            android:entryValues="@array/keyboard__inline_values"
-            android:key="keyboard__inline_preedit"
-            android:title="@string/keyboard__inline_preedit_title"
-            app:iconSpaceReserved="false"
-            app:useSimpleSummaryProvider="true" />
+                android:defaultValue="composition"
+                android:entries="@array/keyboard__inline_entries"
+                android:entryValues="@array/keyboard__inline_values"
+                android:key="keyboard__inline_preedit"
+                android:title="@string/keyboard__inline_preedit_title"
+                app:iconSpaceReserved="false"
+                app:useSimpleSummaryProvider="true" />
         <ListPreference
             android:defaultValue="auto_show"
             android:entries="@array/keyboard__fullscreen_mode_entries"
@@ -24,10 +24,10 @@
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="keyboard__show_key_popup"
-            android:title="@string/keyboard__show_key_popup_title"
-            app:iconSpaceReserved="false" />
+                android:defaultValue="true"
+                android:key="keyboard__show_key_popup"
+                android:title="@string/keyboard__show_key_popup_title"
+                app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -65,10 +65,10 @@
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="keyboard__long_click_delete_candidate"
-            android:title="@string/keyboard__long_click_delete_candidate_title"
-            app:iconSpaceReserved="false" />
+                android:key="keyboard__long_click_delete_candidate"
+                android:title="@string/keyboard__long_click_delete_candidate_title"
+                app:defaultValue="true"
+                app:iconSpaceReserved="false" />
 
         <com.osfans.trime.ui.components.DialogSeekBarPreference
             android:dependency="keyboard__long_click_delete_candidate"
@@ -98,11 +98,12 @@
             app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
-            android:key="keyboard__hook_candidate"
-            android:summaryOff="@string/keyboard__hook_candidate_off"
-            android:summaryOn="@string/keyboard__hook_candidate_on"
-            android:title="@string/keyboard__hook_candidate"
-            app:iconSpaceReserved="false" />
+                android:key="keyboard__hook_candidate"
+                android:summaryOff="@string/keyboard__hook_candidate_off"
+                android:summaryOn="@string/keyboard__hook_candidate_on"
+                android:title="@string/keyboard__hook_candidate"
+                app:defaultValue="true"
+                app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
             android:key="keyboard__hook_candidate_commit"
@@ -150,9 +151,10 @@
         app:key="settings__keyboard_effects"
         app:title="@string/pref_keyboard__effect">
         <SwitchPreferenceCompat
-            android:key="keyboard__key_sound"
-            android:title="@string/keyboard__key_sound_title"
-            app:iconSpaceReserved="false" />
+                android:key="keyboard__key_sound"
+                android:title="@string/keyboard__key_sound_title"
+                app:defaultValue="true"
+                app:iconSpaceReserved="false" />
         <SwitchPreferenceCompat
             android:key="keyboard__custom_key_sound"
             android:title="@string/keyboard__custom_key_sound"
@@ -212,10 +214,10 @@
             android:title="@string/keyboard__speak_key_commit_title"
             app:iconSpaceReserved="false" />
         <SwitchPreferenceCompat
-            android:key="keyboard__swipe_enabled"
-            android:title="@string/keyboard__swipe_enabled"
-            android:defaultValue="true"
-            app:iconSpaceReserved="false" />
+                android:defaultValue="false"
+                android:key="keyboard__swipe_enabled"
+                android:title="@string/keyboard__swipe_enabled"
+                app:iconSpaceReserved="false" />
         <com.osfans.trime.ui.components.DialogSeekBarPreference
             android:defaultValue="80"
             android:key="keyboard__key_swipe_travel"
