@@ -52,7 +52,7 @@ object ClipboardHelper :
     var lastBean: DatabaseBean? = null
 
     fun init(context: Context) {
-        clipboardManager.addPrimaryClipChangedListener(this)
+        // clipboardManager.addPrimaryClipChangedListener(this)
         clbDb = Room
             .databaseBuilder(context, Database::class.java, "clipboard.db")
             .addMigrations(Database.MIGRATION_3_4)
