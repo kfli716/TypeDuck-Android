@@ -8,19 +8,15 @@ import android.widget.ProgressBar
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleCoroutineScope
-import com.blankj.utilcode.util.ToastUtils
 import com.osfans.trime.R
-import com.osfans.trime.ui.components.log.LogView
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Suppress("FunctionName")
 // Adapted from https://github.com/fcitx5-android/fcitx5-android/blob/e37f5513239bab279a9e58cf0c9b163e0dbf5efb/app/src/main/java/org/fcitx/fcitx5/android/ui/common/Preset.kt#L60
 fun Context.ProgressBarDialogIndeterminate(@StringRes titleId: Int): AlertDialog.Builder {
-    return AlertDialog.Builder(this, R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+    return AlertDialog.Builder(this, R.style.dialog_theme)
         .setTitle(titleId)
         .setView(
             LinearLayout(this).apply {
@@ -53,7 +49,7 @@ fun Context.ProgressBarDialogIndeterminate(@StringRes titleId: Int): AlertDialog
 fun LifecycleCoroutineScope.withLoadingDialog(
     context: Context,
     thresholds: Long = 200L,
-    @StringRes titleId: Int = R.string.loading,
+    @StringRes titleId: Int = R.string.refreshing,
     action: suspend () -> Unit
 ) {
     val loading = context.ProgressBarDialogIndeterminate(titleId).create()
@@ -70,6 +66,7 @@ fun LifecycleCoroutineScope.withLoadingDialog(
     }
 }
 
+/*
 suspend fun Context.briefResultLogDialog(
     tag: String,
     priority: String,
@@ -90,12 +87,13 @@ suspend fun Context.briefResultLogDialog(
             }
         }
         AlertDialog.Builder(this@briefResultLogDialog)
-            .setTitle(R.string.setup__done)
+            .setTitle(R.string.setup_done)
             .setMessage(R.string.found_some_problems)
             .setView(logView)
-            .setPositiveButton(R.string.setup__skip_hint_yes, null)
+            .setPositiveButton(R.string.setup_skip_hint_yes, null)
             .show()
     } else {
-        ToastUtils.showShort(R.string.setup__done)
+        ToastUtils.showShort(R.string.setup_done)
     }
 }
+*/

@@ -65,7 +65,7 @@ class InputFeedbackManager(
      * Makes a key press vibration if the user has this feature enabled in the preferences.
      */
     fun keyPressVibrate() {
-        if (prefs.keyboard.vibrationEnabled) {
+        if (prefs.typeDuck.hapticFeedback) {
             val vibrationDuration = prefs.keyboard.vibrationDuration.toLong()
             var vibrationAmplitude = prefs.keyboard.vibrationAmplitude
 
@@ -138,7 +138,7 @@ class InputFeedbackManager(
      * Makes a key press sound if the user has this feature enabled in the preferences.
      */
     fun keyPressSound(keyCode: Int = 0) {
-        if (prefs.keyboard.soundEnabled) {
+        if (prefs.typeDuck.audioFeedback) {
             val soundVolume = prefs.keyboard.soundVolume / 100f
             if (soundVolume <= 0) return
             if (prefs.keyboard.customSoundEnabled) {

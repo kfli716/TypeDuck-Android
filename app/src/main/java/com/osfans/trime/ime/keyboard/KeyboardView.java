@@ -406,7 +406,7 @@ public class KeyboardView extends View implements View.OnClickListener {
     }
     final int mPreviewTextSizeLarge = config.style.getInt("preview_text_size");
     mPreviewText.setTextSize(mPreviewTextSizeLarge);
-    mShowPreview = getPrefs().getKeyboard().getPopupKeyPressEnabled();
+    mShowPreview = getPrefs().getTypeDuck().getVisualFeedback();
 
     mPaint.setTypeface(FontManager.getTypeface(config.style.getString("key_font")));
     mPaintSymbol.setTypeface(FontManager.getTypeface(config.style.getString("symbol_font")));

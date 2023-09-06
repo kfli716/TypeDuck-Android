@@ -9,22 +9,22 @@ enum class SetupPage {
 
     fun getStepText(context: Context) = context.getText(
         when (this) {
-            Enable -> R.string.setup__step_one
-            Select -> R.string.setup__step_two
+            Enable -> R.string.setup_step_one
+            Select -> R.string.setup_step_two
         }
     )
 
     fun getHintText(context: Context) = context.getText(
         when (this) {
-            Enable -> R.string.setup__enable_ime_hint
-            Select -> R.string.setup__select_ime_hint
+            Enable -> R.string.setup_enable_ime_hint
+            Select -> R.string.setup_select_ime_hint
         }
     )
 
     fun getButtonText(context: Context) = context.getText(
         when (this) {
-            Enable -> R.string.setup__enable_ime
-            Select -> R.string.setup__select_ime
+            Enable -> R.string.setup_enable_ime
+            Select -> R.string.setup_select_ime
         }
     )
 
@@ -36,8 +36,8 @@ enum class SetupPage {
     }
 
     fun isDone() = when (this) {
-        Enable -> InputMethodUtils.checkIsTrimeEnabled()
-        Select -> InputMethodUtils.checkIsTrimeSelected()
+        Enable -> InputMethodUtils.checkIsTypeDuckEnabled()
+        Select -> InputMethodUtils.checkIsTypeDuckSelected()
     }
 
     companion object {

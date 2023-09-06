@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    android:supportsSwitchingToNextInputMethod="true"
+    android:settingsActivity="com.osfans.trime.settings.PrefMainActivity">
+    <subtype android:name="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="AsciiCapable" />
+</input-method>

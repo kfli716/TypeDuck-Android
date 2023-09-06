@@ -42,7 +42,6 @@ class IntentReceiver : BroadcastReceiver(), CoroutineScope by MainScope() {
                 withContext(Dispatchers.Default) {
                     Rime.deployRime()
                 }
-                ToastUtils.showLong(R.string.deploy_finish)
             }
             COMMAND_SYNC -> async {
                 Rime.syncRimeUserData()

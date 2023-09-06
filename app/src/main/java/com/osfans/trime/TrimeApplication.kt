@@ -8,7 +8,6 @@ import com.osfans.trime.data.AppPrefs
 import com.osfans.trime.data.db.ClipboardHelper
 import com.osfans.trime.data.db.CollectionHelper
 import com.osfans.trime.data.db.DraftHelper
-import com.osfans.trime.ui.main.LogActivity
 import timber.log.Timber
 
 /**
@@ -32,7 +31,6 @@ class TrimeApplication : Application() {
         super.onCreate()
         CaocConfig.Builder
             .create()
-            .errorActivity(LogActivity::class.java)
             .enabled(!BuildConfig.DEBUG)
             .apply()
         instance = this

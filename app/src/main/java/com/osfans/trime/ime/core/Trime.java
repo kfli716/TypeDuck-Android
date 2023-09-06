@@ -319,7 +319,7 @@ public class Trime extends LifecycleInputMethodService {
     minPopupCheckSize = imeConfig.style.getInt("layout/min_check");
     popupMarginH = (int) DimensionsKt.dp2px(imeConfig.style.getFloat("layout/real_margin"));
     textInputManager.setShouldResetAsciiMode(imeConfig.style.getBoolean("reset_ascii_mode"));
-    isAutoCaps = imeConfig.style.getBoolean("auto_caps");
+    isAutoCaps = getPrefs().getTypeDuck().getAutoCap();
     isPopupWindowEnabled =
         getPrefs().getKeyboard().getPopupWindowEnabled()
             && imeConfig.style.getObject("window") != null;
@@ -785,9 +785,6 @@ public class Trime extends LifecycleInputMethodService {
     inputFeedbackManager.resetPlayProgress();
     for (EventListener listener : eventListeners) {
       if (listener != null) listener.onStartInputView(activeEditorInstance, restarting);
-    }
-    if (getPrefs().getOther().getShowStatusBarIcon()) {
-      showStatusIcon(R.drawable.ic_trime_status); // 狀態欄圖標
     }
     bindKeyboardToInputView();
     // if (!restarting) setNavBarColor();

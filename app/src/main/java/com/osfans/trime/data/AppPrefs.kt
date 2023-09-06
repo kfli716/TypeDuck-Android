@@ -7,8 +7,10 @@ import com.blankj.utilcode.util.PathUtils
 import com.osfans.trime.R
 import com.osfans.trime.ime.enums.InlineModeType
 import com.osfans.trime.ime.landscapeinput.LandscapeInputUIMode
+import com.osfans.trime.ime.text.Language
 import com.osfans.trime.util.appContext
 import java.lang.ref.WeakReference
+import java.util.EnumSet
 
 /**
  * Helper class for an organized access to the shared preferences.
@@ -18,6 +20,7 @@ class AppPrefs(
 ) {
     private val applicationContext: WeakReference<Context> = WeakReference(appContext)
 
+    val typeDuck = TypeDuck(this)
     val internal = Internal(this)
     val keyboard = Keyboard(this)
     val themeAndColor = ThemeAndColor(this)
@@ -30,7 +33,8 @@ class AppPrefs(
      * The type is automatically derived from the given [default] value.
      * @return The value for [key] or [default].
      */
-    private inline fun <reified T> getPref(key: String, default: T): T {
+    private inline fun <reified T> getPref(key: String, default: T): T = default
+    private inline fun <reified T> getTypeDuckPref(key: String, default: T): T {
         return when {
             false is T -> {
                 shared.getBoolean(key, default as Boolean) as T
@@ -41,6 +45,9 @@ class AppPrefs(
             "" is T -> {
                 (shared.getString(key, default as String) ?: (default as String)) as T
             }
+            setOf<String>() is T -> {
+                (shared.getStringSet(key, default as Set<String>) ?: (default as Set<String>)) as T
+            }
             else -> null as T
         }
     }
@@ -49,7 +56,8 @@ class AppPrefs(
      * Sets the [value] for [key] in the shared preferences, puts the value into the corresponding
      * cache and returns it.
      */
-    private inline fun <reified T> setPref(key: String, value: T) {
+    private inline fun <reified T> setPref(key: String, value: T) {}
+    private inline fun <reified T> setTypeDuckPref(key: String, value: T) {
         when {
             false is T -> {
                 shared.edit().putBoolean(key, value as Boolean).apply()
@@ -59,6 +67,9 @@ class AppPrefs(
             }
             "" is T -> {
                 shared.edit().putString(key, value as String).apply()
+            }
+            setOf<String>() is T -> {
+                shared.edit().putStringSet(key, value as Set<String>).apply()
             }
         }
     }
@@ -91,14 +102,48 @@ class AppPrefs(
     fun initDefaultPreferences() {
         try {
             applicationContext.get()?.let { context ->
-                PreferenceManager.setDefaultValues(context, R.xml.keyboard_preference, true)
-                PreferenceManager.setDefaultValues(context, R.xml.theme_color_preference, true)
-                PreferenceManager.setDefaultValues(context, R.xml.profile_preference, true)
-                PreferenceManager.setDefaultValues(context, R.xml.other_preference, true)
+                PreferenceManager.setDefaultValues(context, R.xml.preference, true)
             }
         } catch (e: Exception) {
             e.fillInStackTrace()
         }
+    }
+
+    class TypeDuck(private val prefs: AppPrefs) {
+        companion object {
+            const val DISPLAY_LANGUAGES = "pref_display_languages"
+            const val MAIN_LANGUAGE = "pref_main_language"
+            const val AUTO_CAP = "pref_auto_cap"
+            const val DOUBLE_SPACE_FULL_STOP = "pref_double_space_full_stop"
+            const val HAPTIC_FEEDBACK = "pref_haptic_feedback"
+            const val AUDIO_FEEDBACK = "pref_audio_feedback"
+            const val VISUAL_FEEDBACK = "pref_visual_feedback"
+            const val SYMBOLS_ON_QWERTY = "pref_symbols_on_qwerty"
+        }
+        var displayLanguages: EnumSet<Language>
+            get() = EnumSet.copyOf(prefs.getTypeDuckPref(DISPLAY_LANGUAGES, setOf(Language.values().first().name)).map { Language.valueOf(it) })
+            set(v) = prefs.setTypeDuckPref(DISPLAY_LANGUAGES, v.map { it.name }.toSet())
+        var mainLanguage: Language
+            get() = Language.valueOf(prefs.getTypeDuckPref(MAIN_LANGUAGE, Language.values().first().name))
+            set(v) = prefs.setTypeDuckPref(MAIN_LANGUAGE, v.name)
+        var autoCap: Boolean
+            get() = prefs.getTypeDuckPref(AUTO_CAP, true)
+            set(v) = prefs.setTypeDuckPref(AUTO_CAP, v)
+        var doubleSpaceFullStop: Boolean
+            get() = prefs.getTypeDuckPref(DOUBLE_SPACE_FULL_STOP, true)
+            set(v) = prefs.setTypeDuckPref(DOUBLE_SPACE_FULL_STOP, v)
+        var hapticFeedback: Boolean
+            get() = prefs.getTypeDuckPref(HAPTIC_FEEDBACK, false)
+            set(v) = prefs.setTypeDuckPref(HAPTIC_FEEDBACK, v)
+        var audioFeedback: Boolean
+            get() = prefs.getTypeDuckPref(AUDIO_FEEDBACK, true)
+            set(v) = prefs.setTypeDuckPref(AUDIO_FEEDBACK, v)
+        var visualFeedback: Boolean
+            get() = prefs.getTypeDuckPref(VISUAL_FEEDBACK, true)
+            set(v) = prefs.setTypeDuckPref(VISUAL_FEEDBACK, v)
+        var symbolsOnQwerty: Boolean
+            get() = prefs.getTypeDuckPref(SYMBOLS_ON_QWERTY, true)
+            set(v) = prefs.setTypeDuckPref(SYMBOLS_ON_QWERTY, v)
     }
 
     class Internal(private val prefs: AppPrefs) {
@@ -315,13 +360,13 @@ class AppPrefs(
             const val SYNC_BACKGROUND_ENABLED = "profile_sync_in_background"
             const val LAST_SYNC_STATUS = "profile_last_sync_status"
             const val LAST_BACKGROUND_SYNC = "profile_last_background_sync"
-            val EXTERNAL_PATH_PREFIX: String = PathUtils.getExternalStoragePath()
+            val INTERNAL_PATH_PREFIX: String = PathUtils.getInternalAppDataPath()
         }
         var sharedDataDir: String
-            get() = prefs.getPref(SHARED_DATA_DIR, "$EXTERNAL_PATH_PREFIX/TypeDuck")
+            get() = prefs.getPref(SHARED_DATA_DIR, "$INTERNAL_PATH_PREFIX/TypeDuck")
             set(v) = prefs.setPref(SHARED_DATA_DIR, v)
         var userDataDir: String
-            get() = prefs.getPref(USER_DATA_DIR, "$EXTERNAL_PATH_PREFIX/TypeDuck")
+            get() = prefs.getPref(USER_DATA_DIR, "$INTERNAL_PATH_PREFIX/TypeDuck")
             set(v) = prefs.setPref(USER_DATA_DIR, v)
         var syncBackgroundEnabled: Boolean
             get() = prefs.getPref(SYNC_BACKGROUND_ENABLED, false)

@@ -93,6 +93,7 @@ class FlexibleAdapter(
                 itemView.setOnClickListener {
                     listener.onPaste(bean)
                 }
+                /*
                 itemView.setOnLongClickListener {
                     val menu = PopupMenu(it.context, it)
                     val scope = it.findViewTreeLifecycleOwner()!!.lifecycleScope
@@ -157,6 +158,7 @@ class FlexibleAdapter(
                     menu.show()
                     true
                 }
+                */
             }
         }
     }

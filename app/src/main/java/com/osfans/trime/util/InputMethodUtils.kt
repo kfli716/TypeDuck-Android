@@ -4,15 +4,15 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
-import com.osfans.trime.TrimeImeService
+import com.osfans.trime.TypeDuckIMEService
 import splitties.systemservices.inputMethodManager
 import timber.log.Timber
 
 object InputMethodUtils {
     private val serviceName =
-        ComponentName(appContext, TrimeImeService::class.java).flattenToShortString()
+        ComponentName(appContext, TypeDuckIMEService::class.java).flattenToShortString()
 
-    fun checkIsTrimeEnabled(): Boolean {
+    fun checkIsTypeDuckEnabled(): Boolean {
         val activeImeIds = Settings.Secure.getString(
             appContext.contentResolver,
             Settings.Secure.ENABLED_INPUT_METHODS
@@ -22,7 +22,7 @@ object InputMethodUtils {
         return activeImeIds.split(":").contains(serviceName)
     }
 
-    fun checkIsTrimeSelected(): Boolean {
+    fun checkIsTypeDuckSelected(): Boolean {
         val selectedImeIds = Settings.Secure.getString(
             appContext.contentResolver,
             Settings.Secure.DEFAULT_INPUT_METHOD

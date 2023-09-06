@@ -8,8 +8,6 @@ import java.io.File
 
 object DataManager {
     private val prefs get() = AppPrefs.defaultInstance()
-
-    val defaultDataDirectory = File(PathUtils.getExternalStoragePath(), "TypeDuck")
     @JvmStatic
     val sharedDataDir = File(prefs.profile.sharedDataDir)
     @JvmStatic

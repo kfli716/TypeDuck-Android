@@ -17,7 +17,6 @@ import com.osfans.trime.data.theme.Config
 import com.osfans.trime.databinding.InputRootBinding
 import com.osfans.trime.ime.broadcast.IntentReceiver
 import com.osfans.trime.ime.core.EditorInstance
-import com.osfans.trime.ime.core.Speech
 import com.osfans.trime.ime.core.Trime
 import com.osfans.trime.ime.enums.Keycode
 import com.osfans.trime.ime.enums.Keycode.Companion.toStdKeyEvent
@@ -26,10 +25,6 @@ import com.osfans.trime.ime.keyboard.Event
 import com.osfans.trime.ime.keyboard.Keyboard.printModifierKeyState
 import com.osfans.trime.ime.keyboard.KeyboardSwitcher
 import com.osfans.trime.ime.keyboard.KeyboardView
-import com.osfans.trime.ui.main.colorPicker
-import com.osfans.trime.ui.main.schemaPicker
-import com.osfans.trime.ui.main.soundPicker
-import com.osfans.trime.ui.main.themePicker
 import com.osfans.trime.util.ShortcutUtils
 import com.osfans.trime.util.startsWithAsciiChar
 import kotlinx.coroutines.Job
@@ -389,21 +384,22 @@ class TextInputManager private constructor() :
                     }
                 }
             }
+            /*
             KeyEvent.KEYCODE_VOICE_ASSIST -> Speech(trime).startListening() // Speech Recognition
             KeyEvent.KEYCODE_SETTINGS -> { // Settings
                 trime.lifecycleScope.launch {
                     when (event.option) {
                         "theme" -> trime.showDialogAboveInputView(
-                            trime.themePicker(R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+                            trime.themePicker(R.style.dialog_theme)
                         )
                         "color" -> trime.showDialogAboveInputView(
-                            trime.colorPicker(R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+                            trime.colorPicker(R.style.dialog_theme)
                         )
                         "schema" -> trime.showDialogAboveInputView(
-                            trime.schemaPicker(R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+                            trime.schemaPicker(R.style.dialog_theme)
                         )
                         "sound" -> trime.showDialogAboveInputView(
-                            trime.soundPicker(R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+                            trime.soundPicker(R.style.dialog_theme)
                         )
                         else -> ShortcutUtils.launchMainActivity(trime)
                     }
@@ -411,10 +407,11 @@ class TextInputManager private constructor() :
             }
             KeyEvent.KEYCODE_PROG_RED -> trime.lifecycleScope.launch {
                 trime.showDialogAboveInputView(
-                    trime.colorPicker(R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+                    trime.colorPicker(R.style.dialog_theme)
                 )
             }
             KeyEvent.KEYCODE_MENU -> showOptionsDialog()
+            */
             else -> {
                 if (event.mask == 0 && KeyboardSwitcher.currentKeyboard.isOnlyShiftOn) {
                     if (event.code == KeyEvent.KEYCODE_SPACE && prefs.keyboard.hookShiftSpace) {
@@ -540,8 +537,9 @@ class TextInputManager private constructor() :
         trime.updateComposing()
     }
 
+    /*
     private fun showOptionsDialog() {
-        val builder = AlertDialog.Builder(trime, R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+        val builder = AlertDialog.Builder(trime, R.style.dialog_theme)
         builder
             .setTitle(R.string.trime_app_name)
             .setIcon(R.mipmap.ic_app_icon)
@@ -565,7 +563,7 @@ class TextInputManager private constructor() :
                     R.string.pref_select_schemas
                 ) { dialog, _ ->
                     dialog.dismiss()
-                    trime.showDialogAboveInputView(trime.schemaPicker(R.style.Theme_AppCompat_DayNight_Dialog_Alert))
+                    trime.showDialogAboveInputView(trime.schemaPicker(R.style.dialog_theme))
                 }
                 .setSingleChoiceItems(
                     schemaNameList,
@@ -580,4 +578,5 @@ class TextInputManager private constructor() :
         }
         trime.showDialogAboveInputView(builder.create())
     }
+    */
 }

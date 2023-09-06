@@ -24,6 +24,7 @@ import android.text.TextUtils;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import com.osfans.trime.core.Rime;
+import com.osfans.trime.data.AppPrefs;
 import com.osfans.trime.data.theme.Config;
 import com.osfans.trime.ime.enums.KeyEventType;
 import com.osfans.trime.util.CollectionUtils;
@@ -560,6 +561,9 @@ public class Key {
   }
 
   public Event getLongClick() {
+    final int code = getCode();
+    if (code >= KeyEvent.KEYCODE_A && code <= KeyEvent.KEYCODE_Z
+        && !AppPrefs.defaultInstance().getTypeDuck().getSymbolsOnQwerty()) return null;
     if (events[KeyEventType.ASCII_LONG_CLICK.ordinal()] != null && Rime.isAsciiMode())
       return events[KeyEventType.ASCII_LONG_CLICK.ordinal()];
     return events[KeyEventType.LONG_CLICK.ordinal()];
@@ -612,7 +616,8 @@ public class Key {
   }
 
   public String getSymbolLabel() {
-    if (!mKeyboard.getName().equals("default")) return "";
+    if (!mKeyboard.getName().equals("default")
+        || !AppPrefs.defaultInstance().getTypeDuck().getSymbolsOnQwerty()) return "";
     if (labelSymbol.isEmpty()) {
       Event longClick = getLongClick();
       if (longClick != null) return longClick.getLabel();
