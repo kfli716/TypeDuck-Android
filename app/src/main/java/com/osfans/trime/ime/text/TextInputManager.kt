@@ -127,8 +127,6 @@ class TextInputManager private constructor() :
         // Initialize main keyboard view
         mainKeyboardView = uiBinding.main.mainKeyboardView.also {
             it.setOnKeyboardActionListener(this)
-            it.setShowHint(!Rime.getOption("_hide_key_hint"))
-            it.setShowSymbol(!Rime.getOption("_hide_key_symbol"))
             it.reset()
         }
         // Initialize candidate bar
@@ -138,12 +136,10 @@ class TextInputManager private constructor() :
                 Runnable { trime.handleKey(KeyEvent.KEYCODE_PAGE_UP, 0) },
                 Runnable { trime.selectLiquidKeyboard(SymbolKeyboardType.CANDIDATE) }
             )
-            it.visibility = if (Rime.getOption("_hide_candidate")) View.GONE else View.VISIBLE
         }
 
         candidateView = uiBinding.main.candidateView.candidates.also {
             it.setCandidateListener(this)
-            it.setShowComment(!Rime.getOption("_hide_comment"))
             it.reset()
         }
     }
@@ -250,14 +246,7 @@ class TextInputManager private constructor() :
                     trime.inputFeedbackManager.ttsLanguage =
                         locales[if (value) 1 else 0]
                 }
-                "_hide_comment" -> trime.setShowComment(!value)
-                "_hide_candidate" -> {
-                    candidateRoot?.visibility = if (!value) View.VISIBLE else View.GONE
-                    trime.setCandidatesViewShown(isComposable && !value)
-                }
                 "_liquid_keyboard" -> trime.selectLiquidKeyboard(0)
-                "_hide_key_hint" -> mainKeyboardView?.setShowHint(!value)
-                "_hide_key_symbol" -> mainKeyboardView?.setShowSymbol(!value)
                 else -> if (option.startsWith("_keyboard_") &&
                     option.length > 10 && value
                 ) {

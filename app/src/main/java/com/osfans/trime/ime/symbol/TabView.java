@@ -30,6 +30,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import androidx.annotation.NonNull;
+import com.osfans.trime.core.Rime;
+import com.osfans.trime.data.AppPrefs;
 import com.osfans.trime.data.theme.Config;
 import com.osfans.trime.data.theme.FontManager;
 import com.osfans.trime.ime.core.Trime;
@@ -51,10 +53,18 @@ public class TabView extends View {
   private final Paint candidatePaint;
   private Typeface candidateFont;
   private int candidateTextColor, hilitedCandidateTextColor;
-  private int candidateViewHeight, commentHeight, candidateSpacing, candidatePadding;
-  private boolean isCommentOnTop;
+  private int candidateViewHeight, candidateViewPaddingTop, commentHeight, candidateSpacing, candidatePadding;
+  private boolean shouldShowRomanization, shouldShowReverseLookup;
   private boolean shouldCandidateUseCursor;
   // private final Rect[] tabGeometries = new Rect[MAX_CANDIDATE_COUNT + 2];
+
+  private boolean hasReverseLookup() {
+    return shouldShowReverseLookup && Rime.getCurrentRimeSchema().equals("jyut6ping3");
+  }
+
+  private int getTopCommentsHeight() {
+    return commentHeight * ((hasReverseLookup() ? 1 : 0) + (shouldShowRomanization ? 1 : 0));
+  }
 
   public void reset() {
     Config config = Config.get();
@@ -64,22 +74,23 @@ public class TabView extends View {
     separatorPaint.setColor(config.colors.getColor("candidate_separator_color"));
 
     candidateSpacing = (int) DimensionsKt.dp2px(config.style.getFloat("candidate_spacing"));
-    candidatePadding = (int) DimensionsKt.dp2px(config.style.getFloat("candidate_padding"));
+    candidatePadding = DimensionsKt.dp2px(AppPrefs.defaultInstance().getTypeDuck().getCandidateGap().getPadding());
 
     candidateTextColor = config.colors.getColor("candidate_text_color");
     hilitedCandidateTextColor = config.colors.getColor("hilited_candidate_text_color");
 
-    commentHeight = (int) DimensionsKt.dp2px(config.style.getFloat("comment_height"));
-
-    int candidateTextSize = (int) DimensionsKt.dp2px(config.style.getFloat("candidate_text_size"));
-    candidateViewHeight = (int) DimensionsKt.dp2px(config.style.getFloat("candidate_view_height"));
+    int candidateTextSize = DimensionsKt.sp2px(AppPrefs.defaultInstance().getTypeDuck().getCandidateFontSize().getFontSize());
+    candidateViewHeight = candidateTextSize * 7 / 5;
+    commentHeight = candidateTextSize * 7 / 10;
+    candidateViewPaddingTop = (int) DimensionsKt.dp2px(config.style.getFloat("candidate_view_padding_top"));
 
     candidateFont = FontManager.getTypeface(config.style.getString("candidate_font"));
 
     candidatePaint.setTextSize(candidateTextSize);
     candidatePaint.setTypeface(candidateFont);
 
-    isCommentOnTop = config.style.getBoolean("comment_on_top");
+    shouldShowRomanization = AppPrefs.defaultInstance().getTypeDuck().getShowRomanization();
+    shouldShowReverseLookup = AppPrefs.defaultInstance().getTypeDuck().getShowReverseLookup();
     shouldCandidateUseCursor = config.style.getBoolean("candidate_use_cursor");
     invalidate();
   }
@@ -121,12 +132,7 @@ public class TabView extends View {
       candidateHighlight.draw(canvas);
     }
     // Draw tab text
-    float tabY =
-        /* (shouldShowComment && isCommentOnTop)
-        ? tabTags.get(0).geometry.centerY()
-            - (candidatePaint.ascent() + candidatePaint.descent()) / 2.0f
-            + commentHeight / 2.0f
-        : */ tabTags.get(0).geometry.centerY()
+    float tabY = tabTags.get(0).geometry.centerY()
             - (candidatePaint.ascent() + candidatePaint.descent()) / 2.0f;
 
     for (TabTag computedTab : tabTags) {
@@ -159,7 +165,7 @@ public class TabView extends View {
     LayoutParams params = getLayoutParams();
     Timber.i("update, from Height=" + params.height + " width=" + params.width);
     params.width = x;
-    params.height = isCommentOnTop ? candidateViewHeight + commentHeight : candidateViewHeight;
+    params.height = candidateViewPaddingTop + getTopCommentsHeight() + candidateViewHeight + commentHeight;
     Timber.i("update, to Height=" + candidateViewHeight + " width=" + x);
     setLayoutParams(params);
     params = getLayoutParams();

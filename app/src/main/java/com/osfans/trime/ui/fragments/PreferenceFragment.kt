@@ -23,6 +23,7 @@ import com.osfans.trime.data.AppPrefs
 import com.osfans.trime.data.DataManager
 import com.osfans.trime.ime.core.Trime
 import com.osfans.trime.ime.text.Language
+import com.osfans.trime.ime.text.Size
 import com.osfans.trime.ui.components.PaddingPreferenceFragment
 import com.osfans.trime.util.withLoadingDialog
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,7 @@ class PreferenceFragment :
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var languageNames: Array<String>
+    private lateinit var sizeNames: Array<String>
 
     override fun onResume() {
         super.onResume()
@@ -48,6 +50,7 @@ class PreferenceFragment :
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preference, rootKey)
         languageNames = resources.getStringArray(R.array.pref_languages)
+        sizeNames = resources.getStringArray(R.array.pref_sizes)
         with(preferenceScreen) {
             get<Preference>("pref_refresh")?.setOnPreferenceClickListener {
                 lifecycleScope.withLoadingDialog(context) {
@@ -61,7 +64,7 @@ class PreferenceFragment :
             }
             get<Preference>("pref_test_ime")?.setOnPreferenceClickListener {
                 val editText = EditText(context).apply {
-                    inputType = InputType.TYPE_CLASS_TEXT
+                    inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                 }
                 with(
                     AlertDialog.Builder(context, R.style.dialog_theme)
@@ -93,9 +96,12 @@ class PreferenceFragment :
                 val typeDuck = AppPrefs(this).typeDuck
                 val displayLanguages = typeDuck.displayLanguages
                 val mainLanguage = typeDuck.mainLanguage
+                val candidateFontSize = typeDuck.candidateFontSize
+                val candidateGap = typeDuck.candidateGap
+                val languageValues = Language.values().map { it.name }.toTypedArray()
                 get<MultiSelectListPreference>(AppPrefs.TypeDuck.DISPLAY_LANGUAGES)?.also {
                     it.entries = languageNames
-                    it.entryValues = Language.values().map { it.name }.toTypedArray()
+                    it.entryValues = languageValues
                     it.values = displayLanguages.map { it.name }.toSet()
                     it.summary = displayLanguages.joinToString { languageNames[it.ordinal] }
                     it.setOnPreferenceChangeListener { _, value ->
@@ -108,10 +114,23 @@ class PreferenceFragment :
                     }
                 }
                 get<ListPreference>(AppPrefs.TypeDuck.MAIN_LANGUAGE)?.also {
-                    it.entries = displayLanguages.map { languageNames[it.ordinal] }.toTypedArray()
-                    it.entryValues = displayLanguages.map { it.name }.toTypedArray()
+                    it.entries = languageNames
+                    it.entryValues = languageValues
                     it.value = mainLanguage.name
                     it.summary = languageNames[mainLanguage.ordinal]
+                }
+                val sizeValues = Size.values().map { it.name }.toTypedArray()
+                get<ListPreference>(AppPrefs.TypeDuck.CANDIDATE_FONT_SIZE)?.also {
+                    it.entries = sizeNames
+                    it.entryValues = sizeValues
+                    it.value = candidateFontSize.name
+                    it.summary = sizeNames[candidateFontSize.ordinal]
+                }
+                get<ListPreference>(AppPrefs.TypeDuck.CANDIDATE_GAP)?.also {
+                    it.entries = sizeNames
+                    it.entryValues = sizeValues
+                    it.value = candidateGap.name
+                    it.summary = sizeNames[candidateGap.ordinal]
                 }
             }
             get<Preference>("pref_typeduck_source")?.setOnPreferenceClickListener {
@@ -130,43 +149,55 @@ class PreferenceFragment :
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        val trime = Trime.getServiceOrNull()
-        when (key) {
-            AppPrefs.TypeDuck.DISPLAY_LANGUAGES -> {
-                sharedPreferences?.run {
-                    val typeDuck = AppPrefs(this).typeDuck
+        if (sharedPreferences == null) return
+        val typeDuck = AppPrefs.initDefault(sharedPreferences).typeDuck
+        with(preferenceScreen) {
+            when (key) {
+                AppPrefs.TypeDuck.DISPLAY_LANGUAGES -> {
                     val displayLanguages = typeDuck.displayLanguages
                     var mainLanguage = typeDuck.mainLanguage
-                    with(preferenceScreen) {
-                        get<MultiSelectListPreference>(AppPrefs.TypeDuck.DISPLAY_LANGUAGES)?.also {
-                            it.summary = displayLanguages.joinToString { languageNames[it.ordinal] }
-                        }
+                    get<MultiSelectListPreference>(AppPrefs.TypeDuck.DISPLAY_LANGUAGES)?.also {
+                        it.summary = displayLanguages.joinToString { languageNames[it.ordinal] }
+                    }
+                    if (mainLanguage !in displayLanguages) {
                         get<ListPreference>(AppPrefs.TypeDuck.MAIN_LANGUAGE)?.also {
-                            it.entries = displayLanguages.map { languageNames[it.ordinal] }.toTypedArray()
-                            it.entryValues = displayLanguages.map { it.name }.toTypedArray()
-                            if (mainLanguage !in displayLanguages) {
-                                mainLanguage = displayLanguages.first()
-                                it.value = mainLanguage.name
-                                typeDuck.mainLanguage = mainLanguage
-                            }
+                            mainLanguage = displayLanguages.first()
+                            typeDuck.mainLanguage = mainLanguage
+                            it.value = mainLanguage.name
                             it.summary = languageNames[mainLanguage.ordinal]
                         }
                     }
+                    true
                 }
-                trime?.resetKeyboard()
-            }
-            AppPrefs.TypeDuck.MAIN_LANGUAGE -> {
-                sharedPreferences?.run {
-                    preferenceScreen.get<ListPreference>(AppPrefs.TypeDuck.MAIN_LANGUAGE)?.also {
-                        it.summary = languageNames[AppPrefs(this).typeDuck.mainLanguage.ordinal]
+                AppPrefs.TypeDuck.MAIN_LANGUAGE -> {
+                    val displayLanguages = typeDuck.displayLanguages
+                    val mainLanguage = typeDuck.mainLanguage
+                    get<ListPreference>(AppPrefs.TypeDuck.MAIN_LANGUAGE)?.also {
+                        it.summary = languageNames[mainLanguage.ordinal]
+                    }
+                    if (mainLanguage !in displayLanguages) {
+                        get<MultiSelectListPreference>(AppPrefs.TypeDuck.DISPLAY_LANGUAGES)?.also {
+                            displayLanguages.add(mainLanguage)
+                            typeDuck.displayLanguages = displayLanguages
+                            it.values = displayLanguages.map { it.name }.toSet()
+                            it.summary = displayLanguages.joinToString { languageNames[it.ordinal] }
+                        }
+                    }
+                    true
+                }
+                AppPrefs.TypeDuck.CANDIDATE_FONT_SIZE -> {
+                    get<ListPreference>(AppPrefs.TypeDuck.CANDIDATE_FONT_SIZE)?.also {
+                        it.summary = sizeNames[typeDuck.candidateFontSize.ordinal]
                     }
                 }
-                trime?.resetKeyboard()
-            }
-            AppPrefs.TypeDuck.VISUAL_FEEDBACK,
-            AppPrefs.TypeDuck.SYMBOLS_ON_QWERTY -> {
-                trime?.resetKeyboard()
+                AppPrefs.TypeDuck.CANDIDATE_GAP -> {
+                    get<ListPreference>(AppPrefs.TypeDuck.CANDIDATE_GAP)?.also {
+                        it.summary = sizeNames[typeDuck.candidateGap.ordinal]
+                    }
+                }
+                else -> {}
             }
         }
+        Trime.getServiceOrNull()?.initKeyboard()
     }
 }

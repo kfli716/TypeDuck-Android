@@ -8,6 +8,7 @@ import com.osfans.trime.R
 import com.osfans.trime.ime.enums.InlineModeType
 import com.osfans.trime.ime.landscapeinput.LandscapeInputUIMode
 import com.osfans.trime.ime.text.Language
+import com.osfans.trime.ime.text.Size
 import com.osfans.trime.util.appContext
 import java.lang.ref.WeakReference
 import java.util.EnumSet
@@ -113,6 +114,10 @@ class AppPrefs(
         companion object {
             const val DISPLAY_LANGUAGES = "pref_display_languages"
             const val MAIN_LANGUAGE = "pref_main_language"
+            const val SHOW_ROMANIZATION = "pref_show_romanization"
+            const val SHOW_REVERSE_LOOKUP = "pref_show_reverse_lookup"
+            const val CANDIDATE_FONT_SIZE = "pref_candidate_font_size"
+            const val CANDIDATE_GAP = "pref_candidate_gap"
             const val AUTO_CAP = "pref_auto_cap"
             const val DOUBLE_SPACE_FULL_STOP = "pref_double_space_full_stop"
             const val HAPTIC_FEEDBACK = "pref_haptic_feedback"
@@ -126,6 +131,18 @@ class AppPrefs(
         var mainLanguage: Language
             get() = Language.valueOf(prefs.getTypeDuckPref(MAIN_LANGUAGE, Language.values().first().name))
             set(v) = prefs.setTypeDuckPref(MAIN_LANGUAGE, v.name)
+        var showRomanization: Boolean
+            get() = prefs.getTypeDuckPref(SHOW_ROMANIZATION, true)
+            set(v) = prefs.setTypeDuckPref(SHOW_ROMANIZATION, v)
+        var showReverseLookup: Boolean
+            get() = prefs.getTypeDuckPref(SHOW_REVERSE_LOOKUP, false)
+            set(v) = prefs.setTypeDuckPref(SHOW_REVERSE_LOOKUP, v)
+        var candidateFontSize: Size
+            get() = Size.valueOf(prefs.getTypeDuckPref(CANDIDATE_FONT_SIZE, Size.NORMAL.name))
+            set(v) = prefs.setTypeDuckPref(CANDIDATE_FONT_SIZE, v.name)
+        var candidateGap: Size
+            get() = Size.valueOf(prefs.getTypeDuckPref(CANDIDATE_GAP, Size.NORMAL.name))
+            set(v) = prefs.setTypeDuckPref(CANDIDATE_GAP, v.name)
         var autoCap: Boolean
             get() = prefs.getTypeDuckPref(AUTO_CAP, true)
             set(v) = prefs.setTypeDuckPref(AUTO_CAP, v)
@@ -232,8 +249,8 @@ class AppPrefs(
         var switchArrowEnabled: Boolean = false
             get() = prefs.getPref(SWITCH_ARROW_ENABLED, true)
             private set
-        var candidatePageSize: String = "0"
-            get() = prefs.getPref(CANDIDATE_PAGE_SIZE, "0")
+        var candidatePageSize: String = "30"
+            get() = prefs.getPref(CANDIDATE_PAGE_SIZE, "30")
             private set
 
         var hookFastInput: Boolean = false

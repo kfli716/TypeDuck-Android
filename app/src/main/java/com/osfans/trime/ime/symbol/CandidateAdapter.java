@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 import com.osfans.trime.core.CandidateListItem;
 import com.osfans.trime.core.Rime;
+import com.osfans.trime.data.AppPrefs;
 import com.osfans.trime.data.theme.Config;
 import com.osfans.trime.data.theme.FontManager;
 import com.osfans.trime.databinding.LiquidKeyItemBinding;
@@ -51,7 +52,7 @@ public class CandidateAdapter extends RecyclerView.Adapter<CandidateAdapter.View
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     final LiquidKeyItemBinding binding =
         LiquidKeyItemBinding.inflate(LayoutInflater.from(parent.getContext()));
-    final boolean isCommentHidden = Rime.getRimeOption("_hide_comment");
+    final boolean isCommentHidden = false;
     if (!isCommentHidden) {
       final ConstraintSet set = new ConstraintSet();
       set.clone(binding.getRoot());
@@ -122,8 +123,8 @@ public class CandidateAdapter extends RecyclerView.Adapter<CandidateAdapter.View
       holder.comment.setText(candidate.getComment());
     }
 
-    final float candidateSize = theme.style.getFloat("candidate_text_size");
-    final float commentSize = theme.style.getFloat("comment_text_size");
+    final float candidateSize = AppPrefs.defaultInstance().getTypeDuck().getCandidateFontSize().getFontSize();
+    final float commentSize = candidateSize / 1.8f;
     if (candidateSize > 0) holder.candidate.setTextSize(candidateSize);
     if (commentSize > 0) holder.comment.setTextSize(commentSize);
 

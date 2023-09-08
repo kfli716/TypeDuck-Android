@@ -27,6 +27,15 @@
 		<item name="nep">Nepali</item>
 		<item name="urd">Urdu</item>
 	</string-array>
+	<string name="pref_show_romanization">Display romanization above candidates</string>
+	<string name="pref_show_reverse_lookup">Display reverse lookup code above candidates</string>
+	<string name="pref_candidate_font_size">Font size of candidates</string>
+	<string name="pref_candidate_gap">Gap between candidates</string>
+	<string-array name="pref_sizes">
+		<item name="small">Small</item>
+		<item name="normal">Normal</item>
+		<item name="large">Large</item>
+	</string-array>
 	<string name="pref_ime_settings">Input Method Settings</string>
 	<string name="pref_auto_cap">Auto-capitalization</string>
 	<string name="pref_auto_cap_summary">Capitalize the first word of each sentence</string>

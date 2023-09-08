@@ -344,14 +344,6 @@ public class KeyboardView extends View implements View.OnClickListener {
     }
   }
 
-  public void setShowHint(final boolean value) {
-    mShowHint = value;
-  }
-
-  public void setShowSymbol(final boolean value) {
-    mShowSymbol = value;
-  }
-
   public void reset() {
     final Config config = Config.get();
     key_symbol_color = config.colors.getColor("key_symbol_color");

@@ -41,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import com.osfans.trime.core.CandidateListItem;
 import com.osfans.trime.core.Rime;
+import com.osfans.trime.data.AppPrefs;
 import com.osfans.trime.data.theme.Config;
 import com.osfans.trime.data.theme.FontManager;
 import com.osfans.trime.ime.core.Trime;
@@ -64,7 +65,7 @@ public class Composition extends AppCompatTextView {
   private final int[] composition_pos = new int[2];
   private int max_length, sticky_lines, sticky_lines_land;
   private int max_entries;
-  private boolean candidate_use_cursor, show_comment;
+  private boolean candidate_use_cursor;
   private int highlightIndex;
   private List<Map<String, Object>> windows_comps, liquid_keyboard_window_comp;
   private SpannableStringBuilder ss;
@@ -167,7 +168,6 @@ public class Composition extends AppCompatTextView {
   public Composition(Context context, AttributeSet attrs) {
     super(context, attrs);
     textInputManager = TextInputManager.Companion.getInstance();
-    setShowComment(!Rime.getOption("_hide_comment"));
     reset();
   }
 
@@ -207,10 +207,6 @@ public class Composition extends AppCompatTextView {
     return super.onTouchEvent(event);
   }
 
-  public void setShowComment(boolean value) {
-    show_comment = value;
-  }
-
   public void reset() {
     final Config config = Config.get();
 
@@ -224,12 +220,12 @@ public class Composition extends AppCompatTextView {
     }
 
     if ((max_entries = config.style.getInt("layout/max_entries")) == 0) {
-      max_entries = Candidate.getMaxCandidateCount();
+      max_entries = Candidate.maxCandidateCount;
     }
     candidate_use_cursor = config.style.getBoolean("candidate_use_cursor");
     text_size = (int) DimensionsKt.sp2px(config.style.getFloat("text_size"));
-    candidate_text_size = (int) DimensionsKt.sp2px(config.style.getFloat("candidate_text_size"));
-    comment_text_size = (int) DimensionsKt.sp2px(config.style.getFloat("comment_text_size"));
+    candidate_text_size = DimensionsKt.sp2px(AppPrefs.defaultInstance().getTypeDuck().getCandidateFontSize().getFontSize());
+    comment_text_size = (int) (candidate_text_size / 1.8);
     label_text_size = (int) DimensionsKt.sp2px(config.style.getFloat("label_text_size"));
 
     text_color = config.colors.getColor("text_color");
@@ -448,7 +444,7 @@ public class Composition extends AppCompatTextView {
           span);
       ss.setSpan(new AbsoluteSizeSpan(candidate_text_size), start, end, span);
       String comment = o.getComment();
-      if (show_comment && !TextUtils.isEmpty(comment_format) && !TextUtils.isEmpty(comment)) {
+      if (!TextUtils.isEmpty(comment_format) && !TextUtils.isEmpty(comment)) {
         comment = String.format(comment_format, comment);
         start = ss.length();
         ss.append(comment);

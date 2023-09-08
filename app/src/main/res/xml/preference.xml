@@ -15,6 +15,20 @@
 	<ListPreference
 			android:key="pref_main_language"
 			android:title="@string/pref_main_language" />
+	<SwitchPreferenceCompat
+			android:defaultValue="true"
+			android:key="pref_show_romanization"
+			android:title="@string/pref_show_romanization" />
+	<SwitchPreferenceCompat
+			android:defaultValue="false"
+			android:key="pref_show_reverse_lookup"
+			android:title="@string/pref_show_reverse_lookup" />
+	<ListPreference
+			android:key="pref_candidate_font_size"
+			android:title="@string/pref_candidate_font_size" />
+	<ListPreference
+			android:key="pref_candidate_gap"
+			android:title="@string/pref_candidate_gap" />
 	<PreferenceCategory android:title="@string/pref_ime_settings">
 		<SwitchPreferenceCompat
 				android:defaultValue="true"

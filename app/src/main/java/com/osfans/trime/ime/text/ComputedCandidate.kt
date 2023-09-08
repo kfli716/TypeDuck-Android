@@ -8,7 +8,7 @@ import android.graphics.Rect
  * @property geometry The geometry of the computed candidate, used to position and size the item correctly when
  *  being drawn on a canvas.
  */
-sealed class ComputedCandidate(val geometry: Rect) {
+sealed class ComputedCandidate(var geometry: Rect) {
     /**
      * Computed word candidate, used for suggestions provided by the librime backend.
      *
@@ -17,9 +17,28 @@ sealed class ComputedCandidate(val geometry: Rect) {
      */
     class Word(
         val word: String,
-        val comment: String?,
-        geometry: Rect
+        val comment: String,
+        geometry: Rect = Rect()
     ) : ComputedCandidate(geometry) {
+
+        val isReverseLookup: Boolean
+        val note: String
+        val entries: List<CandidateInfo>
+
+        init {
+            val comment = Comment(comment)
+            // I don't know why, but Kotlin only supports \r, \n, \t and \b
+            isReverseLookup = comment.consume('\u000b' /* \v */)
+            note = comment.consumeUntil('\u000c' /* \f */)
+            entries = if (comment.isNotEmpty()) {
+                if (comment.consume('\r'))
+                    comment.toString().split('\r').map { CandidateInfo(/* csv: */ it) }
+                else
+                    comment.toString().split('\u000c').map { CandidateInfo(honzi = word, jyutping = it.removeSuffix(", ")) }
+            } else
+                listOf()
+        }
+
         override fun toString(): String {
             return "Word { word=\"$word\", comment=\"$comment\", geometry=$geometry }"
         }
@@ -39,4 +58,19 @@ sealed class ComputedCandidate(val geometry: Rect) {
             return "Symbol { arrow=$arrow, geometry=$geometry }"
         }
     }
+}
+
+private class Comment(private val comment: String) {
+    private val length = comment.length
+    private var i = 0
+    fun isNotEmpty() = i < length
+    fun consume(char: Char) = (comment[i] == char).also { if (it) i++ }
+    fun consumeUntil(char: Char): String {
+        val start = i
+        while (isNotEmpty())
+            if (comment[i] == char) return comment.substring(start, i++)
+            else i++
+        return comment.substring(start, i)
+    }
+    override fun toString() = comment.substring(i)
 }

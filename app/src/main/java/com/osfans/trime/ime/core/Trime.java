@@ -526,8 +526,6 @@ public class Trime extends LifecycleInputMethodService {
 
   public void resetKeyboard() {
     if (mainKeyboardView != null) {
-      mainKeyboardView.setShowHint(!Rime.getOption("_hide_key_hint"));
-      mainKeyboardView.setShowSymbol(!Rime.getOption("_hide_key_symbol"));
       mainKeyboardView.reset(); // 實體鍵盤無軟鍵盤
     }
   }
@@ -535,8 +533,6 @@ public class Trime extends LifecycleInputMethodService {
   public void resetCandidate() {
     if (mCandidateRoot != null) {
       loadBackground();
-      setShowComment(!Rime.getOption("_hide_comment"));
-      mCandidateRoot.setVisibility(!Rime.getOption("_hide_candidate") ? View.VISIBLE : View.GONE);
       mCandidate.reset();
       isPopupWindowEnabled =
           getPrefs().getKeyboard().getPopupWindowEnabled()
@@ -753,11 +749,6 @@ public class Trime extends LifecycleInputMethodService {
     Timber.i("onCreateInputView() finish");
 
     return inputRootBinding.inputRoot;
-  }
-
-  public void setShowComment(boolean show_comment) {
-    if (mCandidateRoot != null) mCandidate.setShowComment(show_comment);
-    mComposition.setShowComment(show_comment);
   }
 
   @Override
