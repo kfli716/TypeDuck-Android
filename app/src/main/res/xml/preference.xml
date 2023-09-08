@@ -4,69 +4,90 @@
     android:title="@string/app_name">
 	<Preference
 			android:key="pref_refresh"
-			android:title="@string/pref_refresh"/>
+			android:title="@string/pref_refresh"
+			app:iconSpaceReserved="false" />
 	<Preference
 			android:key="pref_test_ime"
 			android:title="@string/pref_test_ime"
-			app:summary="@string/pref_test_ime_placeholder" />
+			app:summary="@string/pref_test_ime_placeholder"
+			app:iconSpaceReserved="false" />
 	<MultiSelectListPreference
 			android:key="pref_display_languages"
-			android:title="@string/pref_display_languages" />
+			android:title="@string/pref_display_languages"
+			app:iconSpaceReserved="false" />
 	<ListPreference
 			android:key="pref_main_language"
-			android:title="@string/pref_main_language" />
+			android:title="@string/pref_main_language"
+			app:iconSpaceReserved="false" />
 	<SwitchPreferenceCompat
 			android:defaultValue="true"
 			android:key="pref_show_romanization"
-			android:title="@string/pref_show_romanization" />
+			android:title="@string/pref_show_romanization"
+			app:iconSpaceReserved="false" />
 	<SwitchPreferenceCompat
 			android:defaultValue="false"
 			android:key="pref_show_reverse_lookup"
-			android:title="@string/pref_show_reverse_lookup" />
+			android:title="@string/pref_show_reverse_lookup"
+			app:iconSpaceReserved="false" />
 	<ListPreference
 			android:key="pref_candidate_font_size"
-			android:title="@string/pref_candidate_font_size" />
+			android:title="@string/pref_candidate_font_size"
+			app:iconSpaceReserved="false" />
 	<ListPreference
 			android:key="pref_candidate_gap"
-			android:title="@string/pref_candidate_gap" />
-	<PreferenceCategory android:title="@string/pref_ime_settings">
+			android:title="@string/pref_candidate_gap"
+			app:iconSpaceReserved="false" />
+	<PreferenceCategory
+			android:title="@string/pref_ime_settings"
+			app:iconSpaceReserved="false">
 		<SwitchPreferenceCompat
 				android:defaultValue="true"
 				android:key="pref_auto_cap"
 				android:title="@string/pref_auto_cap"
-				app:summary="@string/pref_auto_cap_summary" />
+				app:summary="@string/pref_auto_cap_summary"
+				app:iconSpaceReserved="false" />
 		<SwitchPreferenceCompat
 				android:defaultValue="true"
 				android:key="pref_double_space_full_stop"
 				android:title="@string/pref_double_space_full_stop"
-				app:summary="@string/pref_double_space_full_stop_summary" />
+				app:summary="@string/pref_double_space_full_stop_summary"
+				app:iconSpaceReserved="false" />
 		<SwitchPreferenceCompat
 				android:defaultValue="false"
 				android:key="pref_haptic_feedback"
-				android:title="@string/pref_haptic_feedback" />
+				android:title="@string/pref_haptic_feedback"
+				app:iconSpaceReserved="false" />
 		<SwitchPreferenceCompat
 				android:defaultValue="true"
 				android:key="pref_audio_feedback"
-				android:title="@string/pref_audio_feedback" />
+				android:title="@string/pref_audio_feedback"
+				app:iconSpaceReserved="false" />
 		<SwitchPreferenceCompat
 				android:defaultValue="true"
 				android:key="pref_visual_feedback"
-				android:title="@string/pref_visual_feedback" />
+				android:title="@string/pref_visual_feedback"
+				app:iconSpaceReserved="false" />
 		<SwitchPreferenceCompat
 				android:defaultValue="true"
 				android:key="pref_symbols_on_qwerty"
 				android:title="@string/pref_symbols_on_qwerty"
-				app:summary="@string/pref_symbols_on_qwerty_summary" />
+				app:summary="@string/pref_symbols_on_qwerty_summary"
+				app:iconSpaceReserved="false" />
 	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/pref_about">
+	<PreferenceCategory
+			android:title="@string/pref_about"
+			app:iconSpaceReserved="false">
 		<Preference
 				android:key="pref_typeduck_source"
-				android:title="@string/pref_typeduck_source"/>
+				android:title="@string/pref_typeduck_source"
+				app:iconSpaceReserved="false" />
 		<Preference
 				android:key="pref_trime_source"
-				android:title="@string/pref_trime_source"/>
+				android:title="@string/pref_trime_source"
+				app:iconSpaceReserved="false" />
 		<Preference
 				android:key="pref_license"
-				android:title="@string/pref_license"/>
+				android:title="@string/pref_license"
+				app:iconSpaceReserved="false" />
 	</PreferenceCategory>
 </PreferenceScreen>
