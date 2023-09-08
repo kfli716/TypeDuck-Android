@@ -200,8 +200,7 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 	val highlightRight: Int
 		get() = if (highlightIndex < computedCandidates.size && highlightIndex >= 0) computedCandidates[highlightIndex]!!.geometry.right else 0
 
-	override fun onDraw(canvas: Canvas?) {
-		if (canvas == null) return
+	override fun onDraw(canvas: Canvas) {
 		if (candidates == null) return
 		super.onDraw(canvas)
 

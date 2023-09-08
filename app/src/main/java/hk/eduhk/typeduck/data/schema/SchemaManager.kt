@@ -22,14 +22,13 @@ object SchemaManager {
 
     @JvmStatic
     fun init(schemaId: String) {
-        val raw = File(DataManager.buildDir, "$schemaId.schema.yaml")
-            .inputStream()
-            .bufferedReader()
-            .readText()
+        val stream = File(DataManager.buildDir, "$schemaId.schema.yaml").inputStream()
+        val raw = stream.bufferedReader().readText()
         currentSchema = yaml.decodeFromString(
             RimeSchema.serializer(),
             raw
         )
+        stream.close()
         visibleSwitches = currentSchema.switches
             .filter { it.states.isNotEmpty() } // 剔除没有 states 条目项的值，它们不作为开关使用
         updateSwitchOptions()

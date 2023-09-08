@@ -26,6 +26,7 @@
 
   <hk.eduhk.typeduck.ime.text.Composition
     android:id="@+id/compositions"
+    android:theme="@style/theme"
     android:ellipsize="none"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>

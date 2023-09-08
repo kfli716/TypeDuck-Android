@@ -244,6 +244,7 @@ public class Trime extends LifecycleInputMethodService {
     try {
       self = this;
       textInputManager = TextInputManager.Companion.getInstance();
+      loadConfig();
     } catch (Exception e) {
       e.fillInStackTrace();
     }

@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL
 Java_hk_eduhk_typeduck_core_Rime_setRimeCustomConfigInt(JNIEnv *env, jclass clazz, jstring config_id,
                                                        jobjectArray key_value_pairs) {
   auto levers = get_levers();
-  auto custom = levers->custom_settings_init(CString(env, config_id), "rime.trime");
+  auto custom = levers->custom_settings_init(CString(env, config_id), "TypeDuck");
   levers->load_settings(custom);
   int arrayLength = env->GetArrayLength(key_value_pairs);
   for (int i = 0; i < arrayLength; i++) {
