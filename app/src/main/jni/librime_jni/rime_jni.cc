@@ -28,19 +28,19 @@ public:
         const char *userDir = getenv("RIME_USER_DATA_DIR");
         const char *sharedDir = getenv("RIME_SHARED_DATA_DIR");
 
-        RIME_STRUCT(RimeTraits, trime_traits)
-        trime_traits.shared_data_dir = sharedDir;
-        trime_traits.user_data_dir = userDir;
-        trime_traits.app_name = "TypeDuck";
-        trime_traits.distribution_name = "TypeDuck";
-        trime_traits.distribution_code_name = "TypeDuck";
-        trime_traits.distribution_version = TRIME_VERSION;
+        RIME_STRUCT(RimeTraits, typeduck_traits)
+        typeduck_traits.shared_data_dir = sharedDir;
+        typeduck_traits.user_data_dir = userDir;
+        typeduck_traits.app_name = "TypeDuck";
+        typeduck_traits.distribution_name = "TypeDuck";
+        typeduck_traits.distribution_code_name = "TypeDuck";
+        typeduck_traits.distribution_version = TRIME_VERSION;
 
         if (firstRun) {
-            rime->setup(&trime_traits);
+            rime->setup(&typeduck_traits);
             firstRun = false;
         }
-        rime->initialize(&trime_traits);
+        rime->initialize(&typeduck_traits);
         rime->set_notification_handler([](void *context_object, RimeSessionId session_id,
                                           const char *message_type, const char *message_value) {
             auto env = GlobalRef->AttachEnv();
@@ -154,7 +154,7 @@ static jobject rimeConfigValueToJObject(JNIEnv *env, RimeConfig* config, const s
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_osfans_trime_core_Rime_startupRime(JNIEnv *env, jclass clazz, jstring shared_dir, jstring user_dir,
+Java_hk_eduhk_typeduck_core_Rime_startupRime(JNIEnv *env, jclass clazz, jstring shared_dir, jstring user_dir,
                                             jboolean full_check) {
     if (Rime::Instance().isRunning()) {
         return;
@@ -171,46 +171,46 @@ Java_com_osfans_trime_core_Rime_startupRime(JNIEnv *env, jclass clazz, jstring s
 // deployment
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_osfans_trime_core_Rime_deployRime(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_deployRime(JNIEnv *env, jclass /* thiz */) {
     Rime::Instance().deploy();
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_deployRimeSchemaFile(JNIEnv *env, jclass /* thiz */, jstring schema_file) {
+Java_hk_eduhk_typeduck_core_Rime_deployRimeSchemaFile(JNIEnv *env, jclass /* thiz */, jstring schema_file) {
     return rime_get_api()->deploy_schema(CString(env, schema_file));
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_deployRimeConfigFile(JNIEnv *env, jclass /* thiz */, jstring file_name, jstring version_key) {
+Java_hk_eduhk_typeduck_core_Rime_deployRimeConfigFile(JNIEnv *env, jclass /* thiz */, jstring file_name, jstring version_key) {
     return rime_get_api()->deploy_config_file(CString(env, file_name), CString(env, version_key));
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_syncRimeUserData(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_syncRimeUserData(JNIEnv *env, jclass /* thiz */) {
     return Rime::Instance().sync();
 }
 
 // input
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_processRimeKey(JNIEnv *env, jclass /* thiz */, jint keycode, jint mask) {
+Java_hk_eduhk_typeduck_core_Rime_processRimeKey(JNIEnv *env, jclass /* thiz */, jint keycode, jint mask) {
     RETURN_VALUE_IF_NOT_RUNNING(false)
     return Rime::Instance().processKey(keycode, mask);
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_commitRimeComposition(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_commitRimeComposition(JNIEnv *env, jclass /* thiz */) {
     RETURN_VALUE_IF_NOT_RUNNING(false)
     return Rime::Instance().commitComposition();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_osfans_trime_core_Rime_clearRimeComposition(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_clearRimeComposition(JNIEnv *env, jclass /* thiz */) {
     RETURN_IF_NOT_RUNNING
     Rime::Instance().clearComposition();
 }
@@ -222,7 +222,7 @@ void rimeCommitToJObject(JNIEnv *env, const RimeCommit &commit, const jobject &j
 // output
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_getRimeCommit(JNIEnv *env, jclass /* thiz */, jobject jcommit) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeCommit(JNIEnv *env, jclass /* thiz */, jobject jcommit) {
     RETURN_VALUE_IF_NOT_RUNNING(false)
     RIME_STRUCT(RimeCommit, commit)
     auto rime = rime_get_api();
@@ -286,7 +286,7 @@ void rimeContextToJObject(JNIEnv *env, const RimeContext &context, const jobject
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_getRimeContext(JNIEnv *env, jclass /* thiz */, jobject jcontext) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeContext(JNIEnv *env, jclass /* thiz */, jobject jcontext) {
     RETURN_VALUE_IF_NOT_RUNNING(false)
     RIME_STRUCT(RimeContext, context)
     auto rime = rime_get_api();
@@ -312,7 +312,7 @@ void rimeStatusToJObject(JNIEnv *env, const RimeStatus &status, const jobject &j
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_getRimeStatus(JNIEnv *env, jclass /* thiz */, jobject jstatus) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeStatus(JNIEnv *env, jclass /* thiz */, jobject jstatus) {
     RETURN_VALUE_IF_NOT_RUNNING(false)
     RIME_STRUCT(RimeStatus, status)
     auto rime = rime_get_api();
@@ -350,7 +350,7 @@ static bool is_save_option(const char* p) {
 // runtime options
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_osfans_trime_core_Rime_setRimeOption(JNIEnv *env, jclass /* thiz */, jstring option, jboolean value) {
+Java_hk_eduhk_typeduck_core_Rime_setRimeOption(JNIEnv *env, jclass /* thiz */, jstring option, jboolean value) {
     RETURN_IF_NOT_RUNNING
     auto rime = rime_get_api();
     RimeConfig user = {nullptr};
@@ -368,7 +368,7 @@ Java_com_osfans_trime_core_Rime_setRimeOption(JNIEnv *env, jclass /* thiz */, js
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_getRimeOption(JNIEnv *env, jclass /* thiz */, jstring option) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeOption(JNIEnv *env, jclass /* thiz */, jstring option) {
     RETURN_VALUE_IF_NOT_RUNNING(false)
     return Rime::Instance().getOption(CString(env, option));
 }
@@ -388,7 +388,7 @@ jobjectArray rimeSchemaListToJObjectArray(JNIEnv *env, RimeSchemaList &list) {
 
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_com_osfans_trime_core_Rime_getRimeSchemaList(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeSchemaList(JNIEnv *env, jclass /* thiz */) {
     auto rime = rime_get_api();
     RimeSchemaList list = {0};
     rime->get_schema_list(&list);
@@ -399,14 +399,14 @@ Java_com_osfans_trime_core_Rime_getRimeSchemaList(JNIEnv *env, jclass /* thiz */
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_osfans_trime_core_Rime_getCurrentRimeSchema(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getCurrentRimeSchema(JNIEnv *env, jclass /* thiz */) {
     RETURN_VALUE_IF_NOT_RUNNING(env->NewStringUTF(""))
     return env->NewStringUTF(Rime::Instance().currentSchemaId().c_str());
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_selectRimeSchema(JNIEnv *env, jclass /* thiz */, jstring schema_id) {
+Java_hk_eduhk_typeduck_core_Rime_selectRimeSchema(JNIEnv *env, jclass /* thiz */, jstring schema_id) {
     auto rime = rime_get_api();
     RimeConfig user = {nullptr};
     auto schema = CString(env, schema_id);
@@ -422,49 +422,49 @@ Java_com_osfans_trime_core_Rime_selectRimeSchema(JNIEnv *env, jclass /* thiz */,
 //testing
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_simulateKeySequence(JNIEnv *env, jclass /* thiz */, jstring key_sequence) {
+Java_hk_eduhk_typeduck_core_Rime_simulateKeySequence(JNIEnv *env, jclass /* thiz */, jstring key_sequence) {
     RETURN_VALUE_IF_NOT_RUNNING(false)
     return Rime::Instance().simulateKeySequence(CString(env, key_sequence));
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_osfans_trime_core_Rime_getRimeRawInput(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeRawInput(JNIEnv *env, jclass /* thiz */) {
     RETURN_VALUE_IF_NOT_RUNNING(env->NewStringUTF(""))
     return env->NewStringUTF(Rime::Instance().rawInput().data());
 }
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_osfans_trime_core_Rime_getRimeCaretPos(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeCaretPos(JNIEnv *env, jclass /* thiz */) {
     RETURN_VALUE_IF_NOT_RUNNING(-1)
     return static_cast<jint>(Rime::Instance().caretPosition());
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_osfans_trime_core_Rime_setRimeCaretPos(JNIEnv *env, jclass /* thiz */, jint caret_pos) {
+Java_hk_eduhk_typeduck_core_Rime_setRimeCaretPos(JNIEnv *env, jclass /* thiz */, jint caret_pos) {
     RETURN_IF_NOT_RUNNING
     Rime::Instance().setCaretPosition(caret_pos);
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_selectRimeCandidateOnCurrentPage(JNIEnv *env, jclass /* thiz */, jint index) {
+Java_hk_eduhk_typeduck_core_Rime_selectRimeCandidateOnCurrentPage(JNIEnv *env, jclass /* thiz */, jint index) {
     RETURN_VALUE_IF_NOT_RUNNING(false)
     return Rime::Instance().selectCandidateOnCurrentPage(index);
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_deleteRimeCandidateOnCurrentPage(JNIEnv *env, jclass /* thiz */, jint index) {
+Java_hk_eduhk_typeduck_core_Rime_deleteRimeCandidateOnCurrentPage(JNIEnv *env, jclass /* thiz */, jint index) {
     RETURN_VALUE_IF_NOT_RUNNING(false)
     return Rime::Instance().deleteCandidateOnCurrentPage(index);
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_osfans_trime_core_Rime_getLibrimeVersion(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getLibrimeVersion(JNIEnv *env, jclass /* thiz */) {
     return env->NewStringUTF(LIBRIME_VERSION);
 }
 
@@ -498,7 +498,7 @@ static jobject rimeConfigMapToJObject(JNIEnv *env, RimeConfig *config, const std
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_osfans_trime_core_Rime_getRimeConfigMap(JNIEnv *env, jclass clazz, jstring config_id, jstring key) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeConfigMap(JNIEnv *env, jclass clazz, jstring config_id, jstring key) {
     auto rime = rime_get_api();
     RimeConfig config = {nullptr};
     jobject value = nullptr;
@@ -525,7 +525,7 @@ jobject rimeConfigValueToJObject(JNIEnv *env, RimeConfig *config, const std::str
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_runRimeTask(JNIEnv *env, jclass /* thiz */, jstring task_name) {
+Java_hk_eduhk_typeduck_core_Rime_runRimeTask(JNIEnv *env, jclass /* thiz */, jstring task_name) {
     const char* s = env->GetStringUTFChars(task_name, nullptr);
     RimeConfig config = {nullptr};
     Bool b = RimeRunTask(s);
@@ -534,24 +534,24 @@ Java_com_osfans_trime_core_Rime_runRimeTask(JNIEnv *env, jclass /* thiz */, jstr
 }
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_osfans_trime_core_Rime_getRimeSharedDataDir(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeSharedDataDir(JNIEnv *env, jclass /* thiz */) {
     return env->NewStringUTF(RimeGetSharedDataDir());
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_osfans_trime_core_Rime_getRimeUserDataDir(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeUserDataDir(JNIEnv *env, jclass /* thiz */) {
     return env->NewStringUTF(rime_get_api()->get_user_data_dir());
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_osfans_trime_core_Rime_getRimeSyncDir(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeSyncDir(JNIEnv *env, jclass /* thiz */) {
     return env->NewStringUTF(RimeGetSyncDir());
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_osfans_trime_core_Rime_getRimeUserId(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getRimeUserId(JNIEnv *env, jclass /* thiz */) {
     return env->NewStringUTF(RimeGetUserId());
 }

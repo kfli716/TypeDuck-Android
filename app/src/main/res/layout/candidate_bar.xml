@@ -19,7 +19,7 @@
  */
 -->
 
-<com.osfans.trime.ime.text.ScrollView
+<hk.eduhk.typeduck.ime.text.ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/candidate_root"
     android:layout_width="match_parent"
@@ -32,10 +32,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.osfans.trime.ime.text.Candidate
+        <hk.eduhk.typeduck.ime.text.Candidate
             android:id="@+id/candidates"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-</com.osfans.trime.ime.text.ScrollView>
+</hk.eduhk.typeduck.ime.text.ScrollView>

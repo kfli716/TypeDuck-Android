@@ -9,7 +9,7 @@ static RimeLeversApi* get_levers() {
 
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_com_osfans_trime_core_Rime_getAvailableRimeSchemaList(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getAvailableRimeSchemaList(JNIEnv *env, jclass /* thiz */) {
   auto levers = get_levers();
   auto switcher = levers->switcher_settings_init();
   RimeSchemaList list = {0};
@@ -23,7 +23,7 @@ Java_com_osfans_trime_core_Rime_getAvailableRimeSchemaList(JNIEnv *env, jclass /
 
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_com_osfans_trime_core_Rime_getSelectedRimeSchemaList(JNIEnv *env, jclass /* thiz */) {
+Java_hk_eduhk_typeduck_core_Rime_getSelectedRimeSchemaList(JNIEnv *env, jclass /* thiz */) {
   auto levers = get_levers();
   auto switcher = levers->switcher_settings_init();
   RimeSchemaList list = {0};
@@ -37,7 +37,7 @@ Java_com_osfans_trime_core_Rime_getSelectedRimeSchemaList(JNIEnv *env, jclass /*
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_osfans_trime_core_Rime_selectRimeSchemas(JNIEnv *env, jclass /* thiz */, jobjectArray array) {
+Java_hk_eduhk_typeduck_core_Rime_selectRimeSchemas(JNIEnv *env, jclass /* thiz */, jobjectArray array) {
   int schemaIdsLength = env->GetArrayLength(array);
   const char* entries[schemaIdsLength];
   for (int i = 0; i < schemaIdsLength; i++) {
@@ -59,7 +59,7 @@ Java_com_osfans_trime_core_Rime_selectRimeSchemas(JNIEnv *env, jclass /* thiz */
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_osfans_trime_core_Rime_setRimeCustomConfigInt(JNIEnv *env, jclass clazz, jstring config_id,
+Java_hk_eduhk_typeduck_core_Rime_setRimeCustomConfigInt(JNIEnv *env, jclass clazz, jstring config_id,
                                                        jobjectArray key_value_pairs) {
   auto levers = get_levers();
   auto custom = levers->custom_settings_init(CString(env, config_id), "rime.trime");

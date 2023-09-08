@@ -194,37 +194,37 @@ public:
         PairFirst = env->GetMethodID(Pair, "getFirst", "()Ljava/lang/Object;");
         PairSecond = env->GetMethodID(Pair, "getSecond", "()Ljava/lang/Object;");
 
-        Rime = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/osfans/trime/core/Rime")));
+        Rime = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("hk/eduhk/typeduck/core/Rime")));
         HandleRimeNotification = env->GetStaticMethodID(Rime, "handleRimeNotification", "(Ljava/lang/String;Ljava/lang/String;)V");
 
-        RimeComposition = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/osfans/trime/core/Rime$RimeComposition")));
+        RimeComposition = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("hk/eduhk/typeduck/core/Rime$RimeComposition")));
         RimeCompositionLength = env->GetFieldID(RimeComposition, "length", "I");
         RimeCompositionCursorPos = env->GetFieldID(RimeComposition, "cursor_pos", "I");
         RimeCompositionSelStart = env->GetFieldID(RimeComposition, "sel_start", "I");
         RimeCompositionSelEnd = env->GetFieldID(RimeComposition, "sel_end", "I");
         RimeCompositionPreedit = env->GetFieldID(RimeComposition, "preedit", "Ljava/lang/String;");
 
-        CandidateListItem = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/osfans/trime/core/CandidateListItem")));
+        CandidateListItem = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("hk/eduhk/typeduck/core/CandidateListItem")));
         CandidateListItemInit = env->GetMethodID(CandidateListItem, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
 
-        RimeCommit = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/osfans/trime/core/Rime$RimeCommit")));
+        RimeCommit = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("hk/eduhk/typeduck/core/Rime$RimeCommit")));
         RimeCommitText = env->GetFieldID(RimeCommit, "text", "Ljava/lang/String;");
 
-        RimeContext = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/osfans/trime/core/Rime$RimeContext")));
-        RimeContextComposition = env->GetFieldID(RimeContext, "composition", "Lcom/osfans/trime/core/Rime$RimeComposition;");
-        RimeContextMenu = env->GetFieldID(RimeContext, "menu", "Lcom/osfans/trime/core/Rime$RimeMenu;");
+        RimeContext = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("hk/eduhk/typeduck/core/Rime$RimeContext")));
+        RimeContextComposition = env->GetFieldID(RimeContext, "composition", "Lhk/eduhk/typeduck/core/Rime$RimeComposition;");
+        RimeContextMenu = env->GetFieldID(RimeContext, "menu", "Lhk/eduhk/typeduck/core/Rime$RimeMenu;");
         RimeContextCommitTextPreview = env->GetFieldID(RimeContext, "commit_text_preview", "Ljava/lang/String;");
         RimeContextSelectLabels = env->GetFieldID(RimeContext, "select_labels", "[Ljava/lang/String;");
 
-        RimeMenu = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/osfans/trime/core/Rime$RimeMenu")));
+        RimeMenu = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("hk/eduhk/typeduck/core/Rime$RimeMenu")));
         RimeMenuPageSize = env->GetFieldID(RimeMenu, "page_size", "I");
         RimeMenuPageNo = env->GetFieldID(RimeMenu, "page_no", "I");
         RimeMenuIsLastPage = env->GetFieldID(RimeMenu, "is_last_page", "Z");
         RimeMenuHighlightedCandidateIndex = env->GetFieldID(RimeMenu, "highlighted_candidate_index", "I");
         RimeMenuNumCandidates = env->GetFieldID(RimeMenu, "num_candidates", "I");
-        RimeMenuCandidates = env->GetFieldID(RimeMenu, "candidates", "[Lcom/osfans/trime/core/CandidateListItem;");
+        RimeMenuCandidates = env->GetFieldID(RimeMenu, "candidates", "[Lhk/eduhk/typeduck/core/CandidateListItem;");
 
-        RimeStatus = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/osfans/trime/core/Rime$RimeStatus")));
+        RimeStatus = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("hk/eduhk/typeduck/core/Rime$RimeStatus")));
         RimeStatusSchemaId = env->GetFieldID(RimeStatus, "schema_id", "Ljava/lang/String;");
         RimeStatusSchemaName = env->GetFieldID(RimeStatus, "schema_name", "Ljava/lang/String;");
         RimeStatusDisable = env->GetFieldID(RimeStatus, "is_disabled", "Z");
@@ -235,7 +235,7 @@ public:
         RimeStatusTraditional = env->GetFieldID(RimeStatus, "is_traditional", "Z");
         RimeStatusAsciiPunct = env->GetFieldID(RimeStatus, "is_ascii_punct", "Z");
 
-        SchemaListItem = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("com/osfans/trime/core/SchemaListItem")));
+        SchemaListItem = reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("hk/eduhk/typeduck/core/SchemaListItem")));
         SchemaListItemInit = env->GetMethodID(SchemaListItem, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
     }
 

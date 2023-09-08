@@ -26,11 +26,11 @@ spotless {
     java {
         importOrder()
         removeUnusedImports()
-        target 'app/src/main/java/com/osfans/trime/**/*.java'
+        target 'app/src/main/java/hk/eduhk/typeduck/**/*.java'
         googleJavaFormat('1.15.0')
     }
     kotlin {
-        target 'app/src/main/java/com/osfans/trime/**/*.kt'
+        target 'app/src/main/java/hk/eduhk/typeduck/**/*.kt'
         ktlint("0.44.0")
         trimTrailingWhitespace()
         indentWithSpaces()
