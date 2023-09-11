@@ -195,6 +195,7 @@ public class Event {
   public String getLabel() {
     if (!TextUtils.isEmpty(toggle)) return (String) states.get(Rime.getOption(toggle) ? 1 : 0);
 
+    if (code == KeyEvent.KEYCODE_SPACE && Rime.hasMenu()) return "Confirm";
     if (mKeyboard.isOnlyShiftOn()) {
       if (code >= KeyEvent.KEYCODE_0
           && code <= KeyEvent.KEYCODE_9
@@ -207,6 +208,7 @@ public class Event {
           return adjustCase(shiftLabel);
       }
     } else if (((mKeyboard.getModifer() | mask) & KeyEvent.META_SHIFT_ON) != 0) {
+      if (code == KeyEvent.KEYCODE_SPACE && mKeyboard.fullwidthSpace()) return "Fullwidth Space";
       return adjustCase(shiftLabel);
     }
 
@@ -216,6 +218,10 @@ public class Event {
   public String getText() {
     String s = "";
     if (!TextUtils.isEmpty(text)) s = text;
+    else if (mKeyboard != null
+        && mKeyboard.fullwidthSpace()
+        && mask == 0
+        && code == KeyEvent.KEYCODE_SPACE) s = "　";
     else if (mKeyboard != null
         && mKeyboard.needUpCase()
         && mask == 0
@@ -242,7 +248,7 @@ public class Event {
     if (!TextUtils.isEmpty(label)) return;
     int c = code;
     if (c == KeyEvent.KEYCODE_SPACE) {
-      label = Rime.getSchemaName();
+      label = "Space";
     } else {
       if (c > 0) label = Keycode.Companion.getDisplayLabel(c, mask);
     }

@@ -590,6 +590,11 @@ public class Keyboard {
     return hasModifier(KeyEvent.META_SHIFT_ON);
   }
 
+  public boolean fullwidthSpace() {
+    if (mShiftKey != null) if (mShiftKey.isOn()) return false;
+    return hasModifier(KeyEvent.META_SHIFT_ON);
+  }
+
   /**
    * 設定鍵盤的Shift鍵狀態
    *

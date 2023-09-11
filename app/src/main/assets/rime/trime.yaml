@@ -243,7 +243,7 @@ preset_keyboards:
     - {click: Keyboard_symbols1, width: 15}
     - {click: IME_next, long_click: IME_switch}
     - {click: '，', ascii: ','}
-    - {click: space, width: 40}
+    - {click: space, width: 40, hint: "TypeDuck"}
     - {click: '。', ascii: '.', has_menu: SeparateSyllable, extra: ['．', '｡', 'º', '°', '○', '◌', '◦']}
     - {click: Return, composing: Return1, width: 15}
 
@@ -293,7 +293,7 @@ preset_keyboards:
     - {click: Keyboard_default, width: 15}
     - {click: IME_next, long_click: IME_switch}
     - {click: '，', ascii: ','}
-    - {click: space, width: 40}
+    - {click: space, width: 40, hint: "TypeDuck"}
     - {click: '。', ascii: '.', extra: ['．', '｡', 'º', '°', '○', '◌', '◦']}
     - {click: Return, composing: Return1, width: 15}
 
@@ -337,7 +337,7 @@ preset_keyboards:
     - {click: Keyboard_default, width: 15}
     - {click: IME_next, long_click: IME_switch}
     - {click: '，', ascii: ','}
-    - {click: space, width: 40}
+    - {click: space, width: 40, hint: "TypeDuck"}
     - {click: '。', ascii: '.', extra: ['．', '｡', 'º', '°', '○', '◌', '◦']}
     - {click: Return, composing: Return1, width: 15}
 
