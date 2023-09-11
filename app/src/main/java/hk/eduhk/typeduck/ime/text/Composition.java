@@ -224,8 +224,9 @@ public class Composition extends AppCompatTextView {
     }
     candidate_use_cursor = config.style.getBoolean("candidate_use_cursor");
     text_size = (int) DimensionsKt.sp2px(config.style.getFloat("text_size"));
-    candidate_text_size = DimensionsKt.sp2px(AppPrefs.defaultInstance().getTypeDuck().getCandidateFontSize().getFontSize());
-    comment_text_size = (int) (candidate_text_size / 1.8);
+    final float candidateTextSize = AppPrefs.defaultInstance().getTypeDuck().getCandidateFontSize().getFontSize();
+    candidate_text_size = (int) candidateTextSize;
+    comment_text_size = (int) (candidateTextSize / 1.8f);
     label_text_size = (int) DimensionsKt.sp2px(config.style.getFloat("label_text_size"));
 
     text_color = config.colors.getColor("text_color");

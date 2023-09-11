@@ -27,8 +27,8 @@
 		<item name="nep">Nepali</item>
 		<item name="urd">Urdu</item>
 	</string-array>
-	<string name="pref_show_romanization">Display romanization above candidates</string>
-	<string name="pref_show_reverse_lookup">Display reverse lookup code above candidates</string>
+	<string name="pref_show_romanization">Romanization above candidates</string>
+	<string name="pref_show_reverse_lookup">Reverse lookup code above candidates</string>
 	<string name="pref_candidate_font_size">Font size of candidates</string>
 	<string name="pref_candidate_gap">Gap between candidates</string>
 	<string-array name="pref_sizes">

@@ -36,6 +36,7 @@ import hk.eduhk.typeduck.data.theme.Config;
 import hk.eduhk.typeduck.data.theme.FontManager;
 import hk.eduhk.typeduck.ime.core.Trime;
 import hk.eduhk.typeduck.ime.enums.SymbolKeyboardType;
+import hk.eduhk.typeduck.ime.keyboard.Keyboard;
 import hk.eduhk.typeduck.util.DimensionsKt;
 import hk.eduhk.typeduck.util.GraphicUtils;
 import java.util.ArrayList;
@@ -69,20 +70,20 @@ public class TabView extends View {
   public void reset() {
     Config config = Config.get();
     candidateHighlight = new PaintDrawable(config.colors.getColor("hilited_candidate_back_color"));
-    candidateHighlight.setCornerRadius(config.style.getFloat("layout/round_corner"));
+    candidateHighlight.setCornerRadius(config.style.getFloat("round_corner") * Keyboard.adjustRatio);
 
     separatorPaint.setColor(config.colors.getColor("candidate_separator_color"));
 
     candidateSpacing = (int) DimensionsKt.dp2px(config.style.getFloat("candidate_spacing"));
-    candidatePadding = DimensionsKt.dp2px(AppPrefs.defaultInstance().getTypeDuck().getCandidateGap().getPadding());
+    candidatePadding = (int) AppPrefs.defaultInstance().getTypeDuck().getCandidateGap().getPadding();
 
     candidateTextColor = config.colors.getColor("candidate_text_color");
     hilitedCandidateTextColor = config.colors.getColor("hilited_candidate_text_color");
 
-    int candidateTextSize = DimensionsKt.sp2px(AppPrefs.defaultInstance().getTypeDuck().getCandidateFontSize().getFontSize());
-    candidateViewHeight = candidateTextSize * 7 / 5;
-    commentHeight = candidateTextSize * 7 / 10;
-    candidateViewPaddingTop = (int) DimensionsKt.dp2px(config.style.getFloat("candidate_view_padding_top"));
+    final float candidateTextSize = AppPrefs.defaultInstance().getTypeDuck().getCandidateFontSize().getFontSize();
+    candidateViewHeight = (int) (candidateTextSize * 1.4f);
+    commentHeight = (int) (candidateTextSize * 0.7f);
+    candidateViewPaddingTop = (int) (DimensionsKt.dp2px(config.style.getFloat("candidate_view_padding_top")) * Keyboard.adjustRatioSmall);
 
     candidateFont = FontManager.getTypeface(config.style.getString("candidate_font"));
 

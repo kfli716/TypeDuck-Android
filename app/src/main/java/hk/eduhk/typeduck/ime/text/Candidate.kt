@@ -18,6 +18,7 @@ import hk.eduhk.typeduck.data.AppPrefs.Companion.defaultInstance
 import hk.eduhk.typeduck.data.theme.Config
 import hk.eduhk.typeduck.data.theme.FontManager.getTypeface
 import hk.eduhk.typeduck.ime.core.Trime
+import hk.eduhk.typeduck.ime.keyboard.Keyboard
 import hk.eduhk.typeduck.ime.text.ComputedCandidate.Symbol
 import hk.eduhk.typeduck.ime.text.ComputedCandidate.Word
 import hk.eduhk.typeduck.util.GraphicUtils.drawText
@@ -88,28 +89,28 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 	fun reset() {
 		val config = Config.get()
 		candidateHighlight = PaintDrawable(config.colors.getColor("hilited_candidate_back_color"))
-		candidateHighlight!!.setCornerRadius(config.style.getFloat("layout/round_corner"))
+		candidateHighlight!!.setCornerRadius(config.style.getFloat("round_corner") * Keyboard.adjustRatio)
 		separatorPaint.color = config.colors.getColor("candidate_separator_color")
 		candidateSpacing = dp2px(config.style.getFloat("candidate_spacing")).toInt()
-		candidatePadding = dp2px(appPrefs.typeDuck.candidateGap.padding)
-		candidateGap = dp2px(appPrefs.typeDuck.candidateGap.gap)
+		candidatePadding = appPrefs.typeDuck.candidateGap.padding.toInt()
+		candidateGap = appPrefs.typeDuck.candidateGap.gap.toInt()
 
 		candidateTextColor = config.colors.getColor("candidate_text_color")
 		commentTextColor = config.colors.getColor("comment_text_color")
 		hilitedCandidateTextColor = config.colors.getColor("hilited_candidate_text_color")
 		hilitedCommentTextColor = config.colors.getColor("hilited_comment_text_color")
 
-		candidateViewPaddingTop = dp2px(config.style.getFloat("candidate_view_padding_top")).toInt()
+		candidateViewPaddingTop = (dp2px(config.style.getFloat("candidate_view_padding_top")) * Keyboard.adjustRatioSmall).toInt()
 		candidateFont = getTypeface(config.style.getString("candidate_font"))
 		commentFont = getTypeface(config.style.getString("comment_font"))
 		symbolFont = getTypeface(config.style.getString("symbol_font"))
 
-		val fontSize = sp2px(appPrefs.typeDuck.candidateFontSize.fontSize)
-		candidatePaint.apply { textSize = fontSize.toFloat(); typeface = candidateFont }
-		symbolPaint.apply { textSize = fontSize.toFloat(); typeface = symbolFont }
+		val fontSize = appPrefs.typeDuck.candidateFontSize.fontSize
+		candidatePaint.apply { textSize = fontSize; typeface = candidateFont }
+		symbolPaint.apply { textSize = fontSize; typeface = symbolFont }
 		commentPaint.apply { textSize = fontSize / 1.8f; typeface = commentFont }
-		candidateHeight = fontSize * 7 / 5
-		commentHeight = fontSize * 7 / 10
+		candidateHeight = (fontSize * 1.4f).toInt()
+		commentHeight = (fontSize * 0.7f).toInt()
 
 		shouldShowRomanization = appPrefs.typeDuck.showRomanization
 		shouldShowReverseLookup = appPrefs.typeDuck.showReverseLookup
@@ -129,6 +130,7 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 		commentPaint.strokeWidth = 0f
 
 		separatorPaint = Paint()
+		separatorPaint.isAntiAlias = false
 		separatorPaint.color = Color.BLACK
 
 		// reset(context)
@@ -267,9 +269,9 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 			if (i + 1 < computedCandidates.size) {
 				canvas.drawRect(
 					(geometry.right + candidateGap).toFloat(),
-					geometry.top + geometry.height() * 0.1f,
+					geometry.top.toFloat(),
 					(geometry.right + candidateGap + candidateSpacing).toFloat(),
-					geometry.top + geometry.height() * 0.9f,
+					geometry.bottom.toFloat(),
 					separatorPaint
 				)
 			}

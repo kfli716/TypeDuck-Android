@@ -25,6 +25,7 @@ import hk.eduhk.typeduck.ime.core.Trime
 import hk.eduhk.typeduck.ime.text.Language
 import hk.eduhk.typeduck.ime.text.Size
 import hk.eduhk.typeduck.ui.components.PaddingPreferenceFragment
+import hk.eduhk.typeduck.util.dp2px
 import hk.eduhk.typeduck.util.withLoadingDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -71,7 +72,7 @@ class PreferenceFragment :
                         .setTitle(R.string.pref_test_ime)
                         .setView(
                             TextInputLayout(context).apply {
-                                setPadding(30, 15, 30, 0)
+                                setPadding(dp2px(20), dp2px(10), dp2px(20), 0)
                                 hint = getString(R.string.pref_test_ime_placeholder)
                                 addView(editText)
                             }

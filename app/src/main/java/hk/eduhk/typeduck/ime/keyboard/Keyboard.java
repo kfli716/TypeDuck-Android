@@ -98,7 +98,7 @@ public class Keyboard {
   private int autoHeightIndex, keyboardHeight;
 
   public static float adjustRatio = Math.min(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()) / 1000f;
-  public static float adjustRatioSmall = (float) Math.pow(adjustRatio, 1.0 / 3.0);
+  public static float adjustRatioSmall = (float) Math.cbrt(adjustRatio);
 
   /** Creates a keyboard from the given xml key layout file. */
   public Keyboard() {
