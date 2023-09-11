@@ -6,8 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.ResourceUtils
+import hk.eduhk.typeduck.core.Rime
+import hk.eduhk.typeduck.data.DataManager
 import hk.eduhk.typeduck.databinding.FragmentSetupBinding
 import hk.eduhk.typeduck.ui.setup.SetupPage.Companion.isLastPage
+import hk.eduhk.typeduck.util.withLoadingDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class SetupFragment : Fragment() {
     private val viewModel: SetupViewModel by activityViewModels()
@@ -24,7 +31,15 @@ class SetupFragment : Fragment() {
                 hintText.text = page.getHintText(requireContext())
                 actionButton.visibility = if (new) View.GONE else View.VISIBLE
                 actionButton.text = page.getButtonText(requireContext())
-                actionButton.setOnClickListener { page.getButtonAction(requireContext()) }
+                actionButton.setOnClickListener {
+                    requireContext().let {
+                        lifecycleScope.withLoadingDialog(it) {
+                            withContext(Dispatchers.IO) {
+                                page.getButtonAction(it)
+                            }
+                        }
+                    }
+                }
                 doneText.visibility = if (new) View.VISIBLE else View.GONE
             }
             field = new

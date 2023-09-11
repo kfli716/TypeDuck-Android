@@ -27,6 +27,7 @@ import hk.eduhk.typeduck.ime.text.Size
 import hk.eduhk.typeduck.ui.components.PaddingPreferenceFragment
 import hk.eduhk.typeduck.util.dp2px
 import hk.eduhk.typeduck.util.withLoadingDialog
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.EnumSet
@@ -199,6 +200,10 @@ class PreferenceFragment :
                 else -> {}
             }
         }
-        Trime.getServiceOrNull()?.initKeyboard()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                Trime.getServiceOrNull()?.initKeyboard()
+            }
+        }
     }
 }

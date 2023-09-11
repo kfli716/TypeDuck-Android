@@ -535,11 +535,13 @@ public class Trime extends LifecycleInputMethodService {
     if (mCandidateRoot != null) {
       loadBackground();
       mCandidate.reset();
+      /*
       isPopupWindowEnabled =
           getPrefs().getKeyboard().getPopupWindowEnabled()
               && getImeConfig().style.getObject("window") != null;
       mComposition.setVisibility(isPopupWindowEnabled ? View.VISIBLE : View.GONE);
       mComposition.reset();
+      */
     }
   }
 
@@ -675,7 +677,7 @@ public class Trime extends LifecycleInputMethodService {
       }
       cursorAnchorInfo.getMatrix().mapRect(mPopupRectF);
     }
-    if (mCandidateRoot != null) {
+    if (mCandidateRoot != null && isPopupWindowEnabled) {
       showCompositionView(true);
     }
   }
@@ -725,6 +727,7 @@ public class Trime extends LifecycleInputMethodService {
     mCandidate = inputRootBinding.main.candidateView.candidates;
 
     // 候选词悬浮窗的容器
+    /*
     compositionRootBinding = CompositionRootBinding.inflate(LayoutInflater.from(this));
     mComposition = compositionRootBinding.compositions;
     mPopupWindow = new PopupWindow(compositionRootBinding.compositionRoot);
@@ -733,6 +736,7 @@ public class Trime extends LifecycleInputMethodService {
     if (VERSION.SDK_INT >= VERSION_CODES.M) {
       mPopupWindow.setWindowLayoutType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
     }
+    */
     hideCompositionView();
     mTabRoot = inputRootBinding.symbol.tabView.tabRoot;
 
