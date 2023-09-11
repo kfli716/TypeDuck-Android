@@ -1,17 +1,17 @@
 - artifact: cat.ereza:customactivityoncrash:+
-  name: customactivityoncrash
+  name: CustomActivityOnCrash
   copyrightHolder: #COPYRIGHT_HOLDER#
   license: The Apache Software License, Version 2.0
   licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.txt
   url: https://github.com/Ereza/CustomActivityOnCrash
 - artifact: com.blankj:utilcodex:+
-  name: utilcodex
+  name: AndroidUtilCode
   copyrightHolder: #COPYRIGHT_HOLDER#
   license: The Apache Software License, Version 2.0
   licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.txt
   url: https://github.com/Blankj/AndroidUtilCode
 - artifact: com.jakewharton.timber:timber:+
-  name: timber
+  name: Timber
   copyrightHolder: #COPYRIGHT_HOLDER#
   license: The Apache Software License, Version 2.0
   licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.txt

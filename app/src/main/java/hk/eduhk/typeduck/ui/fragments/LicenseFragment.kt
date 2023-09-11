@@ -20,9 +20,9 @@ class LicenseFragment : PaddingPreferenceFragment() {
                         Preference(context).apply {
                             isIconSpaceReserved = false
                             title = license.libraryName
-                            summary = license.artifactId.group
+                            summary = license.url
                             setOnPreferenceClickListener {
-                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(license.licenseUrl)))
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(license.url)))
                                 true
                             }
                         }
