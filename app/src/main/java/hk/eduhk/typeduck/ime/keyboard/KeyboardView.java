@@ -44,6 +44,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+
 import hk.eduhk.typeduck.R;
 import hk.eduhk.typeduck.data.AppPrefs;
 import hk.eduhk.typeduck.data.theme.Config;
@@ -1697,7 +1698,8 @@ public class KeyboardView extends View implements View.OnClickListener {
           isClickAtLast = true;
         }
         Timber.d("\t<TrimeInput>\tonModifiedTouchEvent()\tdetectAndSendKey finish");
-        invalidateKey(keyIndex);
+        //invalidateKey(keyIndex);
+        invalidateAllKeys();
         mRepeatKeyIndex = NOT_A_KEY;
         break;
       case MotionEvent.ACTION_CANCEL:
