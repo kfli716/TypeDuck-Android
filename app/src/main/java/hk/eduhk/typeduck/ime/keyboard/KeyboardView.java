@@ -627,6 +627,12 @@ public class KeyboardView extends View implements View.OnClickListener {
         // The whole keyboard probably needs to be redrawn
         invalidateAllKeys();
         return true;
+      } else {
+        for (int i = 0; i < mKeys.length; i++) {
+          if (mKeys[i].getCode() == KeyEvent.KEYCODE_SPACE) {
+            invalidateKey(i);
+          }
+        }
       }
     }
     return false;
@@ -1693,7 +1699,7 @@ public class KeyboardView extends View implements View.OnClickListener {
           isClickAtLast = true;
         }
         Timber.d("\t<TrimeInput>\tonModifiedTouchEvent()\tdetectAndSendKey finish");
-        invalidateKey(keyIndex);
+        invalidateAllKeys();
         mRepeatKeyIndex = NOT_A_KEY;
         break;
       case MotionEvent.ACTION_CANCEL:
