@@ -40,7 +40,7 @@ public class Event {
   private int code;
   private int mask = 0;
   private String text;
-  private String label, shiftLabel;
+  private String label, shiftLabel, shiftLockLabel;
   private String preview;
   private List<String> states;
   private String command;
@@ -80,6 +80,7 @@ public class Event {
       label = ConfigGetter.getString(presetKey, "label", "");
       preview = ConfigGetter.getString(presetKey, "preview", "");
       shiftLock = ConfigGetter.getString(presetKey, "shift_lock", "");
+      shiftLockLabel = ConfigGetter.getString(presetKey, "shift_lock_label", "");
       commit = ConfigGetter.getString(presetKey, "commit", "");
       String send = ConfigGetter.getString(presetKey, "send", "");
       if (TextUtils.isEmpty(send) && !TextUtils.isEmpty(command))
@@ -207,6 +208,9 @@ public class Event {
         if (!AppPrefs.defaultInstance().getKeyboard().getHookShiftSymbol())
           return adjustCase(shiftLabel);
       }
+      if (code == KeyEvent.KEYCODE_SHIFT_LEFT
+          || code == KeyEvent.KEYCODE_SHIFT_RIGHT)
+        return shiftLockLabel;
     } else if (((mKeyboard.getModifer() | mask) & KeyEvent.META_SHIFT_ON) != 0) {
       if (code == KeyEvent.KEYCODE_SPACE && mKeyboard.fullwidthSpace()) return "Fullwidth Space";
       return adjustCase(shiftLabel);
