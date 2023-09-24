@@ -46,6 +46,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import hk.eduhk.typeduck.R;
+import hk.eduhk.typeduck.core.Rime;
 import hk.eduhk.typeduck.data.AppPrefs;
 import hk.eduhk.typeduck.data.theme.Config;
 import hk.eduhk.typeduck.data.theme.FontManager;
@@ -523,6 +524,7 @@ public class KeyboardView extends View implements View.OnClickListener {
                   Timber.d("\t<TrimeInput>\tinitGestureDetector()\tsendDownKey");
                   showPreview(NOT_A_KEY);
                   showPreview(mDownKey, type.ordinal());
+                  // todo: didn't consider has menu
                   detectAndSendKey(mDownKey, mStartX, mStartY, me1.getEventTime(), type);
                   isClickAtLast = false;
                   return true;
@@ -1077,35 +1079,45 @@ public class KeyboardView extends View implements View.OnClickListener {
         "\t<TrimeInput>\tdetectAndSendKey()\tindex=%d, x=%d, y=%d, type=%d, mKeys.length=%d",
         index, x, y, type.ordinal(), mKeys.length);
 
-    if (index != NOT_A_KEY && index < mKeys.length) {
-      final Key key = mKeys[index];
-
-      if (Key.isTrimeModifierKey(key.getCode()) && !key.sendBindings(type.ordinal())) {
-        Timber.d(
-            "\t<TrimeInput>\tdetectAndSendKey()\tModifierKey, key.getEvent, KeyLabel=%s",
-            key.getLabel());
-        setModifier(key);
-      } else {
-        if (key.getClick().isRepeatable()) {
-          if (type.ordinal() > KeyEventType.CLICK.ordinal()) mAbortKey = true;
-          if (!key.hasEvent(type.ordinal())) return;
-        }
-        final int code = key.getCode(type.ordinal());
-        // TextEntryState.keyPressedAt(key, x, y);
-        final int[] codes = new int[MAX_NEARBY_KEYS];
-        Arrays.fill(codes, NOT_A_KEY);
-        // getKeyIndices(x, y, codes); // 这里实际上并没有生效
-        Timber.d("\t<TrimeInput>\tdetectAndSendKey()\tonEvent, code=%d, key.getEvent", code);
-        // 可以在这里把 mKeyboard.getModifer() 获取的修饰键状态写入event里
-        mKeyboardActionListener.onEvent(key.getEvent(type.ordinal()));
-        releaseKey(code);
-        Timber.d("\t<TrimeInput>\tdetectAndSendKey()\trefreshModifier");
-        refreshModifier();
-      }
+    if (index == NOT_A_KEY || index >= mKeys.length) {
       mLastSentIndex = index;
       mLastTapTime = eventTime;
       Timber.d("\t<TrimeInput>\tdetectAndSendKey()\tfinish");
+      return;
     }
+    final Key key = mKeys[index];
+    if (type == KeyEventType.CLICK && Rime.hasMenu()
+            && key.events[KeyEventType.HAS_MENU.ordinal()] != null)
+    {
+      type = KeyEventType.HAS_MENU;
+    }
+    if (Key.isTrimeModifierKey(key.getCode()) && !key.sendBindings(type.ordinal())) {
+      Timber.d(
+          "\t<TrimeInput>\tdetectAndSendKey()\tModifierKey, key.getEvent, KeyLabel=%s",
+          key.getLabel());
+      setModifier(key);
+    } else {
+      if (key.getClick().isRepeatable()) {
+        if (type.ordinal() > KeyEventType.CLICK.ordinal()) mAbortKey = true;
+        if (!key.hasEvent(type.ordinal())) return;
+      }
+
+      final int code = key.getCode(type.ordinal());
+      // TextEntryState.keyPressedAt(key, x, y);
+      final int[] codes = new int[MAX_NEARBY_KEYS];
+      Arrays.fill(codes, NOT_A_KEY);
+      // getKeyIndices(x, y, codes); // 这里实际上并没有生效
+      Timber.d("\t<TrimeInput>\tdetectAndSendKey()\tonEvent, code=%d, key.getEvent", code);
+      // 可以在这里把 mKeyboard.getModifer() 获取的修饰键状态写入event里
+      mKeyboardActionListener.onEvent(key.getEvent(type.ordinal()));
+      releaseKey(code);
+      Timber.d("\t<TrimeInput>\tdetectAndSendKey()\trefreshModifier");
+      refreshModifier();
+    }
+    mLastSentIndex = index;
+    mLastTapTime = eventTime;
+    Timber.d("\t<TrimeInput>\tdetectAndSendKey()\tfinish");
+
   }
 
   private void detectAndSendKey(final int index, final int x, final int y, final long eventTime) {
