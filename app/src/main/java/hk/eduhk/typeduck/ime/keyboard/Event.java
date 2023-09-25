@@ -196,7 +196,7 @@ public class Event {
   public String getLabel() {
     if (!TextUtils.isEmpty(toggle)) return (String) states.get(Rime.getOption(toggle) ? 1 : 0);
 
-    if (code == KeyEvent.KEYCODE_SPACE && Rime.hasMenu()) return "Confirm";
+    if (code == KeyEvent.KEYCODE_SPACE && Rime.isComposing()) return "Confirm";
     if (mKeyboard.isOnlyShiftOn()) {
       if (code >= KeyEvent.KEYCODE_0
           && code <= KeyEvent.KEYCODE_9
