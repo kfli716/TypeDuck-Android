@@ -1082,6 +1082,9 @@ public class KeyboardView extends View implements View.OnClickListener {
     if (index != NOT_A_KEY && index < mKeys.length) {
       final Key key = mKeys[index];
 
+      if (type == KeyEventType.CLICK) type = key.getEventType();
+      else if (type == KeyEventType.LONG_CLICK) type = key.getLongClickType();
+      if (type == null) return;
       if (Key.isTrimeModifierKey(key.getCode()) && !key.sendBindings(type.ordinal())) {
         Timber.d(
             "\t<TrimeInput>\tdetectAndSendKey()\tModifierKey, key.getEvent, KeyLabel=%s",

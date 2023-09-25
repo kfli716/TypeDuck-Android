@@ -560,13 +560,19 @@ public class Key {
     return events[KeyEventType.CLICK.ordinal()];
   }
 
-  public Event getLongClick() {
+  public KeyEventType getLongClickType() {
     final int code = getCode();
     if (code >= KeyEvent.KEYCODE_A && code <= KeyEvent.KEYCODE_Z
         && !AppPrefs.defaultInstance().getTypeDuck().getSymbolsOnQwerty()) return null;
     if (events[KeyEventType.ASCII_LONG_CLICK.ordinal()] != null && Rime.isAsciiMode())
-      return events[KeyEventType.ASCII_LONG_CLICK.ordinal()];
-    return events[KeyEventType.LONG_CLICK.ordinal()];
+      return KeyEventType.ASCII_LONG_CLICK;
+    if (getEventType() != KeyEventType.CLICK)
+      return KeyEventType.CLICK;
+    if (events[KeyEventType.LONG_CLICK.ordinal()] != null)
+      return KeyEventType.LONG_CLICK;
+    if (events[KeyEventType.ASCII.ordinal()] != null && !mKeyboard.getName().equals("default"))
+      return Rime.isAsciiMode() ? KeyEventType.CLICK : KeyEventType.ASCII;
+    return null;
   }
 
   public boolean hasEvent(int i) {
@@ -588,6 +594,14 @@ public class Key {
         return events[KeyEventType.COMPOSING.ordinal()];
     }
     return getClick();
+  }
+
+  public KeyEventType getEventType() {
+    if (events[KeyEventType.PAGING.ordinal()] != null && Rime.isPaging())
+      return KeyEventType.PAGING;
+    if (events[KeyEventType.HAS_MENU.ordinal()] != null && Rime.hasMenu())
+      return KeyEventType.HAS_MENU;
+    return KeyEventType.CLICK;
   }
 
   public int getCode() {
@@ -619,8 +633,8 @@ public class Key {
     if (!mKeyboard.getName().equals("default")
         || !AppPrefs.defaultInstance().getTypeDuck().getSymbolsOnQwerty()) return "";
     if (labelSymbol.isEmpty()) {
-      Event longClick = getLongClick();
-      if (longClick != null) return longClick.getLabel();
+      KeyEventType longClickType = getLongClickType();
+      if (longClickType != null) return events[longClickType.ordinal()].getLabel();
     }
     return labelSymbol;
   }
