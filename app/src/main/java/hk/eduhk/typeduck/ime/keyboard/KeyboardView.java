@@ -174,6 +174,7 @@ public class KeyboardView extends View implements View.OnClickListener {
   private int mLastCodeY;
   private int mCurrentKey = NOT_A_KEY;
   private int mDownKey = NOT_A_KEY;
+  private int mLongPressKey = NOT_A_KEY;
   private long mLastKeyTime;
   private long mCurrentKeyTime;
   private long mLastUpTime;
@@ -571,6 +572,7 @@ public class KeyboardView extends View implements View.OnClickListener {
     // Remove any pending messages
     removeMessages();
     mRepeatKeyIndex = NOT_A_KEY;
+    mLongPressKey = NOT_A_KEY;
     mKeyboard = keyboard;
     List<Key> keys = mKeyboard.getKeys();
     mKeys = keys.toArray(new Key[keys.size()]);
@@ -1306,8 +1308,6 @@ public class KeyboardView extends View implements View.OnClickListener {
     if (mCurrentKey < 0 || mCurrentKey >= mKeys.length) {
       return false;
     }
-    showPreview(NOT_A_KEY);
-    showPreview(mCurrentKey, KeyEventType.LONG_CLICK.ordinal());
     Key popupKey = mKeys[mCurrentKey];
     boolean result = onLongPress(popupKey);
     if (result) {
@@ -1407,14 +1407,12 @@ public class KeyboardView extends View implements View.OnClickListener {
       invalidateAllKeys();
       return true;
     } else {
-      if (popupKey.getLongClick() != null) {
-        removeMessages();
-        mAbortKey = true;
-        final Event e = popupKey.getLongClick();
-        mKeyboardActionListener.onEvent(e);
-        releaseKey(e.getCode());
-        resetModifer();
-        return true;
+      KeyEventType longClickType = popupKey.getLongClickType();
+      if (longClickType != null) {
+        showPreview(NOT_A_KEY);
+        showPreview(mCurrentKey, longClickType.ordinal());
+        mLongPressKey = mCurrentKey;
+        return false;
       }
 
       Timber.w("only set isShifted, no others modifierkey");
@@ -1698,8 +1696,10 @@ public class KeyboardView extends View implements View.OnClickListener {
               touchX,
               touchY,
               eventTime,
-              (mOldPointerCount > 1 || mComboMode) ? KeyEventType.COMBO : KeyEventType.CLICK);
+              (mOldPointerCount > 1 || mComboMode) ? KeyEventType.COMBO :
+                  mCurrentKey == mLongPressKey ? KeyEventType.LONG_CLICK : KeyEventType.CLICK);
           isClickAtLast = true;
+          mLongPressKey = NOT_A_KEY;
         }
         Timber.d("\t<TrimeInput>\tonModifiedTouchEvent()\tdetectAndSendKey finish");
         invalidateAllKeys();
@@ -1709,6 +1709,7 @@ public class KeyboardView extends View implements View.OnClickListener {
         removeMessages();
         dismissPopupKeyboard();
         mAbortKey = true;
+        mLongPressKey = NOT_A_KEY;
         showPreview(NOT_A_KEY);
         invalidateKey(mCurrentKey);
         break;
