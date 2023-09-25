@@ -64,7 +64,7 @@ private class Comment(private val comment: String) {
     private val length = comment.length
     private var i = 0
     fun isNotEmpty() = i < length
-    fun consume(char: Char) = (comment[i] == char).also { if (it) i++ }
+    fun consume(char: Char) = (isNotEmpty() && comment[i] == char).also { if (it) i++ }
     fun consumeUntil(char: Char): String {
         val start = i
         while (isNotEmpty())
