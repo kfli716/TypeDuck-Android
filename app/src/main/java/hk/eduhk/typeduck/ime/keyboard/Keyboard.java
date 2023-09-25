@@ -23,6 +23,7 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import hk.eduhk.typeduck.core.Rime;
 import hk.eduhk.typeduck.data.theme.Config;
 import hk.eduhk.typeduck.util.ConfigGetter;
 import hk.eduhk.typeduck.util.DimensionsKt;
@@ -591,6 +592,7 @@ public class Keyboard {
   }
 
   public boolean fullwidthSpace() {
+    if (Rime.isAsciiMode()) return false;
     if (mShiftKey != null) if (mShiftKey.isOn()) return false;
     return hasModifier(KeyEvent.META_SHIFT_ON);
   }
