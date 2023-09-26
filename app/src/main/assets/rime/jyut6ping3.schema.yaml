@@ -4,7 +4,7 @@
 schema:
   schema_id: jyut6ping3
   name: 粵語拼音
-  version: "2023.08.12"
+  version: "2023.09.25"
   author:
     - Ayaka Mikazuki <ayaka@mail.shn.hk>
     - LeiMaau <leimaau@qq.com>
@@ -168,16 +168,8 @@ cangjie5:
     - 'xform/^/\v/'
     - "xlit|abcdefghijklmnopqrstuvwxyz~|日月金木水火土竹戈十大中一弓人心手口尸廿山女田難卜符～|"
 
-variants_hk:
-  option_name: variants_hk
-  opencc_config: t2hkf.json
-
-trad_tw:
-  option_name: trad_tw
-  opencc_config: t2tw.json
-
 punctuator:
-  import_preset: symbols_cantonese
+  import_preset: default
 
 key_binder:
   import_preset: default
@@ -185,7 +177,6 @@ key_binder:
 recognizer:
   import_preset: default
   patterns:
-    punct: "^/([0-9]0?|[a-z]+)$"
     luna_pinyin: "^`p[a-z']*;?$"
     loengfan: "^`l[a-z']*;?$"
     cangjie5: "^`c[a-z']*;?$"

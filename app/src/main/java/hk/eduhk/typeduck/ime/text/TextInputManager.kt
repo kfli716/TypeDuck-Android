@@ -295,6 +295,8 @@ class TextInputManager private constructor() :
     // KeyboardEvent 处理软键盘事件
     override fun onEvent(event: Event?) {
         event ?: return
+        if (event.isPunctuation && Rime.isComposing()) {
+            Rime.commitComposition()
         }
         if (!event.text.isNullOrEmpty()) {
             onText(event.text)

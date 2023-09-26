@@ -67,7 +67,7 @@ translator:
     - "^yyy.*$"
 
 punctuator:
-  import_preset: symbols_cantonese
+  import_preset: default
 
 key_binder:
   import_preset: default

@@ -1,7 +1,7 @@
 # Rime default settings
 # encoding: utf-8
 
-config_version: "2023.07.05"
+config_version: "2023.09.25"
 
 schema_list:
   - schema: jyut6ping3
@@ -17,9 +17,6 @@ switcher:
     - F4
   save_options:
     - full_shape
-    - noop
-    - variants_hk
-    - trad_tw
     - simplification
     - ascii_punct
   option_list_separator: " / "
@@ -47,10 +44,7 @@ key_binder:
       - key_bindings:/optimized_mode_switch
 
 recognizer:
-  patterns:
-    email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
-    uppercase: "[A-Z][-_+.'0-9A-Za-z]*$"
-    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
+  patterns: {}
 
 ascii_composer:
   good_old_caps_lock: true

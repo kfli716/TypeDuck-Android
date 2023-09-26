@@ -65,7 +65,18 @@ object DataManager {
         // Don't combine candidates
         if (!commonPatch.exists()) {
             Timber.d("Creating common.yaml ...")
-            commonPatch.writeText("patch:\n  translator/combine_candidates: false\n")
+            commonPatch.writeText("""
+                patch:
+                  translator/combine_candidates: false
+                  punctuator:
+                    full_shape:
+                      __include: symbols_mobile:/punctuations
+                    half_shape:
+                      __include: symbols_mobile:/punctuations
+                    ascii_style:
+                      __include: symbols_mobile:/punctuations
+                """.trimIndent() + "\n"
+            )
         }
 
         Timber.i("Synced!")

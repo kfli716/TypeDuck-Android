@@ -53,6 +53,7 @@ public class Event {
   private boolean functional;
   private boolean repeatable;
   private boolean sticky;
+  private boolean punctuation;
 
   // {send|key}
   private static final Pattern sendPattern = Pattern.compile("\\{[^\\{\\}]+\\}");
@@ -95,12 +96,15 @@ public class Event {
       sticky = ConfigGetter.getBoolean(presetKey, "sticky", false);
       repeatable = ConfigGetter.getBoolean(presetKey, "repeatable", false);
       functional = ConfigGetter.getBoolean(presetKey, "functional", true);
-    } else if ((code = getClickCode(s)) >= 0) {
-      parseLabel();
     } else {
-      code = 0;
-      text = s;
-      label = labelPattern.matcher(s).replaceAll("");
+      if ((code = getClickCode(s)) >= 0) {
+        parseLabel();
+      } else {
+        code = 0;
+        text = s;
+        label = labelPattern.matcher(s).replaceAll("");
+      }
+      punctuation = code < KeyEvent.KEYCODE_A || code > KeyEvent.KEYCODE_Z;
     }
 
     shiftLabel = label;
@@ -152,6 +156,10 @@ public class Event {
 
   public boolean isSticky() {
     return sticky;
+  }
+
+  public boolean isPunctuation() {
+    return punctuation;
   }
 
   public String getShiftLock() {
