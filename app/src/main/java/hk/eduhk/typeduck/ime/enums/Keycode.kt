@@ -153,29 +153,8 @@ enum class Keycode {
             if (keycode < A.ordinal) {
                 event[0] = keycode
                 event[1] = mask
-            } else {
-                if (keycode <= Z.ordinal)
-                    event[0] = keycode - A.ordinal + a.ordinal
-                else {
-                    event[0] = when (keycode) {
-                        exclam.ordinal -> _1.ordinal
-                        dollar.ordinal -> _4.ordinal
-                        percent.ordinal -> _5.ordinal
-                        asciicircum.ordinal -> _6.ordinal
-                        ampersand.ordinal -> _7.ordinal
-                        quotedbl.ordinal -> apostrophe.ordinal
-                        colon.ordinal -> semicolon.ordinal
-                        less.ordinal -> comma.ordinal
-                        greater.ordinal -> period.ordinal
-                        question.ordinal -> slash.ordinal
-                        underscore.ordinal -> minus.ordinal
-                        braceleft.ordinal -> bracketleft.ordinal
-                        braceright.ordinal -> bracketright.ordinal
-                        asciitilde.ordinal -> grave.ordinal
-                        bar.ordinal -> backslash.ordinal
-                        else -> 0
-                    }
-                }
+            } else if (keycode <= Z.ordinal) {
+                event[0] = keycode - A.ordinal + a.ordinal
                 event[1] = mask or KeyEvent.META_SHIFT_ON
             }
             return event

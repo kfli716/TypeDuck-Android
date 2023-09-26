@@ -262,7 +262,7 @@ public class Event {
     if (c == KeyEvent.KEYCODE_SPACE) {
       label = "Space";
     } else {
-      if (c > 0) label = Keycode.Companion.getDisplayLabel(c, mask);
+      if (c > 0) label = Keycode.Companion.getDisplayLabel(c, c >= KeyEvent.KEYCODE_A && c <= KeyEvent.KEYCODE_Z ? mask : 0);
     }
   }
 
