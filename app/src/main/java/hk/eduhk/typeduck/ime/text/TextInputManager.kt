@@ -62,6 +62,8 @@ class TextInputManager private constructor() :
     var shouldUpdateRimeOption: Boolean = true
     var isComposable: Boolean = false
     var shouldResetAsciiMode: Boolean = false
+    var hasPressedSpace: Boolean = false
+    var fullStopText: String? = null
 
     companion object {
         /** Delimiter regex for key property group, their format like `{property_1: value_1, property_2: value_2}` */
@@ -295,6 +297,20 @@ class TextInputManager private constructor() :
     // KeyboardEvent 处理软键盘事件
     override fun onEvent(event: Event?) {
         event ?: return
+        if (!event.commit.isNullOrEmpty()) {
+            if (hasPressedSpace) {
+                hasPressedSpace = false
+                if (event.code == KeyEvent.KEYCODE_DEL) {
+                    // Remove the space before the cursor
+                    activeEditorInstance.sendDownUpKeyEvent(event.code, 0)
+                }
+                // Directly commit the text and don't dispatch to Rime
+                activeEditorInstance.commitText(event.commit, true)
+            } else {
+                fullStopText = event.commit
+            }
+            return
+        }
         if (event.isPunctuation && Rime.isComposing()) {
             Rime.commitComposition()
         }
@@ -394,6 +410,15 @@ class TextInputManager private constructor() :
             KeyEvent.KEYCODE_MENU -> showOptionsDialog()
             */
             else -> {
+                if (event.code == KeyEvent.KEYCODE_SPACE && !Rime.isComposing()) {
+                    if (fullStopText == null) {
+                        hasPressedSpace = true
+                    } else {
+                        activeEditorInstance.commitText(fullStopText!!, true)
+                        fullStopText = null
+                        return
+                    }
+                }
                 if (event.mask == 0 && KeyboardSwitcher.currentKeyboard.isOnlyShiftOn) {
                     if (event.code == KeyEvent.KEYCODE_SPACE && prefs.keyboard.hookShiftSpace) {
                         onKey(event.code, 0)
@@ -416,11 +441,6 @@ class TextInputManager private constructor() :
                 else
                     onKey(event.code, event.mask)
             }
-        }
-        if (!event.commit.isNullOrEmpty()) {
-            // Directly commit the text and don't dispatch to Rime
-            activeEditorInstance.commitText(event.commit, true)
-            return
         }
     }
 
