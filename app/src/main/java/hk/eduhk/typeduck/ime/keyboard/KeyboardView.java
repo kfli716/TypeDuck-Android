@@ -645,7 +645,8 @@ public class KeyboardView extends View implements View.OnClickListener {
         return true;
       } else {
         for (int i = 0; i < mKeys.length; i++) {
-          if (mKeys[i].getCode() == KeyEvent.KEYCODE_SPACE) {
+          final int c = mKeys[i].getCode();
+          if (c == KeyEvent.KEYCODE_SPACE || c == KeyEvent.KEYCODE_SHIFT_LEFT || c == KeyEvent.KEYCODE_SHIFT_RIGHT) {
             invalidateKey(i);
           }
         }
