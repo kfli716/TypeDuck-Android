@@ -45,6 +45,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import hk.eduhk.typeduck.R;
+import hk.eduhk.typeduck.core.Rime;
 import hk.eduhk.typeduck.data.AppPrefs;
 import hk.eduhk.typeduck.data.theme.Config;
 import hk.eduhk.typeduck.data.theme.FontManager;
@@ -145,10 +146,13 @@ public class KeyboardView extends View implements View.OnClickListener {
   private static final int MSG_REMOVE_PREVIEW = 2;
   private static final int MSG_REPEAT = 3;
   private static final int MSG_LONGPRESS = 4;
+  private static final int MSG_DOUBLE_CLICK_DOWN = 5;
+  private static final int MSG_DOUBLE_CLICK_UP = 6;
 
   private static final int DELAY_BEFORE_PREVIEW = 0;
   private static final int DELAY_AFTER_PREVIEW = 70;
   private static final int DEBOUNCE_TIME = 70;
+  private static final int DOUBLE_CLICK_THRESHOLD = 250;
 
   private int mVerticalCorrection;
   private int mProximityThreshold;
@@ -175,6 +179,8 @@ public class KeyboardView extends View implements View.OnClickListener {
   private int mCurrentKey = NOT_A_KEY;
   private int mDownKey = NOT_A_KEY;
   private int mLongPressKey = NOT_A_KEY;
+  private int mDoubleClickDownKey = NOT_A_KEY;
+  private int mDoubleClickUpKey = NOT_A_KEY;
   private long mLastKeyTime;
   private long mCurrentKeyTime;
   private long mLastUpTime;
@@ -340,6 +346,12 @@ public class KeyboardView extends View implements View.OnClickListener {
           break;
         case MSG_LONGPRESS:
           mKeyboardView.openPopupIfRequired((MotionEvent) msg.obj);
+          break;
+        case MSG_DOUBLE_CLICK_DOWN:
+          mKeyboardView.mDoubleClickDownKey = NOT_A_KEY;
+          break;
+        case MSG_DOUBLE_CLICK_UP:
+          mKeyboardView.mDoubleClickUpKey = NOT_A_KEY;
           break;
       }
     }
@@ -573,6 +585,8 @@ public class KeyboardView extends View implements View.OnClickListener {
     removeMessages();
     mRepeatKeyIndex = NOT_A_KEY;
     mLongPressKey = NOT_A_KEY;
+    mDoubleClickDownKey = NOT_A_KEY;
+    mDoubleClickUpKey = NOT_A_KEY;
     mKeyboard = keyboard;
     List<Key> keys = mKeyboard.getKeys();
     mKeys = keys.toArray(new Key[keys.size()]);
@@ -1414,13 +1428,6 @@ public class KeyboardView extends View implements View.OnClickListener {
         mLongPressKey = mCurrentKey;
         return false;
       }
-
-      Timber.w("only set isShifted, no others modifierkey");
-      if (popupKey.isShift() && !popupKey.sendBindings(KeyEventType.LONG_CLICK.ordinal())) {
-        // todo 其他修饰键
-        setShifted(!popupKey.isOn(), !popupKey.isOn());
-        return true;
-      }
     }
     return false;
   }
@@ -1588,9 +1595,18 @@ public class KeyboardView extends View implements View.OnClickListener {
             break;
           }
         }
-        if (mCurrentKey != NOT_A_KEY) {
+        final Key key = mKeys[mCurrentKey];
+        if (mCurrentKey >= 0 && mDoubleClickDownKey == mCurrentKey && key.isShift() && !key.sendBindings(KeyEventType.LONG_CLICK.ordinal())) {
+          setShifted(!key.isOn(), !key.isOn());
+          mAbortKey = true;
+          mDoubleClickDownKey = NOT_A_KEY;
+        } else if (mCurrentKey != NOT_A_KEY) {
+          mDoubleClickDownKey = mCurrentKey;
           final Message msg = mHandler.obtainMessage(MSG_LONGPRESS, me);
           mHandler.sendMessageDelayed(msg, getPrefs().getKeyboard().getLongPressTimeout());
+          mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DOUBLE_CLICK_DOWN, me), DOUBLE_CLICK_THRESHOLD);
+        } else {
+          mDoubleClickDownKey = NOT_A_KEY;
         }
         showPreview(keyIndex);
         break;
@@ -1691,13 +1707,29 @@ public class KeyboardView extends View implements View.OnClickListener {
         if (mRepeatKeyIndex != NOT_A_KEY && !mAbortKey) repeatKey();
         if (mRepeatKeyIndex == NOT_A_KEY && !mMiniKeyboardOnScreen && !mAbortKey) {
           Timber.d("\t<TrimeInput>\tonModifiedTouchEvent()\tdetectAndSendKey");
-          detectAndSendKey(
-              mCurrentKey,
-              touchX,
-              touchY,
-              eventTime,
-              (mOldPointerCount > 1 || mComboMode) ? KeyEventType.COMBO :
-                  mCurrentKey == mLongPressKey ? KeyEventType.LONG_CLICK : KeyEventType.CLICK);
+          if (mCurrentKey >= 0
+              && mDoubleClickUpKey == mCurrentKey
+              && getPrefs().getTypeDuck().getDoubleSpaceFullStop()
+              && mKeys[mCurrentKey].getCode() == KeyEvent.KEYCODE_SPACE
+              && !Rime.isComposing()) {
+            detectAndSendKey(
+                mCurrentKey,
+                touchX,
+                touchY,
+                eventTime,
+                Rime.isAsciiMode() ? KeyEventType.ASCII_DOUBLE_CLICK : KeyEventType.DOUBLE_CLICK);
+            mDoubleClickUpKey = NOT_A_KEY;
+          } else {
+            detectAndSendKey(
+                mCurrentKey,
+                touchX,
+                touchY,
+                eventTime,
+                (mOldPointerCount > 1 || mComboMode) ? KeyEventType.COMBO :
+                    mCurrentKey == mLongPressKey ? KeyEventType.LONG_CLICK : KeyEventType.CLICK);
+            mDoubleClickUpKey = mCurrentKey;
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DOUBLE_CLICK_UP, me), DOUBLE_CLICK_THRESHOLD);
+          }
           isClickAtLast = true;
           mLongPressKey = NOT_A_KEY;
         }
@@ -1710,6 +1742,8 @@ public class KeyboardView extends View implements View.OnClickListener {
         dismissPopupKeyboard();
         mAbortKey = true;
         mLongPressKey = NOT_A_KEY;
+        mDoubleClickDownKey = NOT_A_KEY;
+        mDoubleClickUpKey = NOT_A_KEY;
         showPreview(NOT_A_KEY);
         invalidateKey(mCurrentKey);
         break;
@@ -1742,6 +1776,8 @@ public class KeyboardView extends View implements View.OnClickListener {
     mHandler.removeMessages(MSG_REPEAT);
     mHandler.removeMessages(MSG_LONGPRESS);
     mHandler.removeMessages(MSG_SHOW_PREVIEW);
+    mHandler.removeMessages(MSG_DOUBLE_CLICK_DOWN);
+    mHandler.removeMessages(MSG_DOUBLE_CLICK_UP);
   }
 
   @Override

@@ -148,6 +148,8 @@ preset_keys:
   Hide: {label: Hide, send: BACK}
   BackSpace: {label: '⌫', repeatable: true, send: BackSpace}
   space: {repeatable: false, functional: false, send: space}
+  Full_Stop: {repeatable: false, functional: false, send: BackSpace, commit: '。'}
+  ASCII_Full_Stop: {repeatable: false, functional: false, send: BackSpace, commit: '. '}
   Escape: {label: ' ', send: Escape}
   Escape1: {label: 'Clear', send: Escape}
   Escape2: {label: 'Back', send: '{Escape}{Escape}'}
@@ -243,7 +245,7 @@ preset_keyboards:
     - {click: Keyboard_symbols1, width: 15}
     - {click: IME_next, long_click: IME_switch}
     - {click: '，', ascii: ','}
-    - {click: space, width: 40, hint: "TypeDuck"}
+    - {click: space, double_click: Full_Stop, ascii_double_click: ASCII_Full_Stop, width: 40, hint: "TypeDuck"}
     - {click: '。', ascii: '.', has_menu: SeparateSyllable, extra: ['．', '｡', 'º', '°', '○', '◌', '◦']}
     - {click: Return, composing: Return1, width: 15}
 
@@ -293,7 +295,7 @@ preset_keyboards:
     - {click: Keyboard_default, width: 15}
     - {click: IME_next, long_click: IME_switch}
     - {click: '，', ascii: ','}
-    - {click: space, width: 40, hint: "TypeDuck"}
+    - {click: space, double_click: Full_Stop, ascii_double_click: ASCII_Full_Stop, width: 40, hint: "TypeDuck"}
     - {click: '。', ascii: '.', extra: ['．', '｡', 'º', '°', '○', '◌', '◦']}
     - {click: Return, composing: Return1, width: 15}
 
@@ -337,7 +339,7 @@ preset_keyboards:
     - {click: Keyboard_default, width: 15}
     - {click: IME_next, long_click: IME_switch}
     - {click: '，', ascii: ','}
-    - {click: space, width: 40, hint: "TypeDuck"}
+    - {click: space, double_click: Full_Stop, ascii_double_click: ASCII_Full_Stop, width: 40, hint: "TypeDuck"}
     - {click: '。', ascii: '.', extra: ['．', '｡', 'º', '°', '○', '◌', '◦']}
     - {click: Return, composing: Return1, width: 15}
 
@@ -356,7 +358,7 @@ preset_keyboards:
     - {click: 'KP_4'}
     - {click: 'KP_5'}
     - {click: 'KP_6'}
-    - {click: space, label: '␣'}
+    - {click: space, label: '␣', double_click: Full_Stop, ascii_double_click: ASCII_Full_Stop}
 
     - {click: '*'}
     - {click: 'KP_7'}
@@ -391,7 +393,7 @@ preset_keyboards:
     - {click: '；', ascii: ';', long_click: 'KP_7'}
     - {click: '，', ascii: ',', long_click: 'KP_8'}
     - {click: '。', ascii: '.', long_click: 'KP_9', extra: ['．', '｡', 'º', '°']}
-    - {click: space, label: '␣'}
+    - {click: space, label: '␣', double_click: Full_Stop, ascii_double_click: ASCII_Full_Stop}
 
     - {click: Keyboard_symbols1}
     - {click: IME_next, long_click: IME_switch}

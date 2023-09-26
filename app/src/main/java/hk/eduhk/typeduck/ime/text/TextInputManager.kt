@@ -295,10 +295,6 @@ class TextInputManager private constructor() :
     // KeyboardEvent 处理软键盘事件
     override fun onEvent(event: Event?) {
         event ?: return
-        if (!event.commit.isNullOrEmpty()) {
-            // Directly commit the text and don't dispatch to Rime
-            activeEditorInstance.commitText(event.commit, true)
-            return
         }
         if (!event.text.isNullOrEmpty()) {
             onText(event.text)
@@ -418,6 +414,11 @@ class TextInputManager private constructor() :
                 else
                     onKey(event.code, event.mask)
             }
+        }
+        if (!event.commit.isNullOrEmpty()) {
+            // Directly commit the text and don't dispatch to Rime
+            activeEditorInstance.commitText(event.commit, true)
+            return
         }
     }
 
