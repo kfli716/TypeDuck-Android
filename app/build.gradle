@@ -101,6 +101,10 @@ android {
             universalApk false
         }
     }
+
+    aaptOptions {
+        ignoreAssetsPattern "!.git:!.DS_Store:!.gitignore:!user.yaml:!installation.yaml:!weasel.yaml:!squirrel.yaml"
+    }
 }
 
 kotlin {
