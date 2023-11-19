@@ -48,7 +48,7 @@ public:
                                       *JString(env, message_type),
                                       *JString(env, message_value));
         }, GlobalRef->jvm);
-        if (rime->start_maintenance(fullCheck) && rime->is_maintenance_mode()) {
+        if ((!fullCheck && RimeStartQuick() || rime->start_maintenance(true)) && rime->is_maintenance_mode()) {
             rime->join_maintenance_thread();
         }
 

@@ -75,7 +75,7 @@ public class Config {
     self = this;
     ThemeManager.init();
 
-    Rime.get(!DataManager.INSTANCE.getSharedDataDir().exists());
+    Rime.get();
 
     init();
 
@@ -89,6 +89,7 @@ public class Config {
     final String active = ThemeManager.getActiveTheme();
     Timber.i("Initializing theme, currentThemeName=%s ...", active);
     try {
+      /*
       final String themeFileName = active + ".yaml";
       final String themeCustomFileName =
           active.equals("trime")
@@ -104,6 +105,7 @@ public class Config {
         Timber.i("The theme has been modified or not yet been deployed, deploying ...");
         Rime.deployRimeConfigFile(themeFileName, VERSION_KEY);
       }
+      */
 
       Timber.d("Fetching global theme config map ...");
       long start = System.currentTimeMillis();
