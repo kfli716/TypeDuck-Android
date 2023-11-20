@@ -34,7 +34,7 @@ sealed class ComputedCandidate(var geometry: Rect) {
                 if (comment.consume('\r'))
                     comment.toString().split('\r').map { CandidateInfo(/* csv: */ it) }
                 else
-                    comment.toString().split('\u000c').map { CandidateInfo(honzi = word, jyutping = it.removeSuffix(", ")) }
+                    comment.toString().split('\u000c').map { CandidateInfo(honzi = word, jyutping = it.removeSuffix("; ")) }
             } else
                 listOf()
         }
