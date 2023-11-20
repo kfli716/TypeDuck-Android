@@ -64,7 +64,7 @@ object DataManager {
         }
         // Don't combine candidates
         Timber.d("Creating common.custom.yaml ...")
-        commonPatch.writeText("__patch:\n  - common:/separate_candidates\n")
+        commonPatch.writeText("__patch:\n  - common:/separate_candidates\n  - common:/show_full_code\n")
 
         Timber.i("Synced!")
     }
