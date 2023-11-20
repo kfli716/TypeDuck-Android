@@ -505,6 +505,7 @@ class TextInputManager private constructor() :
         } else {
             trime.handleKey(KeyEvent.KEYCODE_1 + index, 0)
         }
+        candidateRoot?.scrollTo(0, 0)
     }
 
     override fun onCandidateSymbolPressed(arrow: String) {
