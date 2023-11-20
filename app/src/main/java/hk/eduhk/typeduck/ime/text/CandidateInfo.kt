@@ -87,6 +87,8 @@ data class CandidateInfo(
 					} else {
 						isQuoted = false
 					}
+				} else {
+					value.append(char)
 				}
 			} else if (value.isBlank() && char == '"') {
 				isQuoted = true
