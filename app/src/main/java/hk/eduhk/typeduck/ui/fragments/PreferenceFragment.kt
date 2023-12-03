@@ -4,11 +4,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.text.InputType
-import android.view.WindowManager
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
@@ -16,7 +11,6 @@ import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.get
 import com.blankj.utilcode.util.ResourceUtils
-import com.google.android.material.textfield.TextInputLayout
 import hk.eduhk.typeduck.R
 import hk.eduhk.typeduck.core.Rime
 import hk.eduhk.typeduck.data.AppPrefs
@@ -25,7 +19,7 @@ import hk.eduhk.typeduck.ime.core.Trime
 import hk.eduhk.typeduck.ime.text.Language
 import hk.eduhk.typeduck.ime.text.Size
 import hk.eduhk.typeduck.ui.components.PaddingPreferenceFragment
-import hk.eduhk.typeduck.util.dp2px
+import hk.eduhk.typeduck.ui.setup.TestIMEDialogFragment
 import hk.eduhk.typeduck.util.withLoadingDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -64,33 +58,7 @@ class PreferenceFragment :
                 true
             }
             get<Preference>("pref_test_ime")?.setOnPreferenceClickListener {
-                val editText = EditText(context).apply {
-                    inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-                }
-                with(
-                    AlertDialog.Builder(context, R.style.dialog_theme)
-                        .setTitle(R.string.pref_test_ime)
-                        .setView(
-                            TextInputLayout(context).apply {
-                                setPadding(dp2px(20), dp2px(10), dp2px(20), 0)
-                                hint = getString(R.string.pref_test_ime_placeholder)
-                                addView(editText)
-                            }
-                        )
-                        .setNegativeButton(R.string.close, null)
-                        .create()
-                ) {
-                    editText.setOnEditorActionListener { _, actionId, _ ->
-                        (actionId == EditorInfo.IME_ACTION_DONE).also {
-                            if (it) dismiss()
-                        }
-                    }
-                    setOnShowListener {
-                        editText.requestFocus()
-                    }
-                    window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-                    show()
-                }
+                TestIMEDialogFragment().show(parentFragmentManager, "test_ime_dialog")
                 true
             }
             sharedPreferences?.run {
