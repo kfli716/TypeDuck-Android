@@ -229,7 +229,7 @@ class AppPrefs(
             const val SHOULD_LONG_CLICK_DELETE_CANDIDATE = "keyboard__long_click_delete_candidate"
         }
         var inlinePreedit: InlineModeType
-            get() = InlineModeType.fromString(prefs.getPref(INLINE_PREEDIT_MODE, "composition"))
+            get() = InlineModeType.fromString(prefs.getPref(INLINE_PREEDIT_MODE, ""))
             set(v) = prefs.setPref(INLINE_PREEDIT_MODE, v)
         var fullscreenMode: LandscapeInputUIMode
             get() = LandscapeInputUIMode.fromString(prefs.getPref(FULLSCREEN_MODE, "auto_show"))

@@ -91,7 +91,7 @@ public class Composition extends AppCompatTextView {
     public void updateDrawState(TextPaint ds) {
       ds.setTypeface(tfText);
       ds.setColor(text_color);
-      ds.bgColor = back_color;
+      // ds.bgColor = back_color;
     }
   }
 
@@ -252,17 +252,11 @@ public class Composition extends AppCompatTextView {
     float line_spacing_multiplier = config.style.getFloat("layout/line_spacing_multiplier");
     if (line_spacing_multiplier == 0f) line_spacing_multiplier = 1f;
     setLineSpacing(config.style.getFloat("layout/line_spacing"), line_spacing_multiplier);
-    setMinWidth((int) DimensionsKt.dp2px(config.style.getFloat("layout/min_width")));
-    setMinHeight((int) DimensionsKt.dp2px(config.style.getFloat("layout/min_height")));
 
-    int max_width = (int) DimensionsKt.dp2px(config.style.getFloat("layout/max_width"));
     int real_margin = (int) DimensionsKt.dp2px(config.style.getFloat("layout/real_margin"));
     int displayWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-    Timber.d("max_width = %s, displayWidth = %s ", max_width, displayWidth);
-    if (max_width > displayWidth) max_width = displayWidth;
-    setMaxWidth(max_width - real_margin * 2);
+    setMaxWidth(displayWidth - real_margin * 2);
 
-    setMaxHeight((int) DimensionsKt.dp2px(config.style.getFloat("layout/max_height")));
     int margin_x, margin_y, margin_bottom;
     margin_x = (int) DimensionsKt.dp2px(config.style.getFloat("layout/margin_x"));
     margin_y = (int) DimensionsKt.dp2px(config.style.getFloat("layout/margin_y"));
@@ -303,7 +297,7 @@ public class Composition extends AppCompatTextView {
   private void appendComposition(Map<String, Object> m) {
     final Rime.RimeComposition r = Rime.getComposition();
     assert r != null;
-    final String s = r.getText();
+    final String s = r.getText().replace("‸", "");
     int start, end;
     String sep = CollectionUtils.obtainString(m, "start", "");
     if (!TextUtils.isEmpty(sep)) {
@@ -326,8 +320,8 @@ public class Composition extends AppCompatTextView {
     }
     start = composition_pos[0] + r.getStart();
     end = composition_pos[0] + r.getEnd();
-    ss.setSpan(new ForegroundColorSpan(hilited_text_color), start, end, span);
-    ss.setSpan(new BackgroundColorSpan(hilited_back_color), start, end, span);
+    // ss.setSpan(new ForegroundColorSpan(hilited_text_color), start, end, span);
+    // ss.setSpan(new BackgroundColorSpan(hilited_back_color), start, end, span);
     sep = CollectionUtils.obtainString(m, "end", "");
     if (!TextUtils.isEmpty(sep)) ss.append(sep);
   }
