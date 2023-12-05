@@ -1409,6 +1409,13 @@ public class KeyboardView extends View implements View.OnClickListener {
     } else {
       KeyEventType longClickType = popupKey.getLongClickType();
       if (longClickType != null) {
+        final Event event = popupKey.events[longClickType.ordinal()];
+        final int code = event.getCode();
+        if (code == KeyEvent.KEYCODE_LANGUAGE_SWITCH) {
+          mKeyboardActionListener.onEvent(event);
+          releaseKey(code);
+          return true;
+        }
         showPreview(NOT_A_KEY);
         showPreview(mCurrentKey, longClickType.ordinal());
         mLongPressKey = mCurrentKey;
