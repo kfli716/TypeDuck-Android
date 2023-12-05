@@ -359,8 +359,8 @@ class AppPrefs(
         var selectedColor: String
             get() = prefs.getPref(SELECTED_COLOR, "default")
             set(v) = prefs.setPref(SELECTED_COLOR, v)
-        var autoDark: Boolean = false
-            get() = prefs.getPref(AUTO_DARK, false)
+        var autoDark: Boolean = true
+            get() = prefs.getPref(AUTO_DARK, true)
             private set
         var useMiniKeyboard: Boolean = false
             get() = prefs.getPref(USE_MINI_KEYBOARD, false)

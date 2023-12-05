@@ -106,7 +106,7 @@ public class Trime extends LifecycleInputMethodService {
     return Config.get();
   }
 
-  private boolean darkMode; // 当前键盘主题是否处于暗黑模式
+  private boolean darkMode = false; // 当前键盘主题是否处于暗黑模式
   private KeyboardView mainKeyboardView; // 主軟鍵盤
 
   private Candidate mCandidate; // 候選
@@ -344,7 +344,8 @@ public class Trime extends LifecycleInputMethodService {
 
   @Override
   public void onCreate() {
-
+    setDarkMode((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
+    getImeConfig().initCurrentColors(darkMode);
     StrictMode.setVmPolicy(
         new StrictMode.VmPolicy.Builder(StrictMode.getVmPolicy())
             .detectLeakedClosableObjects()
@@ -549,7 +550,7 @@ public class Trime extends LifecycleInputMethodService {
     inputRootBinding.symbol.symbolInput.setVisibility(View.GONE);
     inputRootBinding.main.mainInput.setVisibility(View.VISIBLE);
     loadConfig();
-    getImeConfig().initCurrentColors();
+    getImeConfig().initCurrentColors(darkMode);
     SoundThemeManager.switchSound(getImeConfig().colors.getString("sound"));
     KeyboardSwitcher.newOrReset();
     resetCandidate();
@@ -743,7 +744,7 @@ public class Trime extends LifecycleInputMethodService {
       assert inputRootBinding != null;
       if (listener != null) listener.onInitializeInputUi(inputRootBinding);
     }
-    getImeConfig().initCurrentColors();
+    getImeConfig().initCurrentColors(darkMode);
     loadBackground();
 
     KeyboardSwitcher.newOrReset();
