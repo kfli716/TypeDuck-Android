@@ -352,7 +352,8 @@ public class KeyboardView extends View implements View.OnClickListener {
     mShadowColor = config.colors.getColor("shadow_color");
 
     mSymbolSize = (int) DimensionsKt.sp2px(config.style.getFloat("symbol_text_size"));
-    mKeyTextSize = (int) DimensionsKt.sp2px(config.style.getFloat("key_text_size"));
+    final int keyTextSize = config.style.getInt("key_text_size");
+    mKeyTextSize = (int) DimensionsKt.sp2px(keyTextSize);
     mVerticalCorrection = (int) (DimensionsKt.dp2px(config.style.getFloat("vertical_correction")) * Keyboard.adjustRatioSmall);
     setProximityCorrectionEnabled(config.style.getBoolean("proximity_correction"));
     mPreviewOffset = (int) (DimensionsKt.dp2px(config.style.getFloat("preview_offset")) * Keyboard.adjustRatioSmall);
@@ -397,8 +398,7 @@ public class KeyboardView extends View implements View.OnClickListener {
       background.setCornerRadius(mRoundCorner);
       mPreviewText.setBackground(background);
     }
-    final int mPreviewTextSizeLarge = config.style.getInt("preview_text_size");
-    mPreviewText.setTextSize(mPreviewTextSizeLarge);
+    mPreviewText.setTextSize(keyTextSize);
     mShowPreview = getPrefs().getTypeDuck().getVisualFeedback();
 
     mPaint.setTypeface(FontManager.getTypeface(config.style.getString("key_font")));
@@ -427,9 +427,7 @@ public class KeyboardView extends View implements View.OnClickListener {
       Timber.e(ex, "Get Drawable Exception");
     }
 
-    final int textPadding = (int) (16 * Keyboard.adjustRatio);
     mPreviewText = KeyboardKeyPreviewBinding.inflate(LayoutInflater.from(context)).getRoot();
-    mPreviewText.setPadding(textPadding, 0, textPadding, textPadding);
     mPaint = new Paint();
     mPaint.setAntiAlias(true);
     mPaint.setTextAlign(Align.CENTER);
@@ -1179,7 +1177,7 @@ public class KeyboardView extends View implements View.OnClickListener {
         Math.max(
             mPreviewText.getMeasuredWidth() + mPreviewText.getPaddingLeft() + mPreviewText.getPaddingRight(),
             key.getWidth());
-    final int popupHeight = mPreviewHeight;
+    final int popupHeight = key.getHeight();
     final ViewGroup.LayoutParams lp = mPreviewText.getLayoutParams();
     if (lp != null) {
       lp.width = popupWidth;
@@ -1190,7 +1188,10 @@ public class KeyboardView extends View implements View.OnClickListener {
     boolean mPreviewCentered = false;
     if (!mPreviewCentered) {
       mPopupPreviewX = key.getX() + getPaddingLeft() + (key.getWidth() - popupWidth) / 2;
-      mPopupPreviewY = key.getY() - popupHeight + mPreviewOffset;
+      mPopupPreviewY = key.getY() - popupHeight - mKeyboard.getVerticalGap();
+      final int textHorizontalPadding = (int) (12 * Keyboard.adjustRatio);
+      mPreviewText.setPadding(textHorizontalPadding, 0, textHorizontalPadding,
+              (int) (popupHeight - mPreviewText.getPaint().getTextSize() - mPreviewText.getPaint().descent()) / 2);
     } else {
       // TODO: Fix this if centering is brought back
       mPopupPreviewX = 160 - mPreviewText.getMeasuredWidth() / 2;
@@ -1228,6 +1229,7 @@ public class KeyboardView extends View implements View.OnClickListener {
     previewPopup.setWidth(popupWidth);
     previewPopup.setHeight(popupHeight);
     previewPopup.showAtLocation(mPopupParent, Gravity.NO_GRAVITY, mPopupPreviewX, mPopupPreviewY);
+    mPreviewText.setOutlineSpotShadowColor(mShadowColor);
     mPreviewText.setVisibility(VISIBLE);
   }
 
