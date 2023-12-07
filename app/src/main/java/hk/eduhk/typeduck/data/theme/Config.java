@@ -347,6 +347,7 @@ public class Config {
     self = null;
   }
 
+  /*
   private int[] keyboardPadding;
 
   public int[] getKeyboardPadding() {
@@ -394,6 +395,7 @@ public class Config {
         keyboardPadding[0], keyboardPadding[1], keyboardPadding[2], one_hand_mode);
     return keyboardPadding;
   }
+  */
 
   //  获取当前配色方案的key的value，或者从fallback获取值。
   @Nullable
