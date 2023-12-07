@@ -101,18 +101,32 @@ public class Keyboard {
   public static float adjustRatio = Math.min(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight()) / 1000f;
   public static float adjustRatioSmall = (float) Math.cbrt(adjustRatio);
 
+  public int getPadding() {
+    return (ScreenUtils.getScreenWidth() - mDisplayWidth) / 2;
+  }
+
   /** Creates a keyboard from the given xml key layout file. */
   public Keyboard() {
+    // some magic
+    final double width = ScreenUtils.getScreenWidth(), height = ScreenUtils.getScreenHeight();
+    final double widthHeightProduct = width * height;
+    final double screenNarrowness = 2.0 / (height / width + width / height);
 
-    // 橫屏模式下，键盘左右两侧到屏幕边缘的距离
+    final double keyboardHeightForNormalScreen = 1344000.0 * widthHeightProduct /
+        ((13.0 * width + 1221760.0) * width + 288.0 * widthHeightProduct + 1013760.0 * height);
+    final double keyboardHeightForNarrowScreen = (2.0 + screenNarrowness) / 3.0 * widthHeightProduct / (width + height);
+
+    final double interpolation = Math.pow(1.0 - Math.pow(screenNarrowness, 5.0), 5.0);
+    final double keyboardHeightWithCandidateBar = keyboardHeightForNarrowScreen * interpolation + keyboardHeightForNormalScreen * (1.0 - interpolation);
+    keyboardHeight = (int) (keyboardHeightWithCandidateBar - SizeUtils.applyDimension(75.2f, TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall); // 24 * 0.7 * 4 + 8
+
+    final double ratio = 2.0 * Math.min(keyboardHeightWithCandidateBar / width, 0.45);
+    mDisplayWidth = (int) (width - 2.0 * Math.round(width / 4.0 * (1.0 + 1.5048001186256637 * Math.pow(ratio, 12.0) - 1.2196050890844857 * Math.pow(ratio, 8.0) - ratio)));
+    // width and mDisplayWidth must have the same parity since the padding must be an integer
+
+    mDisplayWidth -= DimensionsKt.dp2px(Config.get().style.getFloat("keyboard_padding")) * 2;
 
     final Config config = Config.get();
-    int[] keyboardPadding = config.getKeyboardPadding();
-    mDisplayWidth = ScreenUtils.getScreenWidth() - keyboardPadding[0] - keyboardPadding[1];
-    /* Height of the screen */
-    // final int mDisplayHeight = dm.heightPixels;
-    // Log.v(TAG, "keyboard's display metrics:" + dm);
-
     mDefaultHorizontalGap = (int) (SizeUtils.applyDimension(
         config.style.getFloat("horizontal_gap"), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
     mDefaultVerticalGap = (int) (SizeUtils.applyDimension(
@@ -125,14 +139,6 @@ public class Keyboard {
     mProximityThreshold = mProximityThreshold * mProximityThreshold; // Square it for comparison
     mRoundCorner = config.style.getFloat("round_corner") * adjustRatio;
     mBackground = config.colors.getDrawable("keyboard_back_color");
-
-    keyboardHeight = (int) (SizeUtils.applyDimension(
-        config.style.getFloat("keyboard_height"), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
-    if (ScreenUtils.isLandscape()) {
-      int keyBoardHeightLand = (int) (SizeUtils.applyDimension(
-          config.style.getFloat("keyboard_height_land"), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
-      if (keyBoardHeightLand > 0) keyboardHeight = keyBoardHeightLand;
-    }
 
     mKeys = new ArrayList<>();
     mComposingKeys = new ArrayList<>();
@@ -242,18 +248,6 @@ public class Keyboard {
     int[] newHeight = new int[0];
 
     if (keyboardHeight > 0) {
-      int mkeyboardHeight =
-          (int) (SizeUtils.applyDimension(ConfigGetter.getFloat(
-              keyboardConfig, "keyboard_height", 0), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
-      if (ScreenUtils.isLandscape()) {
-        int mkeyBoardHeightLand =
-            (int) (SizeUtils.applyDimension(ConfigGetter.getFloat(
-                keyboardConfig, "keyboard_height_land", 0), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
-        if (mkeyBoardHeightLand > 0) mkeyboardHeight = mkeyBoardHeightLand;
-      }
-
-      if (mkeyboardHeight > 0) keyboardHeight = mkeyboardHeight;
-
       int rawSumHeight = 0;
       List<Integer> rawHeight = new ArrayList<>();
       for (Map<String, Object> mk : lm) {

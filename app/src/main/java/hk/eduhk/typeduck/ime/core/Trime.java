@@ -508,13 +508,6 @@ public class Trime extends LifecycleInputMethodService {
 
     if (inputRootBinding == null) return;
 
-    int[] padding =
-        mConfig.getKeyboardPadding(oneHandMode, orientation == Configuration.ORIENTATION_LANDSCAPE);
-    Timber.i(
-        "update KeyboardPadding: Trime.loadBackground, padding= %s %s %s, orientation=%s",
-        padding[0], padding[1], padding[2], orientation);
-    mainKeyboardView.setPadding(padding[0], 0, padding[1], padding[2]);
-
     final Drawable inputRootBackground = mConfig.colors.getDrawable("root_background");
     if (inputRootBackground != null) {
       inputRootBinding.inputRoot.setBackground(inputRootBackground);

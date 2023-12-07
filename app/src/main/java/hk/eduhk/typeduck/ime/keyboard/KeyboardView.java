@@ -572,6 +572,8 @@ public class KeyboardView extends View implements View.OnClickListener {
     mRepeatKeyIndex = NOT_A_KEY;
     mLongPressKey = NOT_A_KEY;
     mKeyboard = keyboard;
+    final int padding = keyboard.getPadding();
+    setPadding(padding, 0, padding, 0);
     List<Key> keys = mKeyboard.getKeys();
     mKeys = keys.toArray(new Key[keys.size()]);
     setKeyboardBackground();
