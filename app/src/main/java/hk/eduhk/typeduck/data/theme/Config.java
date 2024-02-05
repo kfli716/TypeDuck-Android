@@ -122,6 +122,7 @@ public class Config {
       Key.presetKeys = (Map<String, Map<String, Object>>) fullThemeConfigMap.get("preset_keys");
       presetColorSchemes =
           (Map<String, Map<String, Object>>) fullThemeConfigMap.get("preset_color_schemes");
+      Timber.e(String.format("UFO %s", presetColorSchemes));
       presetKeyboards = (Map<String, Object>) fullThemeConfigMap.get("preset_keyboards");
       liquidKeyboard = (Map<String, Object>) fullThemeConfigMap.get("liquid_keyboard");
       style = new Style(this);

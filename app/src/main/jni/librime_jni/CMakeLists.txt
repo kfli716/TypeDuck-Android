@@ -15,20 +15,20 @@ target_link_libraries(rime_jni rime-static log ${Opencc_LIBRARY})
 
 string(TIMESTAMP TODAY "%Y%m%d")
 execute_process(
-  COMMAND git --git-dir ${CMAKE_SOURCE_DIR}/../../../../.git describe --tags
+  COMMAND git --git-dir ${CMAKE_SOURCE_DIR}/../../../../.git describe --tags --always
   OUTPUT_VARIABLE TRIME_VERSION
 )
 string(STRIP ${TRIME_VERSION} TRIME_VERSION)
 set(TRIME_VERSION "${TRIME_VERSION}-${TODAY}")
 
 execute_process(
-  COMMAND git --git-dir ${CMAKE_SOURCE_DIR}/OpenCC/.git describe --tags
+  COMMAND git --git-dir ${CMAKE_SOURCE_DIR}/OpenCC/.git describe --tags --always
   OUTPUT_VARIABLE OPENCC_VERSION
 )
 
 string(STRIP ${OPENCC_VERSION} OPENCC_VERSION)
 execute_process(
-  COMMAND git --git-dir ${CMAKE_SOURCE_DIR}/librime/.git describe --tags
+  COMMAND git --git-dir ${CMAKE_SOURCE_DIR}/librime/.git describe --tags --always
   OUTPUT_VARIABLE LIBRIME_VERSION
 )
 string(STRIP ${LIBRIME_VERSION} LIBRIME_VERSION)

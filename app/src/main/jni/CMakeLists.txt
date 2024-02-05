@@ -58,8 +58,8 @@ include_directories(
 )
 # workaround for librime/tools/rime_api_console.cc
 # TODO: fix it in upstream
-string(REPLACE "-Werror=format-security" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-string(REPLACE "-Wformat" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+# string(REPLACE "-Werror=format-security" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+# string(REPLACE "-Wformat" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 add_definitions("-Wno-format")
 # workaround end
 add_subdirectory(librime)
