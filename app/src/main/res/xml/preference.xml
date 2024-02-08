@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/app_name">
 	<Preference
+			app:isPreferenceVisible="@bool/DEBUG"
 			android:key="pref_refresh"
 			android:title="@string/pref_refresh"
 			app:iconSpaceReserved="false" />

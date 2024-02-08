@@ -31,10 +31,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            resValue "bool", "DEBUG", "true"
+        }
         release {
             minifyEnabled false
             //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-android.txt'
             signingConfig signingConfigs.release
+            resValue "bool", "DEBUG", "false"
         }
     }
 
