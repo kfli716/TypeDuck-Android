@@ -23,7 +23,11 @@ sealed class ComputedCandidate(var geometry: Rect) {
 
         val isReverseLookup: Boolean
         val note: String
-        val entries: List<CandidateInfo>
+        val entries: List<CandidateEntry>
+
+        val entry: CandidateEntry?
+        val hasDictionaryEntry: Boolean
+        val romanization: String
 
         init {
             val comment = Comment(comment)
@@ -32,11 +36,15 @@ sealed class ComputedCandidate(var geometry: Rect) {
             note = comment.consumeUntil('\u000c' /* \f */)
             entries = if (comment.isNotEmpty()) {
                 if (comment.consume('\r'))
-                    comment.toString().split('\r').map { CandidateInfo(/* csv: */ it) }
+                    comment.toString().split('\r').map { CandidateEntry(/* csv: */ it) }
                 else
-                    comment.toString().split('\u000c').map { CandidateInfo(honzi = word, jyutping = it.removeSuffix("; ")) }
+                    comment.toString().split('\u000c').map { CandidateEntry(honzi = word, jyutping = it.removeSuffix("; ")) }
             } else
                 listOf()
+
+            entry = entries.firstOrNull { it.matchInputBuffer == "1" }
+            hasDictionaryEntry = entries.any { it.isDictionaryEntry }
+            romanization = entry?.jyutping ?: (if (isReverseLookup) "" else note)
         }
 
         override fun toString(): String {

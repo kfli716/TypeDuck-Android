@@ -4,7 +4,7 @@ import hk.eduhk.typeduck.data.AppPrefs
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 
-data class CandidateInfo(
+data class CandidateEntry(
 	var matchInputBuffer: String? = null,
 	var honzi: String? = null,
 	var jyutping: String? = null,
@@ -33,40 +33,84 @@ data class CandidateInfo(
 		var ind: String? = null,
 	)
 
-	private companion object {
-		val columns = listOf(
-			(CandidateInfo::matchInputBuffer).asProperty(),
-			(CandidateInfo::honzi).asProperty(),
-			(CandidateInfo::jyutping).asProperty(),
-			(CandidateInfo::pronOrder).asProperty(),
-			(CandidateInfo::sandhi).asProperty(),
-			(CandidateInfo::litColReading).asProperty(),
-			(CandidateInfo::properties)(Properties::partOfSpeech),
-			(CandidateInfo::properties)(Properties::register),
-			(CandidateInfo::properties)(Properties::label),
-			(CandidateInfo::properties)(Properties::normalized),
-			(CandidateInfo::properties)(Properties::written),
-			(CandidateInfo::properties)(Properties::vernacular),
-			(CandidateInfo::properties)(Properties::collocation),
-			(CandidateInfo::properties)(Properties::definition)(Definition::eng),
-			(CandidateInfo::properties)(Properties::definition)(Definition::urd),
-			(CandidateInfo::properties)(Properties::definition)(Definition::nep),
-			(CandidateInfo::properties)(Properties::definition)(Definition::hin),
-			(CandidateInfo::properties)(Properties::definition)(Definition::ind),
+	private val pref = AppPrefs.defaultInstance()
+	private val prefMainLanguage = pref.typeDuck.mainLanguage
+	private val prefDisplayLanguages = pref.typeDuck.displayLanguages
+
+	companion object {
+		private val columns = listOf(
+			(CandidateEntry::matchInputBuffer).asProperty(),
+			(CandidateEntry::honzi).asProperty(),
+			(CandidateEntry::jyutping).asProperty(),
+			(CandidateEntry::pronOrder).asProperty(),
+			(CandidateEntry::sandhi).asProperty(),
+			(CandidateEntry::litColReading).asProperty(),
+			(CandidateEntry::properties)(Properties::partOfSpeech),
+			(CandidateEntry::properties)(Properties::register),
+			(CandidateEntry::properties)(Properties::label),
+			(CandidateEntry::properties)(Properties::normalized),
+			(CandidateEntry::properties)(Properties::written),
+			(CandidateEntry::properties)(Properties::vernacular),
+			(CandidateEntry::properties)(Properties::collocation),
+			(CandidateEntry::properties)(Properties::definition)(Definition::eng),
+			(CandidateEntry::properties)(Properties::definition)(Definition::urd),
+			(CandidateEntry::properties)(Properties::definition)(Definition::nep),
+			(CandidateEntry::properties)(Properties::definition)(Definition::hin),
+			(CandidateEntry::properties)(Properties::definition)(Definition::ind),
 		)
 
-		val checkColumns = listOf(
-			(CandidateInfo::properties)(Properties::partOfSpeech),
-			(CandidateInfo::properties)(Properties::register),
-			(CandidateInfo::properties)(Properties::normalized),
-			(CandidateInfo::properties)(Properties::written),
-			(CandidateInfo::properties)(Properties::vernacular),
-			(CandidateInfo::properties)(Properties::collocation),
+		private val checkColumns = listOf(
+			(CandidateEntry::properties)(Properties::partOfSpeech),
+			(CandidateEntry::properties)(Properties::register),
+			(CandidateEntry::properties)(Properties::normalized),
+			(CandidateEntry::properties)(Properties::written),
+			(CandidateEntry::properties)(Properties::vernacular),
+			(CandidateEntry::properties)(Properties::collocation),
 		)
 
-		private val pref = AppPrefs.defaultInstance()
-		private val prefMainLanguage = pref.typeDuck.mainLanguage
-		private val prefDisplayLanguages = pref.typeDuck.displayLanguages
+		val otherData = listOf(
+			"Standard Form 標準字形" to (CandidateEntry::properties)(Properties::normalized),
+			"Written Form 書面語" to (CandidateEntry::properties)(Properties::written),
+			"Vernacular Form 口語" to (CandidateEntry::properties)(Properties::vernacular),
+			"Collocation 配搭" to (CandidateEntry::properties)(Properties::collocation),
+		)
+
+		val litColReading = mapOf(
+			"lit" to "literary reading 文讀",
+			"col" to "colloquial reading 白讀",
+		)
+
+		val register = mapOf(
+			"wri" to "written 書面語 ",
+			"ver" to "vernacular 口語 ",
+			"for" to "formal 公文體 ",
+			"lzh" to "classical Chinese 文言 ",
+		)
+
+		val partOfSpeech = mapOf(
+			"n" to "noun 名詞",
+			"v" to "verb 動詞",
+			"adj" to "adjective 形容詞",
+			"adv" to "adverb 副詞",
+			"morph" to "morpheme 語素",
+			"mw" to "measure word 量詞",
+			"part" to "particle 助詞",
+			"oth" to "other 其他",
+			"x" to "non-morpheme 非語素",
+		)
+
+		val labels = mapOf(
+			"abbrev" to "abbreviation 簡稱",
+			"astro" to "astronomy 天文",
+			"ChinMeta" to "sexagenary cycle 干支",
+			"horo" to "horoscope 星座",
+			"org" to "organisation 機構",
+			"person" to "person 人名",
+			"place" to "place 地名",
+			"reli" to "religion 宗教",
+			"rare" to "rare 罕見",
+			"composition" to "compound 詞組",
+		)
 	}
 
 	var isJyutpingOnly = true
@@ -140,11 +184,11 @@ data class CandidateInfo(
 			.filter { it != prefMainLanguage }
 			.mapNotNull { getDefinition(it) }
 
-	fun otherLanguagesWithNames(languageNames: Array<String>) =
-		prefDisplayLanguages
+	val otherLanguagesWithNames: List<Pair<String, String>>
+		get() = prefDisplayLanguages
 			.filter { it != prefMainLanguage }
 			.mapNotNull { language ->
-				getDefinition(language)?.let { languageNames[language.ordinal] to it }
+				getDefinition(language)?.let { language.displayName to it }
 			}
 
 	val formattedLabels: List<String>?
