@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:title="@string/pref_about">
+	<hk.eduhk.typeduck.ui.components.AboutPreference
+			android:selectable="false"
+			android:layout="@layout/about_description" />
+	<PreferenceCategory
+			android:title="@string/pref_links"
+			app:iconSpaceReserved="false">
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="@string/pref_typeduck_site"
+				app:icon="@drawable/ic_baseline_launch_24"
+				app:jumpToUrl="https://typeduck.hk" />
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="@string/pref_learnduck"
+				android:summary="@string/pref_learnduck_summary"
+				app:icon="@drawable/ic_baseline_launch_24"
+				app:jumpToUrl="https://learn.typeduck.hk" />
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="@string/pref_jyutping_site"
+				app:jumpToUrl="https://lshk.org/jyutping-scheme/"
+				app:icon="@drawable/ic_baseline_launch_24" />
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="@string/pref_typeduck_source"
+				app:jumpToUrl="@string/current_git_repo"
+				app:icon="@drawable/ic_baseline_code_24" />
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="@string/pref_trime_source"
+				app:jumpToUrl="@string/original_git_repo"
+				app:icon="@drawable/ic_baseline_code_24" />
+	</PreferenceCategory>
+	<PreferenceCategory
+			android:title="@string/pref_acknowledgements"
+			app:iconSpaceReserved="false">
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="Rime Input Method Engine"
+				app:jumpToUrl="https://github.com/TypeDuck-HK/librime"
+				app:icon="@drawable/ic_octicon_repo_24" />
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="Open Chinese Convert (OpenCC)"
+				app:jumpToUrl="https://github.com/BYVoid/OpenCC"
+				app:icon="@drawable/ic_octicon_repo_24" />
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="AndroidUtilCode"
+				app:jumpToUrl="https://github.com/Blankj/AndroidUtilCode"
+				app:icon="@drawable/ic_octicon_repo_24" />
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="Custom Activity On Crash"
+				app:jumpToUrl="https://github.com/Ereza/CustomActivityOnCrash"
+				app:icon="@drawable/ic_octicon_repo_24" />
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="Splitties"
+				app:jumpToUrl="https://github.com/LouisCAD/Splitties"
+				app:icon="@drawable/ic_octicon_repo_24" />
+		<hk.eduhk.typeduck.ui.components.IntentPreference
+				android:title="Timber"
+				app:jumpToUrl="https://github.com/JakeWharton/timber"
+				app:icon="@drawable/ic_octicon_repo_24" />
+	</PreferenceCategory>
+</PreferenceScreen>

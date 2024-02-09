@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/app_name">
 	<Preference
+			android:key="pref_about"
+			android:title="@string/pref_about"
+			app:iconSpaceReserved="false" />
+	<Preference
 			app:isPreferenceVisible="@bool/DEBUG"
 			android:key="pref_refresh"
 			android:title="@string/pref_refresh"
@@ -75,22 +79,6 @@
 				android:key="pref_symbols_on_qwerty"
 				android:title="@string/pref_symbols_on_qwerty"
 				app:summary="@string/pref_symbols_on_qwerty_summary"
-				app:iconSpaceReserved="false" />
-	</PreferenceCategory>
-	<PreferenceCategory
-			android:title="@string/pref_about"
-			app:iconSpaceReserved="false">
-		<Preference
-				android:key="pref_typeduck_source"
-				android:title="@string/pref_typeduck_source"
-				app:iconSpaceReserved="false" />
-		<Preference
-				android:key="pref_trime_source"
-				android:title="@string/pref_trime_source"
-				app:iconSpaceReserved="false" />
-		<Preference
-				android:key="pref_license"
-				android:title="@string/pref_license"
 				app:iconSpaceReserved="false" />
 	</PreferenceCategory>
 </PreferenceScreen>

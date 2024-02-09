@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'com.cookpad.android.plugin.license-tools' version '1.2.8'
     id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_version"
     id 'com.google.devtools.ksp' version '1.7.20-1.0.8'
 }
@@ -19,10 +18,9 @@ android {
 
         multiDexEnabled true
         setProperty("archivesBaseName", "typeduck-$versionName")
-        buildConfigField "String", "BUILD_GIT_HASH", "\"${gitHashShort}\""
-        buildConfigField "String", "BUILD_GIT_REPO", "\"${gitRemoteUrl}\""
-        buildConfigField "String", "BUILD_VERSION_NAME", "\"${gitVersionName}\""
-        buildConfigField "String", "BUILD_INFO", "\"${buildInfo}\""
+        buildConfigField "String", "BUILD_GIT_HASH", "\"${gitHash}\""
+        resValue "string", "current_git_repo", "\"${gitOriginUrl}\""
+        resValue "string", "original_git_repo", "\"${gitUpstreamUrl}\""
     }
 
     signingConfigs {
@@ -121,11 +119,6 @@ ksp {
     arg "room.schemaLocation", "$projectDir/schemas"
 }
 
-android.applicationVariants.all {
-    def variantName = name.capitalize()
-    tasks.findByName("merge${variantName}Assets")?.dependsOn(generateLicenseJson)
-}
-
 dependencies {
     ksp project(":codegen")
     implementation "com.blankj:utilcodex:1.31.1"
@@ -172,16 +165,23 @@ static String exec(String cmd) {
     }
 }
 
-static String getGitHashShort() {
-    return exec("git rev-parse --short HEAD")
+static String getGitHash() {
+    return exec("git rev-parse HEAD")
 }
 
-static String getGitRemoteUrl() {
+static String getGitOriginUrl() {
     return exec("git remote get-url origin")
             .replaceFirst("^git@github\\.com:", "https://github.com/")
             .replaceFirst("\\.git\$", "")
 }
 
+static String getGitUpstreamUrl() {
+    return exec("git remote get-url upstream")
+            .replaceFirst("^git@github\\.com:", "https://github.com/")
+            .replaceFirst("\\.git\$", "")
+}
+
+/*
 static String getGitVersionName() {
     return exec("git describe --tags --long --always")
 }
@@ -212,3 +212,4 @@ static String getBuildInfo() {
     println(info)
     return info
 }
+*/

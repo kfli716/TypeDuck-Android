@@ -8,11 +8,11 @@
         android:name="hk.eduhk.typeduck.ui.fragments.PreferenceFragment"
         android:label="@string/app_name" >
         <action
-            android:id="@+id/action_preferenceFragment_to_licenseFragment"
-            app:destination="@id/licenseFragment" />
+            android:id="@+id/action_preferenceFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
     </fragment>
     <fragment
-        android:id="@+id/licenseFragment"
-        android:name="hk.eduhk.typeduck.ui.fragments.LicenseFragment"
-        android:label="@string/pref_license" />
+        android:id="@+id/aboutFragment"
+        android:name="hk.eduhk.typeduck.ui.fragments.AboutFragment"
+        android:label="@string/pref_about" />
 </navigation>

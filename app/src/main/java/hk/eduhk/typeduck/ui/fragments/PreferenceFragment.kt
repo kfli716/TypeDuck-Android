@@ -1,8 +1,6 @@
 package hk.eduhk.typeduck.ui.fragments
 
-import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -47,6 +45,10 @@ class PreferenceFragment :
         languageNames = resources.getStringArray(R.array.pref_languages)
         sizeNames = resources.getStringArray(R.array.pref_sizes)
         with(preferenceScreen) {
+            get<Preference>("pref_about")?.setOnPreferenceClickListener {
+                findNavController().navigate(R.id.action_preferenceFragment_to_aboutFragment)
+                true
+            }
             get<Preference>("pref_refresh")?.setOnPreferenceClickListener {
                 lifecycleScope.withLoadingDialog(context) {
                     withContext(Dispatchers.IO) {
@@ -101,18 +103,6 @@ class PreferenceFragment :
                     it.value = candidateGap.name
                     it.summary = sizeNames[candidateGap.ordinal]
                 }
-            }
-            get<Preference>("pref_typeduck_source")?.setOnPreferenceClickListener {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/TypeDuck-HK/TypeDuck-Android")))
-                true
-            }
-            get<Preference>("pref_trime_source")?.setOnPreferenceClickListener {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/osfans/trime")))
-                true
-            }
-            get<Preference>("pref_license")?.setOnPreferenceClickListener {
-                findNavController().navigate(R.id.action_preferenceFragment_to_licenseFragment)
-                true
             }
         }
     }
