@@ -528,11 +528,12 @@ class TextInputManager private constructor() :
         if (candidate != null && candidate is ComputedCandidate.Word && candidate.hasDictionaryEntry) {
             onPress(KeyEvent.KEYCODE_UNKNOWN)
             trime.inputRootBinding.apply {
-                dictionaryView.setup(candidate) { hideDictionaryView() }.also {
-                    dictionaryView.layoutParams.height = main.mainInput.height
-                    dictionaryView.visibility = View.VISIBLE
-                    main.mainInput.visibility = View.GONE
+                dictionaryView.apply {
+                    setup(candidate) { hideDictionaryView() }
+                    layoutParams.height = main.mainInput.height
+                    visibility = View.VISIBLE
                 }
+                main.mainInput.visibility = View.GONE
             }
         }
     }
