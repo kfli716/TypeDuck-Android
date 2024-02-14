@@ -537,16 +537,15 @@ class TextInputManager private constructor() :
         }
     }
 
-    public fun hideDictionaryView(): Boolean {
-        with(trime.inputRootBinding) {
-            return (dictionaryView.visibility == View.VISIBLE).also {
+    fun hideDictionaryView() =
+        trime.inputRootBinding?.run {
+            (dictionaryView.visibility == View.VISIBLE).also {
                 if (it) {
                     dictionaryView.visibility = View.GONE
                     main.mainInput.visibility = View.VISIBLE
                 }
             }
-        }
-    }
+        } ?: false
 
     /*
     private fun showOptionsDialog() {
