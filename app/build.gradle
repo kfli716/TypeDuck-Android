@@ -17,7 +17,7 @@ android {
         versionName "1.0.0"
 
         multiDexEnabled true
-        setProperty("archivesBaseName", "typeduck-$versionName")
+        setProperty("archivesBaseName", "TypeDuck-Android-$versionName")
         buildConfigField "String", "BUILD_GIT_HASH", "\"${gitHash}\""
         resValue "string", "current_git_repo", "\"${gitOriginUrl}\""
         resValue "string", "original_git_repo", "\"${gitUpstreamUrl}\""
