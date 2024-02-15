@@ -33,6 +33,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
+import hk.eduhk.typeduck.util.DimensionsKt;
 import timber.log.Timber;
 
 /** {@link Keyboard 鍵盤}中的各個按鍵，包含單擊、長按、滑動等多種{@link Event 事件} */
@@ -145,8 +146,8 @@ public class Key {
     }
 
     mKeyboard.setModiferKey(getCode(), this);
-    key_text_size = ConfigGetter.getPixel(mk, "key_text_size", 0);
-    symbol_text_size = ConfigGetter.getPixel(mk, "symbol_text_size", 0);
+    key_text_size = (int) DimensionsKt.sp2px(ConfigGetter.getFloat(mk, "key_text_size", 0));
+    symbol_text_size = (int) DimensionsKt.sp2px(ConfigGetter.getFloat(mk, "symbol_text_size", 0));
     key_text_color = config.colors.getColor(mk, "key_text_color");
     hilited_key_text_color = config.colors.getColor(mk, "hilited_key_text_color");
     key_back_color = config.colors.getDrawable(mk, "key_back_color");

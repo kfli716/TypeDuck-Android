@@ -1,7 +1,5 @@
 package hk.eduhk.typeduck.util
 
-import android.util.TypedValue
-import com.blankj.utilcode.util.SizeUtils
 import hk.eduhk.typeduck.core.Rime
 
 object ConfigGetter {
@@ -42,6 +40,6 @@ object ConfigGetter {
     @JvmStatic
     fun Map<String, *>.getPixel(key: String, default: Float): Int {
         val f = this.getFloat(key, default)
-        return SizeUtils.applyDimension(f, TypedValue.COMPLEX_UNIT_SP).toInt()
+        return dp2px(f).toInt()
     }
 }
