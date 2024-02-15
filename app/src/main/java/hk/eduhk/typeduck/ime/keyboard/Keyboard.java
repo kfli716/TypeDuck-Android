@@ -118,7 +118,7 @@ public class Keyboard {
 
     final double interpolation = Math.pow(1.0 - Math.pow(screenNarrowness, 5.0), 5.0);
     final double keyboardHeightWithCandidateBar = keyboardHeightForNarrowScreen * interpolation + keyboardHeightForNormalScreen * (1.0 - interpolation);
-    keyboardHeight = (int) (keyboardHeightWithCandidateBar - SizeUtils.applyDimension(75.2f, TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall); // 24 * 0.7 * 4 + 8
+    keyboardHeight = (int) (keyboardHeightWithCandidateBar * 0.9 - SizeUtils.applyDimension(40f, TypedValue.COMPLEX_UNIT_DIP) * adjustRatioSmall);
 
     final double ratio = 2.0 * Math.min(keyboardHeightWithCandidateBar / width, 0.45);
     mDisplayWidth = (int) (width - 2.0 * Math.round(width / 4.0 * (1.0 + 1.5048001186256637 * Math.pow(ratio, 12.0) - 1.2196050890844857 * Math.pow(ratio, 8.0) - ratio)));
