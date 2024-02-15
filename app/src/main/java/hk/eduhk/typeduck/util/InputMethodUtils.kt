@@ -12,14 +12,8 @@ object InputMethodUtils {
     private val serviceName =
         ComponentName(appContext, TypeDuckIMEService::class.java).flattenToShortString()
 
-    fun checkIsTypeDuckEnabled(): Boolean {
-        val activeImeIds = Settings.Secure.getString(
-            appContext.contentResolver,
-            Settings.Secure.ENABLED_INPUT_METHODS
-        ) ?: "(none)"
-
-        Timber.i("List of active IMEs: $activeImeIds")
-        return activeImeIds.split(":").contains(serviceName)
+    fun checkIsTypeDuckEnabled() = inputMethodManager.enabledInputMethodList.any {
+        it.serviceName == serviceName.replace("/", "")
     }
 
     fun checkIsTypeDuckSelected(): Boolean {
