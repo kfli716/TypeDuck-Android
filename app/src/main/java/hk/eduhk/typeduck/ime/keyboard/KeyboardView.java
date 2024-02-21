@@ -234,6 +234,8 @@ public class KeyboardView extends View implements View.OnClickListener {
   private Map<String, String> mEnterLabels;
   private int enterLabelMode;
 
+  private boolean isDoubleClick;
+
   public void resetEnterLabel() {
     labelEnter = mEnterLabels.get("default");
   }
@@ -1091,7 +1093,13 @@ public class KeyboardView extends View implements View.OnClickListener {
         Timber.d(
             "\t<TrimeInput>\tdetectAndSendKey()\tModifierKey, key.getEvent, KeyLabel=%s",
             key.getLabel());
-        setModifier(key);
+        if(isDoubleClick){
+          mKeyboard.setShifted(true, true);
+          isDoubleClick = false;q
+        }
+        else{
+          setModifier(key);
+        }
       } else {
         if (key.getClick().isRepeatable()) {
           if (type.ordinal() > KeyEventType.CLICK.ordinal()) mAbortKey = true;
@@ -1790,6 +1798,10 @@ public class KeyboardView extends View implements View.OnClickListener {
     final int multiTabInterval = getPrefs().getKeyboard().getLongPressTimeout();
     if (eventTime > mLastTapTime + multiTabInterval || keyIndex != mLastSentIndex) {
       resetMultiTap();
+      isDoubleClick = false;
+    }
+    else{
+      isDoubleClick = !isDoubleClick;
     }
   }
 
