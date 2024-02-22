@@ -103,6 +103,8 @@ public class KeyboardView extends View implements View.OnClickListener {
      * @param text the sequence of characters to be displayed.
      */
     void onText(final CharSequence text);
+
+    void onDoubleSpace(int charToDel, CharSequence punct);
   }
 
   private static final boolean DEBUG = false;
@@ -233,6 +235,10 @@ public class KeyboardView extends View implements View.OnClickListener {
   private String labelEnter = "";
   private Map<String, String> mEnterLabels;
   private int enterLabelMode;
+  // To record if the key is being double clicked
+  private boolean isDoubleClick;
+  // In case when space button is double clicked, this bool records whether text was inputted
+  private boolean lastSpaceWasConfirm;
 
   public void resetEnterLabel() {
     labelEnter = mEnterLabels.get("default");
@@ -1091,7 +1097,12 @@ public class KeyboardView extends View implements View.OnClickListener {
         Timber.d(
             "\t<TrimeInput>\tdetectAndSendKey()\tModifierKey, key.getEvent, KeyLabel=%s",
             key.getLabel());
-        setModifier(key);
+        if (isDoubleClick) {
+          mKeyboard.setShifted(true, true);
+          //isDoubleClick = false;
+        } else {
+          setModifier(key);
+        }
       } else {
         if (key.getClick().isRepeatable()) {
           if (type.ordinal() > KeyEventType.CLICK.ordinal()) mAbortKey = true;
@@ -1104,10 +1115,47 @@ public class KeyboardView extends View implements View.OnClickListener {
         // getKeyIndices(x, y, codes); // 这里实际上并没有生效
         Timber.d("\t<TrimeInput>\tdetectAndSendKey()\tonEvent, code=%d, key.getEvent", code);
         // 可以在这里把 mKeyboard.getModifer() 获取的修饰键状态写入event里
-        mKeyboardActionListener.onEvent(key.getEvent(type.ordinal()));
-        releaseKey(code);
-        Timber.d("\t<TrimeInput>\tdetectAndSendKey()\trefreshModifier");
-        refreshModifier();
+        // When DoubleSpaceFullStop is not enabled or not handling double space keys, everything proceeds as normal.
+        // Otherwise, normal input procedure is interrupted.
+        boolean proceedAsNormal = true;
+        // triggers only if getDoubleSpaceFullStop is preferred.
+        if (getPrefs().getTypeDuck().getDoubleSpaceFullStop()) {
+          /* When space key is pressed, there could be two labels depending on the state.
+             If you are typing Chinese and press double space, the first space key will be labeled as Confirm
+             and the second space is labeled as Space. In this case, the Confirm space keys ejects the Chinese words
+             you are typing and there is no trailing space. So we don't want to delete anything at the end of the input.
+             If you are not typing Chinese and press double space, both of the space keys will be labeled as Space. And
+             the first space key will input a empty character, so when pressing the space key for the second time, we need
+             to delete the trailing space. And this is handled in the onDoubleSpace function. The boolean lastSpaceWasConfirm
+             is used to track the label of the last space key pressed.
+           */
+          switch (key.getLabel()) {
+            case "Space":
+              // need full stop when english mode
+              if (isDoubleClick) {
+                // The isHalfShapePunct is used to check whether ". " or "。" should be entered after double space.
+                mKeyboardActionListener.onDoubleSpace(
+                        lastSpaceWasConfirm ? 0 : 1,
+                        mKeyboard.isHalfShapePunct() ? ". " : "。"
+                );
+                proceedAsNormal = false;
+                isDoubleClick = false;
+              }
+              lastSpaceWasConfirm = false;
+              break;
+            case "Confirm":
+              lastSpaceWasConfirm = true;
+              break;
+            default:
+          }
+        }
+        // If the double space full stop feature is not enabled or if double space is not triggered, then proceed as below.
+        if (proceedAsNormal) {
+          mKeyboardActionListener.onEvent(key.getEvent(type.ordinal()));
+          releaseKey(code);
+          Timber.d("\t<TrimeInput>\tdetectAndSendKey()\trefreshModifier");
+          refreshModifier();
+        }
       }
       mLastSentIndex = index;
       mLastTapTime = eventTime;
@@ -1370,6 +1418,12 @@ public class KeyboardView extends View implements View.OnClickListener {
               @Override
               public void onRelease(final int primaryCode) {
                 mKeyboardActionListener.onRelease(primaryCode);
+              }
+
+              // added for doubleSpaceFullStop
+              @Override
+              public void onDoubleSpace(int charToDel, CharSequence punct) {
+                mKeyboardActionListener.onDoubleSpace(charToDel, punct);
               }
             });
         // mInputView.setSuggest(mSuggest);
@@ -1784,12 +1838,18 @@ public class KeyboardView extends View implements View.OnClickListener {
     // final boolean mInMultiTap = false;
   }
 
+  // This function checks whether the same key is double clicked.
+  // We add a class boolean to track it.
   private void checkMultiTap(long eventTime, int keyIndex) {
     if (keyIndex == NOT_A_KEY) return;
     // final Key key = mKeys[keyIndex];
     final int multiTabInterval = getPrefs().getKeyboard().getLongPressTimeout();
     if (eventTime > mLastTapTime + multiTabInterval || keyIndex != mLastSentIndex) {
       resetMultiTap();
+      isDoubleClick = false;
+    } else {
+      // The third consecutive click should not be considered as double click.
+      isDoubleClick = !isDoubleClick;
     }
   }
 
