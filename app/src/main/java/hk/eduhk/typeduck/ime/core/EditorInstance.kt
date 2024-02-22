@@ -267,4 +267,11 @@ class EditorInstance(private val ims: InputMethodService) {
         ic.endBatchEdit()
         return true
     }
+
+    // added to handle doubleSpaceFullStop
+    fun doubleSpaceEvent(charToDel: Int, punct: CharSequence) {
+        val ic = inputConnection ?: return
+        ic.deleteSurroundingText(charToDel, 0)
+        ic.commitText(punct, 1)
+    }
 }

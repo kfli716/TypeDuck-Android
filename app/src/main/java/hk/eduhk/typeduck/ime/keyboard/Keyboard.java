@@ -795,4 +795,8 @@ public class Keyboard {
   public Drawable getBackground() {
     return mBackground;
   }
+
+  public boolean isHalfShapePunct() {
+    return Rime.showAsciiPunch();
+  }
 }
