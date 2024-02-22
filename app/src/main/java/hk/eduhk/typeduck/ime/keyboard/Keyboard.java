@@ -795,4 +795,9 @@ public class Keyboard {
   public Drawable getBackground() {
     return mBackground;
   }
+
+  // added for double space to full stop
+  public boolean showAsciiPunch(){
+    return Rime.showAsciiPunch();
+  }
 }

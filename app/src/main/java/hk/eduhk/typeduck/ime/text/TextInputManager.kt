@@ -563,4 +563,9 @@ class TextInputManager private constructor() :
         trime.showDialogAboveInputView(builder.create())
     }
     */
+
+    // added to handle doubleSpaceFullStop
+    override fun onDoubleSpace(charToDel: Int, pMark: CharSequence){
+        activeEditorInstance.doubleSpaceEvent(charToDel, pMark)
+    }
 }
