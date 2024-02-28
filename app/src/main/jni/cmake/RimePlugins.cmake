@@ -1,8 +1,6 @@
 # if you want to add some new plugins, add them to librime_jni/rime_jni.cc too
 set(RIME_PLUGINS
-  librime-lua
-  librime-charcode
-  librime-octagram
+  rime-dictionary-lookup-filter
 )
 
 # plugins didn't use target_link_libraries, the usage-requirements won't work, include manually
@@ -28,15 +26,3 @@ foreach(plugin ${RIME_PLUGINS})
     "${CMAKE_SOURCE_DIR}/librime/plugins"
   )
 endforeach()
-
-# librime-lua
-file(REMOVE "${CMAKE_SOURCE_DIR}/librime/plugins/librime-lua/thirdparty")
-execute_process(COMMAND ln -s
-  "${CMAKE_SOURCE_DIR}/librime-lua-deps"
-  "${CMAKE_SOURCE_DIR}/librime/plugins/librime-lua/thirdparty"
-)
-
-# librime-charcode
-option(BUILD_WITH_ICU "" OFF)
-# TODO: replace with TOUCH after cmake >= 3.12
-file(WRITE "${CMAKE_BINARY_DIR}/include/boost/asio.hpp" "")
