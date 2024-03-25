@@ -1097,7 +1097,7 @@ public class KeyboardView extends View implements View.OnClickListener {
         Timber.d(
             "\t<TrimeInput>\tdetectAndSendKey()\tModifierKey, key.getEvent, KeyLabel=%s",
             key.getLabel());
-        if (isDoubleClick) {
+        if (key.isShift() && isDoubleClick) {
           mKeyboard.setShifted(true, true);
           //isDoubleClick = false;
         } else {
@@ -1135,8 +1135,8 @@ public class KeyboardView extends View implements View.OnClickListener {
               if (isDoubleClick) {
                 // The isHalfShapePunct is used to check whether ". " or "。" should be entered after double space.
                 mKeyboardActionListener.onDoubleSpace(
-                        lastSpaceWasConfirm ? 0 : 1,
-                        mKeyboard.isHalfShapePunct() ? ". " : "。"
+                    lastSpaceWasConfirm ? 0 : 1,
+                    mKeyboard.isHalfShapePunct() ? ". " : "。"
                 );
                 proceedAsNormal = false;
                 isDoubleClick = false;
