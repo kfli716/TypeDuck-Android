@@ -1097,7 +1097,7 @@ public class KeyboardView extends View implements View.OnClickListener {
         Timber.d(
             "\t<TrimeInput>\tdetectAndSendKey()\tModifierKey, key.getEvent, KeyLabel=%s",
             key.getLabel());
-        if (isDoubleClick) {
+        if (key.isShift() && isDoubleClick) {
           mKeyboard.setShifted(true, true);
           //isDoubleClick = false;
         } else {
