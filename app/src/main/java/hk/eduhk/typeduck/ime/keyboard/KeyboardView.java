@@ -1135,8 +1135,8 @@ public class KeyboardView extends View implements View.OnClickListener {
               if (isDoubleClick) {
                 // The isHalfShapePunct is used to check whether ". " or "。" should be entered after double space.
                 mKeyboardActionListener.onDoubleSpace(
-                        lastSpaceWasConfirm ? 0 : 1,
-                        mKeyboard.isHalfShapePunct() ? ". " : "。"
+                    lastSpaceWasConfirm ? 0 : 1,
+                    mKeyboard.isHalfShapePunct() ? ". " : "。"
                 );
                 proceedAsNormal = false;
                 isDoubleClick = false;
