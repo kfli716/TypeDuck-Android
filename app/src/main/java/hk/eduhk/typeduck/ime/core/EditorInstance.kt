@@ -268,10 +268,18 @@ class EditorInstance(private val ims: InputMethodService) {
         return true
     }
 
-    // added to handle doubleSpaceFullStop
-    fun doubleSpaceEvent(charToDel: Int, punct: CharSequence) {
-        val ic = inputConnection ?: return
+    // Added to handle doubleSpaceFullStop, depending on the character just before the cursor, the function determines
+    // whether double clicking the space key produces a full stop.
+    fun doubleSpaceEvent(charToDel: Int, punct: CharSequence): Boolean {
+        // specialCharacters are characters that do not produce a full stop after double clicking in GBoard.
+        val specialCharacters: String = " ！？、，。!?.,"
+        val ic = inputConnection ?: return true
+        var inputSuffix = ic.getTextBeforeCursor(1 + charToDel, 0)
+        if (inputSuffix.isNullOrEmpty() || specialCharacters.contains(inputSuffix[0])) {
+            return true
+        }
         ic.deleteSurroundingText(charToDel, 0)
         ic.commitText(punct, 1)
+        return false;
     }
 }

@@ -521,6 +521,11 @@ class TextInputManager private constructor() :
         trime.updateComposing()
     }
 
+    // Used to handle doubleSpaceFullStop
+    override fun onDoubleSpace(charToDel: Int, punct: CharSequence): Boolean {
+        return activeEditorInstance.doubleSpaceEvent(charToDel, punct)
+    }
+
     /*
     private fun showOptionsDialog() {
         val builder = AlertDialog.Builder(trime, R.style.dialog_theme)
@@ -564,8 +569,4 @@ class TextInputManager private constructor() :
     }
     */
 
-    // added to handle doubleSpaceFullStop
-    override fun onDoubleSpace(charToDel: Int, punct: CharSequence) {
-        activeEditorInstance.doubleSpaceEvent(charToDel, punct)
-    }
 }

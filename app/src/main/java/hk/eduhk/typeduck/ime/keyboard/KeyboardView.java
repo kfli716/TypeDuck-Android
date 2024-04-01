@@ -45,6 +45,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import hk.eduhk.typeduck.R;
+import hk.eduhk.typeduck.core.Rime;
 import hk.eduhk.typeduck.data.AppPrefs;
 import hk.eduhk.typeduck.data.theme.Config;
 import hk.eduhk.typeduck.data.theme.FontManager;
@@ -104,7 +105,7 @@ public class KeyboardView extends View implements View.OnClickListener {
      */
     void onText(final CharSequence text);
 
-    void onDoubleSpace(int charToDel, CharSequence punct);
+    boolean onDoubleSpace(int charToDel, CharSequence punct);
   }
 
   private static final boolean DEBUG = false;
@@ -1099,7 +1100,6 @@ public class KeyboardView extends View implements View.OnClickListener {
             key.getLabel());
         if (key.isShift() && isDoubleClick) {
           mKeyboard.setShifted(true, true);
-          //isDoubleClick = false;
         } else {
           setModifier(key);
         }
@@ -1115,6 +1115,7 @@ public class KeyboardView extends View implements View.OnClickListener {
         // getKeyIndices(x, y, codes); // 这里实际上并没有生效
         Timber.d("\t<TrimeInput>\tdetectAndSendKey()\tonEvent, code=%d, key.getEvent", code);
         // 可以在这里把 mKeyboard.getModifer() 获取的修饰键状态写入event里
+
         // When DoubleSpaceFullStop is not enabled or not handling double space keys, everything proceeds as normal.
         // Otherwise, normal input procedure is interrupted.
         boolean proceedAsNormal = true;
@@ -1129,24 +1130,14 @@ public class KeyboardView extends View implements View.OnClickListener {
              to delete the trailing space. And this is handled in the onDoubleSpace function. The boolean lastSpaceWasConfirm
              is used to track the label of the last space key pressed.
            */
-          switch (key.getLabel()) {
-            case "Space":
-              // need full stop when english mode
-              if (isDoubleClick) {
-                // The isHalfShapePunct is used to check whether ". " or "。" should be entered after double space.
-                mKeyboardActionListener.onDoubleSpace(
-                    lastSpaceWasConfirm ? 0 : 1,
-                    mKeyboard.isHalfShapePunct() ? ". " : "。"
-                );
-                proceedAsNormal = false;
-                isDoubleClick = false;
-              }
-              lastSpaceWasConfirm = false;
-              break;
-            case "Confirm":
-              lastSpaceWasConfirm = true;
-              break;
-            default:
+          if (key.isSpace()) {
+            if (isDoubleClick) {
+              proceedAsNormal = mKeyboardActionListener.onDoubleSpace(
+                  lastSpaceWasConfirm ? 0 : 1,
+                  mKeyboard.isHalfShapePunct() ? ". " : "。"
+              );
+            }
+            lastSpaceWasConfirm = Rime.isComposing();
           }
         }
         // If the double space full stop feature is not enabled or if double space is not triggered, then proceed as below.
@@ -1422,8 +1413,8 @@ public class KeyboardView extends View implements View.OnClickListener {
 
               // added for doubleSpaceFullStop
               @Override
-              public void onDoubleSpace(int charToDel, CharSequence punct) {
-                mKeyboardActionListener.onDoubleSpace(charToDel, punct);
+              public boolean onDoubleSpace(int charToDel, CharSequence punct) {
+                return mKeyboardActionListener.onDoubleSpace(charToDel, punct);
               }
             });
         // mInputView.setSuggest(mSuggest);
