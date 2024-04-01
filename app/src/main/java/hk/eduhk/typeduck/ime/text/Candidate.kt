@@ -5,12 +5,17 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.PaintDrawable
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
+import hk.eduhk.typeduck.R
 import hk.eduhk.typeduck.core.CandidateListItem
 import hk.eduhk.typeduck.core.Rime
 import hk.eduhk.typeduck.data.AppPrefs
@@ -24,7 +29,6 @@ import hk.eduhk.typeduck.ime.text.ComputedCandidate.Word
 import hk.eduhk.typeduck.util.GraphicUtils.drawText
 import hk.eduhk.typeduck.util.GraphicUtils.measureText
 import hk.eduhk.typeduck.util.dp2px
-import hk.eduhk.typeduck.util.sp2px
 import java.lang.ref.WeakReference
 
 /** 顯示候選字詞  */
@@ -35,6 +39,7 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 		fun onCandidatePressed(index: Int)
 		fun onCandidateSymbolPressed(arrow: String)
 		fun onCandidateLongClicked(index: Int)
+		fun onCandidateSwipeDown(candidate: ComputedCandidate?)
 	}
 
 	companion object {
@@ -44,6 +49,11 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 		const val PAGE_EX_BUTTON = "▼"
 	}
 
+	private val infoIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_outline_info_24, null)
+	private val highlightedInfoIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_info_24, null)
+	private val expandIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_expand_more_24, null)
+	private val swipeYThreshold = dp2px(80f) * Keyboard.adjustRatioSmall
+
 	private var expectWidth = 0
 
 	private var listener = WeakReference<EventListener?>(null)
@@ -52,8 +62,9 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 	private val computedCandidates = ArrayList<ComputedCandidate?>(maxCandidateCount)
 	private var numCandidates = 0
 	private var startNum = 0
-	private var timeDown: Long = 0
-	private var timeMove: Long = 0
+	private val mainHandler = Handler(Looper.getMainLooper())
+	private var longPressTimer: Runnable? = null
+	private var beginPoint: Point? = null
 
 	private var candidateHighlight: PaintDrawable? = null
 	private val separatorPaint: Paint
@@ -76,6 +87,7 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 	private var shouldShowRomanization = true
 	private var shouldShowReverseLookup = false
 	private var candidateUseCursor = false
+	private var infoIsHighlighted = false
 
 	private val appPrefs: AppPrefs
 		get() = defaultInstance()
@@ -197,6 +209,8 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 
 	private fun isHighlighted(i: Int) = candidateUseCursor && i == highlightIndex
 
+	private fun infoIsHighlighted(i: Int) = infoIsHighlighted && i == highlightIndex
+
 	val highlightLeft: Int
 		get() = if (highlightIndex < computedCandidates.size && highlightIndex >= 0) computedCandidates[highlightIndex]!!.geometry.left else 0
 	val highlightRight: Int
@@ -220,41 +234,47 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 			val primaryColor = if (isHighlighted(i)) hilitedCandidateTextColor else candidateTextColor
 			val secondaryColor = if (isHighlighted(i)) hilitedCommentTextColor else commentTextColor
 			if (computedCandidate is Word) {
+				val centerX = geometry.centerX().toFloat() - (if (computedCandidate.hasDictionaryEntry) commentHeight / 2f else 0f)
 				if (hasReverseLookup && computedCandidate.isReverseLookup) {
 					val note = computedCandidate.note
 					if (note.isNotEmpty()) {
-						val noteX = geometry.centerX().toFloat()
 						val noteY = geometry.top + commentHeight / 2.0f -
 								(commentPaint.ascent() + commentPaint.descent()) / 2
 						commentPaint.color = primaryColor
-						canvas.drawText(note, noteX, noteY, commentPaint, commentFont!!)
+						canvas.drawText(note, centerX, noteY, commentPaint, commentFont!!)
 					}
 				}
-				val entry = computedCandidate.entries.firstOrNull { it.matchInputBuffer == "1" }
-				if (shouldShowRomanization) {
-					val roman = entry?.jyutping ?: (if (computedCandidate.isReverseLookup) "" else computedCandidate.note)
-					if (roman.isNotEmpty()) {
-						val romanX = geometry.centerX().toFloat()
-						val romanY = geometry.top + (if (hasReverseLookup) commentHeight else 0) + commentHeight / 2.0f -
-								(commentPaint.ascent() + commentPaint.descent()) / 2
-						commentPaint.color = primaryColor
-						canvas.drawText(roman, romanX, romanY, commentPaint, commentFont!!)
-					}
+				if (shouldShowRomanization && computedCandidate.romanization.isNotEmpty()) {
+					val romanY = geometry.top + (if (hasReverseLookup) commentHeight else 0) + commentHeight / 2.0f -
+							(commentPaint.ascent() + commentPaint.descent()) / 2
+					commentPaint.color = primaryColor
+					canvas.drawText(computedCandidate.romanization, centerX, romanY, commentPaint, commentFont!!)
 				}
 				val word = computedCandidate.word
-				val wordX = geometry.centerX().toFloat()
 				val wordY = geometry.top + topCommentsHeight + candidateHeight / 2.0f -
 						(candidatePaint.ascent() + candidatePaint.descent()) / 2
 				candidatePaint.color = primaryColor
-				canvas.drawText(word, wordX, wordY, candidatePaint, candidateFont!!)
+				canvas.drawText(word, centerX, wordY, candidatePaint, candidateFont!!)
 
-				val definition = entry?.mainLanguageOrLabel
+				val definition = computedCandidate.entry?.mainLanguageOrLabel
 				if (!definition.isNullOrEmpty()) {
-					val definitionX = geometry.centerX().toFloat()
 					val definitionY = geometry.top + topCommentsHeight + candidateHeight + commentHeight / 2.0f -
 							(commentPaint.ascent() + commentPaint.descent()) / 2
-					commentPaint.color = if (entry.isDictionaryEntry) primaryColor else secondaryColor
-					canvas.drawText(definition, definitionX, definitionY, commentPaint, commentFont!!)
+					commentPaint.color = if (computedCandidate.entry.isDictionaryEntry) primaryColor else secondaryColor
+					canvas.drawText(definition, centerX, definitionY, commentPaint, commentFont!!)
+				}
+
+				if (computedCandidate.hasDictionaryEntry) {
+					(if (infoIsHighlighted(i)) highlightedInfoIcon else infoIcon)?.apply {
+						setTint(primaryColor)
+						setBounds(geometry.right - candidateHeight / 2, geometry.top, geometry.right, geometry.top + candidateHeight / 2)
+						draw(canvas)
+					}
+					expandIcon?.apply {
+						setTint(primaryColor)
+						setBounds(geometry.right - candidateHeight * 2 / 3, geometry.top + candidateHeight * 3 / 8, geometry.right + candidateHeight / 6, geometry.top + candidateHeight * 3 / 4)
+						draw(canvas)
+					}
 				}
 			} else if (computedCandidate is Symbol) {
 				// Draw page up / down buttons
@@ -316,11 +336,9 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 					candidateWidth = candidateWidth.coerceAtLeast(noteWidth)
 				}
 			}
-			val entry = candidate.entries.firstOrNull { it.matchInputBuffer == "1" }
 			if (shouldShowRomanization) {
-				val roman = entry?.jyutping ?: (if (candidate.isReverseLookup) "" else candidate.note)
-				if (roman.isNotEmpty()) {
-					val romanWidth = commentPaint.measureText(roman, commentFont!!)
+				if (candidate.romanization.isNotEmpty()) {
+					val romanWidth = commentPaint.measureText(candidate.romanization, commentFont!!)
 					candidateWidth = candidateWidth.coerceAtLeast(romanWidth)
 				}
 			}
@@ -328,10 +346,14 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 				val textWidth = commentPaint.measureText(text, candidateFont!!)
 				candidateWidth = candidateWidth.coerceAtLeast(textWidth)
 			}
-			val definition = entry?.mainLanguageOrLabel
+			val definition = candidate.entry?.mainLanguageOrLabel
 			if (!definition.isNullOrEmpty()) {
 				val definitionWidth = commentPaint.measureText(definition, commentFont!!)
 				candidateWidth = candidateWidth.coerceAtLeast(definitionWidth)
+			}
+
+			if (candidate.hasDictionaryEntry) {
+				candidateWidth += commentHeight / 2
 			}
 
 			candidateWidth += 2 * (candidatePadding + candidateGap)
@@ -386,33 +408,65 @@ class Candidate(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
 		val x = me.x.toInt()
 		val y = me.y.toInt()
 		when (me.actionMasked) {
-			MotionEvent.ACTION_DOWN,
-			MotionEvent.ACTION_MOVE -> {
-				if (me.actionMasked == MotionEvent.ACTION_DOWN) {
-					timeDown = System.currentTimeMillis()
-				}
+			MotionEvent.ACTION_DOWN -> {
+		   		beginPoint = Point(x, y)
 				isPressed = true
 				highlightIndex = getCandidateIndex(x, y)
-				invalidate()
-				// updateHighlight(x, y)
-			}
-
-			MotionEvent.ACTION_UP,
-			MotionEvent.ACTION_CANCEL -> {
-				timeMove = System.currentTimeMillis()
-				val durationMs = timeMove - timeDown
-				isPressed = false
-				if (me.actionMasked == MotionEvent.ACTION_UP) {
-					onCandidateClick(
-						highlightIndex,
-						durationMs >= appPrefs.keyboard.deleteCandidateTimeout
-					)
+				longPressTimer = Runnable {
+					onCandidateClick(highlightIndex, true)
+					deselectCandidate()
+					invalidate()
 				}
-				highlightIndex = -1
+				mainHandler.postDelayed(longPressTimer!!, appPrefs.keyboard.deleteCandidateTimeout.toLong())
+				invalidate()
+			}
+			MotionEvent.ACTION_MOVE -> {
+				if (!computedCandidates.indices.contains(highlightIndex) || beginPoint == null) return true
+				if (y - beginPoint!!.y > swipeYThreshold) {
+					listener.get()?.onCandidateSwipeDown(computedCandidates[highlightIndex])
+					deselectCandidate()
+				} else {
+					computedCandidates[highlightIndex]?.geometry?.let {
+						if (x < it.left || x > it.right || y < it.top) {
+							deselectCandidate()
+						} else if (y > it.bottom) {
+							infoIsHighlighted = true
+							clearLongPressTimer()
+						} else {
+							infoIsHighlighted = false
+						}
+					}
+				}
+				invalidate()
+			}
+			MotionEvent.ACTION_UP -> {
+				if (computedCandidates.indices.contains(highlightIndex) && computedCandidates[highlightIndex]?.geometry?.contains(x, y) == true) {
+					onCandidateClick(highlightIndex, false)
+				}
+				deselectCandidate()
+				invalidate()
+			}
+			MotionEvent.ACTION_CANCEL -> {
+				deselectCandidate()
 				invalidate()
 			}
 		}
 		return true
+	}
+
+	private fun deselectCandidate() {
+		isPressed = false
+		infoIsHighlighted = false
+		highlightIndex = -1
+		clearLongPressTimer()
+		beginPoint = null
+	}
+
+	private fun clearLongPressTimer() {
+		longPressTimer?.let {
+			mainHandler.removeCallbacks(it)
+			longPressTimer = null
+		}
 	}
 
 	/**

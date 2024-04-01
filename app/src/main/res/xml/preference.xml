@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/app_name">
 	<Preference
+			android:key="pref_about"
+			android:title="@string/pref_about"
+			app:iconSpaceReserved="false" />
+	<Preference
+			app:isPreferenceVisible="@bool/DEBUG"
 			android:key="pref_refresh"
 			android:title="@string/pref_refresh"
 			app:iconSpaceReserved="false" />
@@ -46,12 +51,14 @@
 				android:title="@string/pref_auto_cap"
 				app:summary="@string/pref_auto_cap_summary"
 				app:iconSpaceReserved="false" />
+		<!--
 		<SwitchPreferenceCompat
 				android:defaultValue="true"
 				android:key="pref_double_space_full_stop"
 				android:title="@string/pref_double_space_full_stop"
 				app:summary="@string/pref_double_space_full_stop_summary"
 				app:iconSpaceReserved="false" />
+		-->
 		<SwitchPreferenceCompat
 				android:defaultValue="false"
 				android:key="pref_haptic_feedback"
@@ -72,22 +79,6 @@
 				android:key="pref_symbols_on_qwerty"
 				android:title="@string/pref_symbols_on_qwerty"
 				app:summary="@string/pref_symbols_on_qwerty_summary"
-				app:iconSpaceReserved="false" />
-	</PreferenceCategory>
-	<PreferenceCategory
-			android:title="@string/pref_about"
-			app:iconSpaceReserved="false">
-		<Preference
-				android:key="pref_typeduck_source"
-				android:title="@string/pref_typeduck_source"
-				app:iconSpaceReserved="false" />
-		<Preference
-				android:key="pref_trime_source"
-				android:title="@string/pref_trime_source"
-				app:iconSpaceReserved="false" />
-		<Preference
-				android:key="pref_license"
-				android:title="@string/pref_license"
 				app:iconSpaceReserved="false" />
 	</PreferenceCategory>
 </PreferenceScreen>

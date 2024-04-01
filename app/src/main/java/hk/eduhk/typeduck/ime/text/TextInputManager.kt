@@ -2,6 +2,7 @@ package hk.eduhk.typeduck.ime.text
 
 import android.text.InputType
 import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.lifecycleScope
 import hk.eduhk.typeduck.core.Rime
@@ -424,6 +425,8 @@ class TextInputManager private constructor() :
     override fun onKey(keyEventCode: Int, metaState: Int) {
         printModifierKeyState(metaState, "keyEventCode=$keyEventCode")
 
+        if ((keyEventCode == KeyEvent.KEYCODE_BACK || keyEventCode == KeyEvent.KEYCODE_ESCAPE) && hideDictionaryView()) return
+
         // 优先由librime处理按键事件
         if (trime.handleKey(keyEventCode, metaState)) return
 
@@ -520,6 +523,30 @@ class TextInputManager private constructor() :
         Rime.deleteCandidate(index)
         trime.updateComposing()
     }
+
+    override fun onCandidateSwipeDown(candidate: ComputedCandidate?) {
+        if (candidate != null && candidate is ComputedCandidate.Word && candidate.hasDictionaryEntry) {
+            onPress(KeyEvent.KEYCODE_UNKNOWN)
+            trime.inputRootBinding.apply {
+                dictionaryView.apply {
+                    setup(candidate) { hideDictionaryView() }
+                    layoutParams.height = main.mainInput.height
+                    visibility = View.VISIBLE
+                }
+                main.mainInput.visibility = View.GONE
+            }
+        }
+    }
+
+    fun hideDictionaryView() =
+        trime.inputRootBinding?.run {
+            (dictionaryView.visibility == View.VISIBLE).also {
+                if (it) {
+                    dictionaryView.visibility = View.GONE
+                    main.mainInput.visibility = View.VISIBLE
+                }
+            }
+        } ?: false
 
     // Used to handle doubleSpaceFullStop
     override fun onDoubleSpace(charToDel: Int, punct: CharSequence): Boolean {

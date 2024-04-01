@@ -118,7 +118,7 @@ public class Keyboard {
 
     final double interpolation = Math.pow(1.0 - Math.pow(screenNarrowness, 5.0), 5.0);
     final double keyboardHeightWithCandidateBar = keyboardHeightForNarrowScreen * interpolation + keyboardHeightForNormalScreen * (1.0 - interpolation);
-    keyboardHeight = (int) (keyboardHeightWithCandidateBar - SizeUtils.applyDimension(75.2f, TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall); // 24 * 0.7 * 4 + 8
+    keyboardHeight = (int) (keyboardHeightWithCandidateBar * 0.9 - DimensionsKt.dp2px(40f) * adjustRatioSmall);
 
     final double ratio = 2.0 * Math.min(keyboardHeightWithCandidateBar / width, 0.45);
     mDisplayWidth = (int) (width - 2.0 * Math.round(width / 4.0 * (1.0 + 1.5048001186256637 * Math.pow(ratio, 12.0) - 1.2196050890844857 * Math.pow(ratio, 8.0) - ratio)));
@@ -127,10 +127,10 @@ public class Keyboard {
     mDisplayWidth -= DimensionsKt.dp2px(Config.get().style.getFloat("keyboard_padding")) * 2;
 
     final Config config = Config.get();
-    mDefaultHorizontalGap = (int) (SizeUtils.applyDimension(
-        config.style.getFloat("horizontal_gap"), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
-    mDefaultVerticalGap = (int) (SizeUtils.applyDimension(
-        config.style.getFloat("vertical_gap"), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
+    mDefaultHorizontalGap = (int) (DimensionsKt.dp2px(
+        config.style.getFloat("horizontal_gap")) * adjustRatioSmall);
+    mDefaultVerticalGap = (int) (DimensionsKt.dp2px(
+        config.style.getFloat("vertical_gap")) * adjustRatioSmall);
     mDefaultWidth = (int) (mDisplayWidth * config.style.getFloat("key_width") / 100);
 
     mDefaultHeight = (int) DimensionsKt.dp2px(config.style.getFloat("key_height"));
@@ -225,11 +225,11 @@ public class Keyboard {
     List<Map<String, Object>> lm = (List<Map<String, Object>>) keyboardConfig.get("keys");
 
     mDefaultHorizontalGap =
-        (int) (SizeUtils.applyDimension(ConfigGetter.getFloat(
-            keyboardConfig, "horizontal_gap", config.style.getFloat("horizontal_gap")), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
+        (int) (DimensionsKt.dp2px(ConfigGetter.getFloat(
+            keyboardConfig, "horizontal_gap", config.style.getFloat("horizontal_gap"))) * adjustRatioSmall);
     mDefaultVerticalGap =
-        (int) (SizeUtils.applyDimension(ConfigGetter.getFloat(
-            keyboardConfig, "vertical_gap", config.style.getFloat("vertical_gap")), TypedValue.COMPLEX_UNIT_SP) * adjustRatioSmall);
+        (int) (DimensionsKt.dp2px(ConfigGetter.getFloat(
+            keyboardConfig, "vertical_gap", config.style.getFloat("vertical_gap"))) * adjustRatioSmall);
     mRoundCorner =
         (int) (ConfigGetter.getFloat(
             keyboardConfig, "round_corner", config.style.getFloat("round_corner")) * adjustRatio);
