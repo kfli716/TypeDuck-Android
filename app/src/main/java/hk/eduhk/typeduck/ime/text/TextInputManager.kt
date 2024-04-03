@@ -548,6 +548,9 @@ class TextInputManager private constructor() :
             }
         } ?: false
 
+    // Used to handle doubleSpaceFullStop
+    override fun onDoubleSpace() = activeEditorInstance.doubleSpaceEvent()
+
     /*
     private fun showOptionsDialog() {
         val builder = AlertDialog.Builder(trime, R.style.dialog_theme)

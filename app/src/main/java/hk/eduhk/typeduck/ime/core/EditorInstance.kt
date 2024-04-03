@@ -267,4 +267,15 @@ class EditorInstance(private val ims: InputMethodService) {
         ic.endBatchEdit()
         return true
     }
+
+    // Added to handle doubleSpaceFullStop, depending on the character just before the cursor, the function determines
+    // whether double clicking the space key produces a full stop.
+    fun doubleSpaceEvent(): Boolean {
+        val ic = inputConnection ?: return false
+        val isHalfShapePunct = Rime.showAsciiPunch()
+        // In Gboard, an ideographic full stop is only produced after a letter or digit (with Unicode categories L* or Nd).
+        return (isHalfShapePunct || ic.getTextBeforeCursor(2, 0)?.firstOrNull()?.isLetterOrDigit() == true)
+                && ic.deleteSurroundingText(1, 0)
+                && ic.commitText(if (isHalfShapePunct) ". " else "。", 1)
+    }
 }

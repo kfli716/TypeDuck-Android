@@ -45,6 +45,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import hk.eduhk.typeduck.R;
+import hk.eduhk.typeduck.core.Rime;
 import hk.eduhk.typeduck.data.AppPrefs;
 import hk.eduhk.typeduck.data.theme.Config;
 import hk.eduhk.typeduck.data.theme.FontManager;
@@ -103,6 +104,8 @@ public class KeyboardView extends View implements View.OnClickListener {
      * @param text the sequence of characters to be displayed.
      */
     void onText(final CharSequence text);
+
+    boolean onDoubleSpace();
   }
 
   private static final boolean DEBUG = false;
@@ -233,6 +236,10 @@ public class KeyboardView extends View implements View.OnClickListener {
   private String labelEnter = "";
   private Map<String, String> mEnterLabels;
   private int enterLabelMode;
+  // To record if the key is being double clicked
+  private boolean isDoubleClick;
+  // In case when space button is double clicked, this bool records whether text was inputted
+  private boolean lastSpaceWasConfirm;
 
   public void resetEnterLabel() {
     labelEnter = mEnterLabels.get("default");
@@ -1091,7 +1098,11 @@ public class KeyboardView extends View implements View.OnClickListener {
         Timber.d(
             "\t<TrimeInput>\tdetectAndSendKey()\tModifierKey, key.getEvent, KeyLabel=%s",
             key.getLabel());
-        setModifier(key);
+        if (key.isShift() && isDoubleClick) {
+          mKeyboard.setShifted(true, true);
+        } else {
+          setModifier(key);
+        }
       } else {
         if (key.getClick().isRepeatable()) {
           if (type.ordinal() > KeyEventType.CLICK.ordinal()) mAbortKey = true;
@@ -1104,10 +1115,22 @@ public class KeyboardView extends View implements View.OnClickListener {
         // getKeyIndices(x, y, codes); // 这里实际上并没有生效
         Timber.d("\t<TrimeInput>\tdetectAndSendKey()\tonEvent, code=%d, key.getEvent", code);
         // 可以在这里把 mKeyboard.getModifer() 获取的修饰键状态写入event里
-        mKeyboardActionListener.onEvent(key.getEvent(type.ordinal()));
-        releaseKey(code);
-        Timber.d("\t<TrimeInput>\tdetectAndSendKey()\trefreshModifier");
-        refreshModifier();
+
+        // records if the current spacebar tap inserts the candidate instead of a space
+        if (key.isSpace()) {
+          lastSpaceWasConfirm = Rime.isComposing();
+        }
+        // triggers only if doubleSpaceFullStop is enabled.
+        if (getPrefs().getTypeDuck().getDoubleSpaceFullStop() &&
+            key.isSpace() && isDoubleClick && mKeyboardActionListener.onDoubleSpace()) {
+          // A full stop is inserted. Don’t do anything further.
+        } else {
+          // If the double space full stop feature is not enabled or if double space is not triggered, then proceed as below.
+          mKeyboardActionListener.onEvent(key.getEvent(type.ordinal()));
+          releaseKey(code);
+          Timber.d("\t<TrimeInput>\tdetectAndSendKey()\trefreshModifier");
+          refreshModifier();
+        }
       }
       mLastSentIndex = index;
       mLastTapTime = eventTime;
@@ -1371,6 +1394,12 @@ public class KeyboardView extends View implements View.OnClickListener {
               public void onRelease(final int primaryCode) {
                 mKeyboardActionListener.onRelease(primaryCode);
               }
+
+              // added for doubleSpaceFullStop
+              @Override
+              public boolean onDoubleSpace() {
+                return mKeyboardActionListener.onDoubleSpace();
+              }
             });
         // mInputView.setSuggest(mSuggest);
         final Keyboard keyboard;
@@ -1423,14 +1452,6 @@ public class KeyboardView extends View implements View.OnClickListener {
         showPreview(NOT_A_KEY);
         showPreview(mCurrentKey, longClickType.ordinal());
         mLongPressKey = mCurrentKey;
-        return false;
-      }
-
-      Timber.w("only set isShifted, no others modifierkey");
-      if (popupKey.isShift() && !popupKey.sendBindings(KeyEventType.LONG_CLICK.ordinal())) {
-        // todo 其他修饰键
-        setShifted(!popupKey.isOn(), !popupKey.isOn());
-        return true;
       }
     }
     return false;
@@ -1784,12 +1805,19 @@ public class KeyboardView extends View implements View.OnClickListener {
     // final boolean mInMultiTap = false;
   }
 
+  // This function checks whether the same key is double clicked.
+  // We add a class boolean to track it.
   private void checkMultiTap(long eventTime, int keyIndex) {
     if (keyIndex == NOT_A_KEY) return;
-    // final Key key = mKeys[keyIndex];
-    final int multiTabInterval = getPrefs().getKeyboard().getLongPressTimeout();
-    if (eventTime > mLastTapTime + multiTabInterval || keyIndex != mLastSentIndex) {
+    final Key key = mKeys[keyIndex];
+    // Don’t detect spacebar double tap during composing. The first click inserting the candidate shouldn’t be counted.
+    if (key.isSpace() && lastSpaceWasConfirm || mMiniKeyboardOnScreen ||
+        eventTime > mLastTapTime + getPrefs().getKeyboard().getLongPressTimeout() || keyIndex != mLastSentIndex) {
       resetMultiTap();
+      isDoubleClick = false;
+    } else {
+      // The third consecutive click should not be considered as double click.
+      isDoubleClick = !isDoubleClick;
     }
   }
 

@@ -513,6 +513,11 @@ public class Key {
     return (c == KeyEvent.KEYCODE_ALT_LEFT || c == KeyEvent.KEYCODE_ALT_RIGHT);
   }
 
+  public boolean isSpace() {
+    int c = getCode();
+    return (c == KeyEvent.KEYCODE_SPACE);
+  }
+
   public boolean isSys() {
     int c = getCode();
     return (c == KeyEvent.KEYCODE_SYM);
