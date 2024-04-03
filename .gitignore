@@ -258,3 +258,6 @@ $RECYCLE.BIN/
 # Keystore
 keystore.properties
 
+# boost
+app/boost-*.tar.xz
+app/src/main/jni/boost/

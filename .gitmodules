@@ -1,22 +1,9 @@
-[submodule "OpenCC"]
-	path = app/src/main/jni/OpenCC
-	url = https://github.com/BYVoid/OpenCC.git
 [submodule "snappy"]
 	path = app/src/main/jni/snappy
 	url = https://github.com/google/snappy.git
-[submodule "boost"]
-	path = app/src/main/jni/boost
-	url = https://github.com/boostorg/boost.git
 [submodule "librime"]
 	path = app/src/main/jni/librime
 	url = https://github.com/TypeDuck-HK/librime.git
-	branch = scholar-dev
-[submodule "libiconv"]
-	path = app/src/main/jni/libiconv
-	url = https://github.com/osfans/libiconv-gnu.git
-[submodule "rime-dictionary-lookup-filter"]
-	path = app/src/main/jni/rime-dictionary-lookup-filter
-	url = https://github.com/TypeDuck-HK/rime-dictionary-lookup-filter.git
 [submodule "schema"]
 	path = app/src/main/assets/rime
 	url = https://github.com/TypeDuck-HK/schema.git
