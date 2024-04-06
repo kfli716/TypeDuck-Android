@@ -1,4 +1,7 @@
 set(Boot_FOUND TRUE)
+
+# libraries that can't compile
+set(BOOST_EXCLUDE_LIBRARIES "fiber" CACHE STRING "" FORCE)
 # we have to specify all libraries and their dependencies manually for Boost_LIBRARIES
 # you can dump them from boost/tools/cmake/include/BoostRoot.cmake ${__boost_include_libraries}
 set(BOOST_INSTALLED_LIBRARIES
