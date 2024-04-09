@@ -1,7 +1,10 @@
-# Since OpenCC doesn't include its headers in the binary dir,
-# we need to install them manually.
+# install opencc headers manually
 file(GLOB LIBOPENCC_HEADERS
-  librime/deps/opencc/src/*.hpp
-  "${CMAKE_BINARY_DIR}/librime/deps/opencc/src/opencc_config.h"
+  OpenCC/src/*.hpp
+  OpenCC/src/*.h
+  "${CMAKE_BINARY_DIR}/OpenCC/src/opencc_config.h"
 )
-file(COPY ${LIBOPENCC_HEADERS} DESTINATION "${CMAKE_BINARY_DIR}/include/opencc")
+make_directory("${CMAKE_BINARY_DIR}/include/opencc")
+foreach(header ${LIBOPENCC_HEADERS})
+  configure_file(${header} "${CMAKE_BINARY_DIR}/include/opencc" COPYONLY)
+endforeach()
