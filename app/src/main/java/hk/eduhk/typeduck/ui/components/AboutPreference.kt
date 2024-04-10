@@ -11,17 +11,16 @@ import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.children
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
+import hk.eduhk.typeduck.R
 import hk.eduhk.typeduck.util.Const
 
 class AboutPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs) {
 	override fun onBindViewHolder(holder: PreferenceViewHolder) {
 		super.onBindViewHolder(holder)
-		((holder.itemView as ViewGroup).children.first() as TextView).apply {
+		holder.itemView.findViewById<TextView>(R.id.description_text).apply {
 			transformationMethod = EmailLinkTransformationMethod()
 			movementMethod = LinkMovementMethod.getInstance()
 		}
