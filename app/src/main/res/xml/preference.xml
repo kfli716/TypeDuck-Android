@@ -19,11 +19,14 @@
 			app:segmentLeftText="@string/pref_interface_language_zho"
 			app:segmentRightText="@string/pref_interface_language_eng"
 			android:widgetLayout="@layout/binary_segment" />
-	<Preference
-			android:key="pref_test_ime"
+	<PreferenceCategory
 			android:title="@string/pref_test_ime"
-			app:summary="@string/pref_test_ime_placeholder"
-			app:iconSpaceReserved="false" />
+			app:iconSpaceReserved="false">
+		<hk.eduhk.typeduck.ui.components.TestIMEPreference
+				android:key="pref_test_ime"
+				android:selectable="false"
+				android:layout="@layout/test_ime_layout" />
+	</PreferenceCategory>
 	<PreferenceCategory
 			android:title="@string/pref_ime_settings"
 			app:iconSpaceReserved="false">
