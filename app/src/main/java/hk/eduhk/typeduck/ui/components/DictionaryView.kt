@@ -37,7 +37,7 @@ class DictionaryView(context: Context, attrs: AttributeSet?): RelativeLayout(con
 		val inflater = LayoutInflater.from(context)
 		DictionaryViewBinding.inflate(inflater, this, true).apply {
 			info.entries.filter { it.isDictionaryEntry }.forEach {
-				DictionaryEntryBinding.inflate(inflater, dictionaryView, true).apply {
+				DictionaryEntryBinding.inflate(inflater, contentView, true).apply {
 					titleStack.apply {
 						it.honzi?.let {
 							addTextView(context, it, true, 28, gap = 32 to 10)
@@ -106,7 +106,7 @@ class DictionaryView(context: Context, attrs: AttributeSet?): RelativeLayout(con
 					root.bottomPadding = 40.scaled.roundToInt()
 				}
 			}
-			dictionaryView.lastChild.padding = 0
+			contentView.lastChild.padding = 0
 		}
 		addView(
 			ImageView(context).apply {
