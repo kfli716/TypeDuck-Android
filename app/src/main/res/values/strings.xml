@@ -18,6 +18,7 @@
 	<string name="pref_refresh">Refresh</string>
 	<string name="pref_test_ime">Keyboard Test</string>
 	<string name="pref_test_ime_placeholder">Try the input method here…</string>
+	<string name="pref_ime_settings">Input Method Settings</string>
 	<string name="pref_display_languages">Display Languages</string>
 	<string name="pref_main_language">Main Language</string>
 	<string-array name="pref_languages">
@@ -36,7 +37,7 @@
 		<item name="normal">Normal</item>
 		<item name="large">Large</item>
 	</string-array>
-	<string name="pref_ime_settings">Input Method Settings</string>
+	<string name="pref_general_settings">General Settings</string>
 	<string name="pref_auto_cap">Auto-capitalization</string>
 	<string name="pref_auto_cap_summary">Capitalize the first word of each sentence</string>
 	<string name="pref_double_space_full_stop">Double-space full stop</string>

@@ -16,34 +16,38 @@
 			android:title="@string/pref_test_ime"
 			app:summary="@string/pref_test_ime_placeholder"
 			app:iconSpaceReserved="false" />
-	<MultiSelectListPreference
-			android:key="pref_display_languages"
-			android:title="@string/pref_display_languages"
-			app:iconSpaceReserved="false" />
-	<ListPreference
-			android:key="pref_main_language"
-			android:title="@string/pref_main_language"
-			app:iconSpaceReserved="false" />
-	<SwitchPreferenceCompat
-			android:defaultValue="true"
-			android:key="pref_show_romanization"
-			android:title="@string/pref_show_romanization"
-			app:iconSpaceReserved="false" />
-	<SwitchPreferenceCompat
-			android:defaultValue="false"
-			android:key="pref_show_reverse_lookup"
-			android:title="@string/pref_show_reverse_lookup"
-			app:iconSpaceReserved="false" />
-	<ListPreference
-			android:key="pref_candidate_font_size"
-			android:title="@string/pref_candidate_font_size"
-			app:iconSpaceReserved="false" />
-	<ListPreference
-			android:key="pref_candidate_gap"
-			android:title="@string/pref_candidate_gap"
-			app:iconSpaceReserved="false" />
 	<PreferenceCategory
 			android:title="@string/pref_ime_settings"
+			app:iconSpaceReserved="false">
+		<MultiSelectListPreference
+				android:key="pref_display_languages"
+				android:title="@string/pref_display_languages"
+				app:iconSpaceReserved="false" />
+		<ListPreference
+				android:key="pref_main_language"
+				android:title="@string/pref_main_language"
+				app:iconSpaceReserved="false" />
+		<SwitchPreferenceCompat
+				android:defaultValue="true"
+				android:key="pref_show_romanization"
+				android:title="@string/pref_show_romanization"
+				app:iconSpaceReserved="false" />
+		<SwitchPreferenceCompat
+				android:defaultValue="false"
+				android:key="pref_show_reverse_lookup"
+				android:title="@string/pref_show_reverse_lookup"
+				app:iconSpaceReserved="false" />
+		<ListPreference
+				android:key="pref_candidate_font_size"
+				android:title="@string/pref_candidate_font_size"
+				app:iconSpaceReserved="false" />
+		<ListPreference
+				android:key="pref_candidate_gap"
+				android:title="@string/pref_candidate_gap"
+				app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+	<PreferenceCategory
+			android:title="@string/pref_general_settings"
 			app:iconSpaceReserved="false">
 		<SwitchPreferenceCompat
 				android:defaultValue="true"
