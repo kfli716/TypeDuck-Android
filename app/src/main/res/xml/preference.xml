@@ -43,11 +43,13 @@
 				android:key="pref_show_romanization"
 				android:title="@string/pref_show_romanization"
 				app:iconSpaceReserved="false" />
+		<!--
 		<SwitchPreferenceCompat
 				android:defaultValue="false"
 				android:key="pref_show_reverse_lookup"
 				android:title="@string/pref_show_reverse_lookup"
 				app:iconSpaceReserved="false" />
+		-->
 		<ListPreference
 				android:key="pref_candidate_font_size"
 				android:title="@string/pref_candidate_font_size"
