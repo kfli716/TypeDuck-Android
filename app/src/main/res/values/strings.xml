@@ -3,21 +3,37 @@
 	<string name="app_name">TypeDuck</string>
 	<string name="space">Space</string>
 	<string name="fullwidth_space">Fullwidth Space</string>
-	<string name="setup_prev">Prev</string>
-	<string name="setup_next">Next</string>
-	<string name="setup_skip">Skip</string>
-	<string name="setup_done">Done</string>
-	<string name="setup_step_one">Step 1</string>
-	<string name="setup_enable_ime">Enable Input Method</string>
-	<string name="setup_enable_ime_hint">Enable TypeDuck in Language and input settings</string>
-	<string name="setup_step_two">Step 2</string>
-	<string name="setup_select_ime">Select Input Method</string>
-	<string name="setup_select_ime_hint">Select TypeDuck as your default input method</string>
-	<string name="close">Close</string>
+	<string name="confirm">Confirm</string>
+	<string name="onboarding_skip">Skip</string>
+	<string name="onboarding_open_keyboard_settings">Open Input Method Preferences</string>
+	<string name="onboarding_open_keyboard_picker">Open Keyboard Picker</string>
+	<string name="onboarding_done">Done!</string>
+	<string-array name="onboarding_headings">
+		<item>
+"歡迎使用 TypeDuck
+Welcome to TypeDuck"
+		</item>
+		<item>Activating TypeDuck</item>
+		<item>One More Step to Go…</item>
+		<item>You’re done!</item>
+	</string-array>
+	<string-array name="onboarding_contents">
+		<item>
+"歡迎使用 TypeDuck 打得 ⸺ 設有少數族裔語言提示粵拼輸入法！有字想打？一裝即用，毋須再等，即刻打得！
+Welcome to TypeDuck: a Cantonese input keyboard with minority language prompts! Got something you want to type? Have your fingers ready, get, set, TYPE DUCK!"
+		</item>
+		<item>Enable TypeDuck in System Keyboard Settings</item>
+		<item>Select TypeDuck from the list of input methods to get started.</item>
+		<item>TypeDuck is now available for use. If you encounter any problems, you may visit the “About” page for support.</item>
+	</string-array>
 	<string name="refreshing">Refreshing…</string>
 	<string name="pref_refresh">Refresh</string>
+	<string name="pref_interface_language">介面語言 Interface Language</string>
+	<string name="pref_interface_language_zho">中文</string>
+	<string name="pref_interface_language_eng">English</string>
 	<string name="pref_test_ime">Keyboard Test</string>
 	<string name="pref_test_ime_placeholder">Try the input method here…</string>
+	<string name="pref_ime_settings">Input Method Settings</string>
 	<string name="pref_display_languages">Display Languages</string>
 	<string name="pref_main_language">Main Language</string>
 	<string-array name="pref_languages">
@@ -36,7 +52,7 @@
 		<item name="normal">Normal</item>
 		<item name="large">Large</item>
 	</string-array>
-	<string name="pref_ime_settings">Input Method Settings</string>
+	<string name="pref_general_settings">General Settings</string>
 	<string name="pref_auto_cap">Auto-capitalization</string>
 	<string name="pref_auto_cap_summary">Capitalize the first word of each sentence</string>
 	<string name="pref_double_space_full_stop">Double-space full stop</string>

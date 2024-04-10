@@ -17,7 +17,7 @@ import hk.eduhk.typeduck.ime.core.Trime
 import hk.eduhk.typeduck.ime.text.Language
 import hk.eduhk.typeduck.ime.text.Size
 import hk.eduhk.typeduck.ui.components.PaddingPreferenceFragment
-import hk.eduhk.typeduck.ui.setup.TestIMEDialogFragment
+import hk.eduhk.typeduck.ui.components.TestIMEPreference
 import hk.eduhk.typeduck.util.withLoadingDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -30,14 +30,18 @@ class PreferenceFragment :
     private lateinit var languageNames: Array<String>
     private lateinit var sizeNames: Array<String>
 
+    var testIMEPreference: TestIMEPreference? = null
+
     override fun onResume() {
         super.onResume()
         preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+        testIMEPreference?.blur()
     }
 
     override fun onPause() {
         super.onPause()
         preferenceScreen.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
+        testIMEPreference?.blur()
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -57,10 +61,6 @@ class PreferenceFragment :
                         Rime.deployRime()
                     }
                 }
-                true
-            }
-            get<Preference>("pref_test_ime")?.setOnPreferenceClickListener {
-                TestIMEDialogFragment().show(parentFragmentManager, "test_ime_dialog")
                 true
             }
             sharedPreferences?.run {
@@ -104,6 +104,7 @@ class PreferenceFragment :
                     it.summary = sizeNames[candidateGap.ordinal]
                 }
             }
+            testIMEPreference = get("pref_test_ime")
         }
     }
 
@@ -112,6 +113,12 @@ class PreferenceFragment :
         val typeDuck = AppPrefs.initDefault(sharedPreferences).typeDuck
         with(preferenceScreen) {
             when (key) {
+                AppPrefs.TypeDuck.INTERFACE_LANGUAGE -> {
+                    activity?.apply {
+                        finish()
+                        startActivity(intent)
+                    }
+                }
                 AppPrefs.TypeDuck.DISPLAY_LANGUAGES -> {
                     val displayLanguages = typeDuck.displayLanguages
                     var mainLanguage = typeDuck.mainLanguage

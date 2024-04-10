@@ -1254,11 +1254,7 @@ public class KeyboardView extends View implements View.OnClickListener {
     previewPopup.setWidth(popupWidth);
     previewPopup.setHeight(popupHeight);
     previewPopup.showAtLocation(mPopupParent, Gravity.NO_GRAVITY, mPopupPreviewX, mPopupPreviewY);
-    if (Build.VERSION.SDK_INT >= 28) {
-      // This function exists only if API level >= 28.
-      // Thing looks okay without it if API level < 28.
-      mPreviewText.setOutlineSpotShadowColor(mShadowColor);
-    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) mPreviewText.setOutlineSpotShadowColor(mShadowColor);
     mPreviewText.setVisibility(VISIBLE);
   }
 

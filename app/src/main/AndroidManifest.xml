@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.setup.SetupActivity"
+            android:name=".ui.onboarding.OnboardingActivity"
             android:exported="false" />
     </application>
 </manifest>

@@ -12,7 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import hk.eduhk.typeduck.R
 import hk.eduhk.typeduck.databinding.ActivityPrefBinding
-import hk.eduhk.typeduck.ui.setup.SetupActivity
+import hk.eduhk.typeduck.ui.onboarding.OnboardingActivity
 import hk.eduhk.typeduck.util.applyTranslucentSystemBars
 
 class PrefActivity : AppCompatActivity() {
@@ -60,8 +60,8 @@ class PrefActivity : AppCompatActivity() {
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         binding.prefToolbar.toolbar.setupWithNavController(navHostFragment.navController, appBarConfiguration)
-        if (SetupActivity.shouldSetup()) {
-            startActivity(Intent(this, SetupActivity::class.java))
+        if (OnboardingActivity.shouldSetup()) {
+            startActivity(Intent(this, OnboardingActivity::class.java))
         }
     }
 }

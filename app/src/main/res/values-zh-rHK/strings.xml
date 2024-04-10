@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">TypeDuck</string>
+	<string name="space">空格</string>
+	<string name="fullwidth_space">全形空格</string>
+	<string name="confirm">確認</string>
+	<string name="onboarding_skip">略過</string>
+	<string name="onboarding_open_keyboard_settings">開啟輸入法設定</string>
+	<string name="onboarding_open_keyboard_picker">開啟鍵盤選擇器</string>
+	<string name="onboarding_done">完成！</string>
+	<string-array name="onboarding_headings">
+		<item>
+"歡迎使用 TypeDuck
+Welcome to TypeDuck"
+		</item>
+		<item>加入 TypeDuck</item>
+		<item>尚餘一步……</item>
+		<item>大功告成！</item>
+	</string-array>
+	<string-array name="onboarding_contents">
+		<item>
+"歡迎使用 TypeDuck 打得 ⸺ 設有少數族裔語言提示粵拼輸入法！有字想打？一裝即用，毋須再等，即刻打得！
+Welcome to TypeDuck: a Cantonese input keyboard with minority language prompts! Got something you want to type? Have your fingers ready, get, set, TYPE DUCK!"
+		</item>
+		<item>於系統鍵盤設定啟用 TypeDuck</item>
+		<item>於輸入法列表選擇 TypeDuck 以開始使用。</item>
+		<item>TypeDuck 現已可供使用。如果遇到任何問題，可以前往「關於」頁面尋求支援。</item>
+	</string-array>
+	<string name="refreshing">正在重新整理……</string>
+	<string name="pref_refresh">重新整理</string>
+	<string name="pref_interface_language">介面語言 Interface Language</string>
+	<string name="pref_interface_language_zho">中文</string>
+	<string name="pref_interface_language_eng">English</string>
+	<string name="pref_test_ime">測試鍵盤</string>
+	<string name="pref_test_ime_placeholder">於此處嘗試輸入……</string>
+	<string name="pref_ime_settings">輸入法設定 Input Method Settings</string>
+	<string name="pref_display_languages">顯示語言 Display Languages</string>
+	<string name="pref_main_language">主要語言 Main Language</string>
+	<string-array name="pref_languages">
+		<item name="eng">英語 English</item>
+		<item name="hin">印地語 Hindi</item>
+		<item name="ind">印尼語 Indonesian</item>
+		<item name="nep">尼泊爾語 Nepali</item>
+		<item name="urd">烏爾都語 Urdu</item>
+	</string-array>
+	<string name="pref_show_romanization">候選詞粵拼</string>
+	<string name="pref_show_reverse_lookup">顯示反查碼</string>
+	<string name="pref_candidate_font_size">候選詞大小</string>
+	<string name="pref_candidate_gap">候選詞間隔</string>
+	<string-array name="pref_sizes">
+		<item name="small">小</item>
+		<item name="normal">正常</item>
+		<item name="large">大</item>
+	</string-array>
+	<string name="pref_general_settings">一般設定</string>
+	<string name="pref_auto_cap">自動大階</string>
+	<string name="pref_auto_cap_summary">句首字母自動大階</string>
+	<string name="pref_double_space_full_stop">句號快捷鍵</string>
+	<string name="pref_double_space_full_stop_summary">按兩下空白鍵，快速輸入句號</string>
+	<string name="pref_haptic_feedback">按鍵震動</string>
+	<string name="pref_audio_feedback">按鍵聲音</string>
+	<string name="pref_visual_feedback">按鍵文字預覽</string>
+	<string name="pref_symbols_on_qwerty">輔助符號及數字鍵</string>
+	<string name="pref_symbols_on_qwerty_summary">長按字母鍵輸入符號或數字</string>
+	<string name="pref_about">關於</string>
+	<string name="pref_about_description">
+"歡迎使用 TypeDuck 打得 ⸺ 設有少數族裔語言提示粵拼輸入法！有字想打？一裝即用，毋須再等，即刻打得！
+Welcome to TypeDuck: a Cantonese input keyboard with minority language prompts! Got something you want to type? Have your fingers ready, get, set, TYPE DUCK!
+
+如有任何查詢，歡迎電郵至 info@typeduck.hk 或 lchaakming@eduhk.hk。
+Should you have any enquiries, please email info@typeduck.hk or lchaakming@eduhk.hk.
+
+本輸入法由香港教育大學語言學及現代語言系開發。特別鳴謝「語文教育及研究常務委員會」資助本計劃。
+This input method is developed by the Department of Linguistics and Modern Language Studies, the Education University of Hong Kong. Special thanks to the Standing Committee on Language Education and Research for funding this project."
+	</string>
+	<string name="pref_links">連結</string>
+	<string name="pref_typeduck_site">TypeDuck 網站</string>
+	<string name="pref_learnduck">LearnDuck 粵拼打字入門</string>
+	<string name="pref_learnduck_summary">Introduction to Cantonese Jyutping Typing</string>
+	<string name="pref_jyutping_site">粵拼 Jyutping</string>
+	<string name="pref_typeduck_source">TypeDuck 原始碼</string>
+	<string name="pref_trime_source">Trime 原始碼</string>
+	<string name="pref_acknowledgements">鳴謝</string>
+</resources>

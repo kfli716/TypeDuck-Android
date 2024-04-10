@@ -10,8 +10,10 @@ import hk.eduhk.typeduck.ime.landscapeinput.LandscapeInputUIMode
 import hk.eduhk.typeduck.ime.text.Language
 import hk.eduhk.typeduck.ime.text.Size
 import hk.eduhk.typeduck.util.appContext
+import hk.eduhk.typeduck.util.userKnowsChinese
 import java.lang.ref.WeakReference
 import java.util.EnumSet
+import java.util.Locale
 
 /**
  * Helper class for an organized access to the shared preferences.
@@ -112,6 +114,7 @@ class AppPrefs(
 
     class TypeDuck(private val prefs: AppPrefs) {
         companion object {
+            const val INTERFACE_LANGUAGE = "pref_interface_language"
             const val DISPLAY_LANGUAGES = "pref_display_languages"
             const val MAIN_LANGUAGE = "pref_main_language"
             const val SHOW_ROMANIZATION = "pref_show_romanization"
@@ -125,6 +128,9 @@ class AppPrefs(
             const val VISUAL_FEEDBACK = "pref_visual_feedback"
             const val SYMBOLS_ON_QWERTY = "pref_symbols_on_qwerty"
         }
+        var interfaceLanguage: Locale
+            get() = if (prefs.getTypeDuckPref(INTERFACE_LANGUAGE, !userKnowsChinese)) Locale.ENGLISH else Locale("zh", "HK")
+            set(v) = prefs.setTypeDuckPref(INTERFACE_LANGUAGE, v.language == "en")
         var displayLanguages: EnumSet<Language>
             get() = EnumSet.copyOf(prefs.getTypeDuckPref(DISPLAY_LANGUAGES, setOf(Language.values().first().name)).map { Language.valueOf(it) })
             set(v) = prefs.setTypeDuckPref(DISPLAY_LANGUAGES, v.map { it.name }.toSet())

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- https://stackoverflow.com/a/73177722 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="wrap_content"
+		android:layout_height="44dp"
+		android:background="@drawable/bg_segment"
+		android:padding="2.5dp">
+
+	<androidx.appcompat.widget.SwitchCompat
+			android:id="@+id/segment"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_centerVertical="true"
+			android:textColor="@color/text_color_primary"
+			android:thumb="@drawable/segment_thumb_selector"
+			app:switchMinWidth="200dp"
+			app:track="@drawable/segment_track_selector" />
+
+	<LinearLayout
+			android:layout_width="200dp"
+			android:layout_height="match_parent"
+			android:orientation="horizontal"
+			android:weightSum="2">
+
+		<TextView
+				android:id="@+id/segment_left"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:gravity="center"
+				android:textColor="@color/text_color_primary"
+				android:textSize="16sp"
+				tools:text="Left" />
+
+		<TextView
+				android:id="@+id/segment_right"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_weight="1"
+				android:gravity="center"
+				android:textColor="@color/text_color_primary"
+				android:textSize="16sp"
+				tools:text="Right" />
+
+	</LinearLayout>
+
+</RelativeLayout>
