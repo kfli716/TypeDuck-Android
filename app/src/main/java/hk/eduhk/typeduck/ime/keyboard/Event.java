@@ -18,12 +18,16 @@
 
 package hk.eduhk.typeduck.ime.keyboard;
 
+import static hk.eduhk.typeduck.util.UtilsKt.i18n;
+
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import androidx.annotation.NonNull;
+import hk.eduhk.typeduck.R;
 import hk.eduhk.typeduck.core.Rime;
 import hk.eduhk.typeduck.core.RimeKeyMapping;
 import hk.eduhk.typeduck.data.AppPrefs;
+import hk.eduhk.typeduck.ime.core.Trime;
 import hk.eduhk.typeduck.ime.enums.Keycode;
 import hk.eduhk.typeduck.util.ConfigGetter;
 import java.util.HashMap;
@@ -196,7 +200,7 @@ public class Event {
   public String getLabel() {
     if (!TextUtils.isEmpty(toggle)) return (String) states.get(Rime.getOption(toggle) ? 1 : 0);
 
-    if (code == KeyEvent.KEYCODE_SPACE && Rime.isComposing()) return "Confirm";
+    if (code == KeyEvent.KEYCODE_SPACE && Rime.isComposing()) return i18n(R.string.confirm);
     if (mKeyboard.isOnlyShiftOn()) {
       if (code >= KeyEvent.KEYCODE_0
           && code <= KeyEvent.KEYCODE_9
@@ -212,7 +216,7 @@ public class Event {
           || code == KeyEvent.KEYCODE_SHIFT_RIGHT)
         return shiftLockLabel;
     } else if (((mKeyboard.getModifer() | mask) & KeyEvent.META_SHIFT_ON) != 0) {
-      if (code == KeyEvent.KEYCODE_SPACE && mKeyboard.fullwidthSpace()) return "Fullwidth Space";
+      if (code == KeyEvent.KEYCODE_SPACE && mKeyboard.fullwidthSpace()) return i18n(R.string.fullwidth_space);
       return adjustCase(shiftLabel);
     }
 
@@ -252,7 +256,7 @@ public class Event {
     if (!TextUtils.isEmpty(label)) return;
     int c = code;
     if (c == KeyEvent.KEYCODE_SPACE) {
-      label = "Space";
+      label = i18n(R.string.space);
     } else {
       if (c > 0) label = Keycode.Companion.getDisplayLabel(c, mask);
     }

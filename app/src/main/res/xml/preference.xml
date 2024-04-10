@@ -11,6 +11,14 @@
 			android:key="pref_refresh"
 			android:title="@string/pref_refresh"
 			app:iconSpaceReserved="false" />
+	<hk.eduhk.typeduck.ui.components.BinarySegmentPreference
+			android:selectable="false"
+			android:key="pref_interface_language"
+			android:title="@string/pref_interface_language"
+			app:iconSpaceReserved="false"
+			app:segmentLeftText="@string/pref_interface_language_zho"
+			app:segmentRightText="@string/pref_interface_language_eng"
+			android:widgetLayout="@layout/binary_segment" />
 	<Preference
 			android:key="pref_test_ime"
 			android:title="@string/pref_test_ime"

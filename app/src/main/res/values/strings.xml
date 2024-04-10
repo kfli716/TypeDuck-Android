@@ -3,6 +3,7 @@
 	<string name="app_name">TypeDuck</string>
 	<string name="space">Space</string>
 	<string name="fullwidth_space">Fullwidth Space</string>
+	<string name="confirm">Confirm</string>
 	<string name="setup_prev">Prev</string>
 	<string name="setup_next">Next</string>
 	<string name="setup_skip">Skip</string>
@@ -16,6 +17,9 @@
 	<string name="close">Close</string>
 	<string name="refreshing">Refreshing…</string>
 	<string name="pref_refresh">Refresh</string>
+	<string name="pref_interface_language">介面語言 Interface Language</string>
+	<string name="pref_interface_language_zho">中文</string>
+	<string name="pref_interface_language_eng">English</string>
 	<string name="pref_test_ime">Keyboard Test</string>
 	<string name="pref_test_ime_placeholder">Try the input method here…</string>
 	<string name="pref_ime_settings">Input Method Settings</string>

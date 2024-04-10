@@ -112,6 +112,12 @@ class PreferenceFragment :
         val typeDuck = AppPrefs.initDefault(sharedPreferences).typeDuck
         with(preferenceScreen) {
             when (key) {
+                AppPrefs.TypeDuck.INTERFACE_LANGUAGE -> {
+                    activity?.apply {
+                        finish()
+                        startActivity(intent)
+                    }
+                }
                 AppPrefs.TypeDuck.DISPLAY_LANGUAGES -> {
                     val displayLanguages = typeDuck.displayLanguages
                     var mainLanguage = typeDuck.mainLanguage

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
+import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import hk.eduhk.typeduck.R
 import hk.eduhk.typeduck.TrimeApplication
+import hk.eduhk.typeduck.data.AppPrefs
+import hk.eduhk.typeduck.ime.core.Trime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -22,6 +25,21 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 val appContext: Context get() = TrimeApplication.getInstance().applicationContext
+
+// Our translations are in neutral Chinese, which are expected to be intelligible by speakers from virtually all Chinese varieties
+private val languageCodes = setOf("cdo", "cjy", "cmn", "cnp", "cpx", "csp", "czh", "czo", "gan", "hak", "hsn", "lzh", "mnp", "nan", "wuu", "yue", "zh")
+
+val userKnowsChinese: Boolean get() =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        appContext.resources.configuration.locales.let {
+            for (i in 0 until it.size()) {
+                if (languageCodes.contains(it.get(i).language)) return true
+            }
+            return false
+        }
+    } else {
+        languageCodes.contains(appContext.resources.configuration.locale.language)
+    }
 
 @OptIn(ExperimentalContracts::class)
 inline fun <T : Any, U> Result<T?>.bindOnNotNull(block: (T) -> Result<U>): Result<U>? {
@@ -83,3 +101,16 @@ fun RecyclerView.applyNavBarInsetsBottomPadding() {
         windowInsets
     }
 }
+
+fun Context.setLocale(locale: Locale): Context {
+    val config = resources.configuration
+    Locale.setDefault(locale)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) config.setLocale(locale)
+    else config.locale = locale
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) return createConfigurationContext(config)
+    resources.updateConfiguration(config, resources.displayMetrics)
+    return this
+}
+
+fun i18n(@StringRes resId: Int) =
+    Trime.getService().setLocale(AppPrefs.defaultInstance().typeDuck.interfaceLanguage).getString(resId)
