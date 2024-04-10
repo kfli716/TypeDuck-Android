@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- https://dharmeshbasapati.medium.com/working-with-viewpager2-23424111aec1 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:state_selected="true">
+		<shape
+				android:innerRadius="0dp"
+				android:shape="ring"
+				android:thickness="8dp"
+				android:useLevel="false">
+			<solid android:color="@color/accent_color" />
+		</shape>
+	</item>
+	<item android:state_selected="false">
+		<shape
+				android:innerRadius="0dp"
+				android:shape="ring"
+				android:thickness="4sp"
+				android:useLevel="false">
+			<solid android:color="@color/background_color" />
+			<stroke android:width="1sp" android:color="@android:color/darker_gray" />
+		</shape>
+	</item>
+</selector>

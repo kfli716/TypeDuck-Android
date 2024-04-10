@@ -4,17 +4,28 @@
 	<string name="space">空格</string>
 	<string name="fullwidth_space">全形空格</string>
 	<string name="confirm">確認</string>
-    <string name="setup_prev">上一步</string>
-    <string name="setup_next">下一步</string>
-    <string name="setup_skip">略過</string>
-    <string name="setup_done">完成</string>
-    <string name="setup_step_one">步驟 1</string>
-    <string name="setup_enable_ime">啟用輸入法</string>
-    <string name="setup_enable_ime_hint">於「語言及輸入設定」啟用 TypeDuck</string>
-    <string name="setup_step_two">步驟 2</string>
-    <string name="setup_select_ime">選擇輸入法</string>
-    <string name="setup_select_ime_hint">將 TypeDuck 設為預設輸入法</string>
-    <string name="close">關閉</string>
+	<string name="onboarding_skip">略過</string>
+	<string name="onboarding_open_keyboard_settings">開啟輸入法設定</string>
+	<string name="onboarding_open_keyboard_picker">開啟鍵盤選擇器</string>
+	<string name="onboarding_done">完成！</string>
+	<string-array name="onboarding_headings">
+		<item>
+"歡迎使用 TypeDuck
+Welcome to TypeDuck"
+		</item>
+		<item>加入 TypeDuck</item>
+		<item>尚餘一步……</item>
+		<item>大功告成！</item>
+	</string-array>
+	<string-array name="onboarding_contents">
+		<item>
+"歡迎使用 TypeDuck 打得 ⸺ 設有少數族裔語言提示粵拼輸入法！有字想打？一裝即用，毋須再等，即刻打得！
+Welcome to TypeDuck: a Cantonese input keyboard with minority language prompts! Got something you want to type? Have your fingers ready, get, set, TYPE DUCK!"
+		</item>
+		<item>於系統鍵盤設定啟用 TypeDuck</item>
+		<item>於輸入法列表選擇 TypeDuck 以開始使用。</item>
+		<item>TypeDuck 現已可供使用。如果遇到任何問題，可以前往「關於」頁面尋求支援。</item>
+	</string-array>
 	<string name="refreshing">正在重新整理……</string>
 	<string name="pref_refresh">重新整理</string>
 	<string name="pref_interface_language">介面語言 Interface Language</string>

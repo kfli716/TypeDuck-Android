@@ -55,7 +55,7 @@ inline fun <T : Any, U> Result<T?>.bindOnNotNull(block: (T) -> Result<U>): Resul
 
 suspend fun <T> Result<T>.toast() = withContext(Dispatchers.Main.immediate) {
     onSuccess {
-        ToastUtils.showShort(R.string.setup_done)
+        ToastUtils.showShort(R.string.onboarding_done)
     }
     onFailure {
         ToastUtils.showShort(it.message)
